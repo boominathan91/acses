@@ -1,4 +1,4 @@
-$('.staff-table-view').hide();
+$('.staff-grid-view').hide();
 $('.btn-link').click(function(){
 	var id = $(this).attr('id');
 	$(this).addClass('active');	

@@ -9,8 +9,8 @@
 					<div class="col-xs-8 text-right m-b-30">
 						<a href="#" class="btn btn-primary pull-right rounded" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>
 						<div class="view-icons">
-							<a href="javascript:void(0);" class="grid-view btn btn-link active" id="staff-grid-view"><i class="fa fa-th"></i></a>
-							<a href="javascript:void(0);" class="list-view btn btn-link " id="staff-table-view"><i class="fa fa-bars"></i></a>
+							<a href="javascript:void(0);" class="grid-view btn btn-link" id="staff-grid-view"><i class="fa fa-th"></i></a>
+							<a href="javascript:void(0);" class="list-view btn btn-link active" id="staff-table-view"><i class="fa fa-bars"></i></a>
 						</div>
 					</div>
 				</div>

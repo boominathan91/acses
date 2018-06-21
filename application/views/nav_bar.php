@@ -94,7 +94,7 @@
 						<ul class="dropdown-menu">
 							<li><a href="#">My Profile</a></li>
 							<li><a href="#">Edit Profile</a></li>
-							<li><a href="#">Settings</a></li>
+							<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
 							<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
 						</ul>
 					</li>
@@ -104,7 +104,7 @@
 					<ul class="dropdown-menu pull-right">
 						<li><a href="#">My Profile</a></li>
 						<li><a href="#">Edit Profile</a></li>
-						<li><a href="#">Settings</a></li>
+						<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
 						<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
 					</ul>
 				</div>
