@@ -4,10 +4,10 @@
 			<div class="content container-fluid">
 				<div class="row">
 					<div class="col-xs-4">
-						<h4 class="page-title">Employee</h4>
+						<h4 class="page-title"><?php lang('employees'); ?></h4>
 					</div>
 					<div class="col-xs-8 text-right m-b-30">
-						<a href="#" class="btn btn-primary pull-right rounded" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> Add Employee</a>
+						<a href="#" class="btn btn-primary pull-right rounded" data-toggle="modal" data-target="#add_employee"><i class="fa fa-plus"></i> <?php lang('add_employee'); ?></a>
 						<div class="view-icons">
 							<a href="javascript:void(0);" class="grid-view btn btn-link" id="staff-grid-view"><i class="fa fa-th"></i></a>
 							<a href="javascript:void(0);" class="list-view btn btn-link active" id="staff-table-view"><i class="fa fa-bars"></i></a>
@@ -17,21 +17,21 @@
 				<div class="row filter-row">
 					<div class="col-sm-3 col-xs-6">  
 						<div class="form-group form-focus">
-							<label class="control-label">Employee ID</label>
+							<label class="control-label"><?php lang('employee_id'); ?></label>
 							<input type="text" class="form-control floating" />
 						</div>
 					</div>
 					<div class="col-sm-3 col-xs-6">  
 						<div class="form-group form-focus">
-							<label class="control-label">Employee Name</label>
+							<label class="control-label"><?php lang('employee_name'); ?></label>
 							<input type="text" class="form-control floating" />
 						</div>
 					</div>
 					<div class="col-sm-3 col-xs-6"> 
 						<div class="form-group form-focus select-focus">
-							<label class="control-label">Designation</label>
+							<label class="control-label"><?php lang('designation'); ?></label>
 							<select class="select floating"> 
-								<option value="">Select Designation</option>
+								<option value=""><?php lang('select_designation'); ?></option>
 								<option value="">Web Developer</option>
 								<option value="1">Web Designer</option>
 								<option value="1">Android Developer</option>
@@ -40,7 +40,7 @@
 						</div>
 					</div>
 					<div class="col-sm-3 col-xs-6">  
-						<a href="#" class="btn btn-success btn-block"> Search </a>  
+						<a href="#" class="btn btn-success btn-block"><?php lang('search') ?></a>  
 					</div>     
 				</div>
 				<div class="row staff-table-view">
@@ -49,12 +49,12 @@
 							<table class="table table-striped custom-table datatable">
 								<thead>
 									<tr>
-										<th style="width:30%;">Name</th>
-										<th>Employee ID</th>
-										<th>Email</th>
-										<th>Mobile</th>
-										<th>Join Date</th>
-										<th class="text-right">Action</th>
+										<th style="width:30%;"><?php lang('employee_name') ?></th>
+										<th><?php lang('employee_id'); ?></th>
+										<th><?php lang('email'); ?></th>
+										<th><?php lang('mobile'); ?></th>
+										<th><?php lang('join_date'); ?></th>
+										<th class="text-right"><?php lang('action'); ?></th>
 									</tr>
 								</thead>
 								<tbody>

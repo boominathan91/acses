@@ -5,15 +5,15 @@
 					<div class="row">
 						<div class="col-md-8 col-md-offset-2">
                             <form class="form-horizontal">
-								<h4 class="page-title">Theme Settings</h4>
+								<h4 class="page-title"><?php lang('theme_settings'); ?></h4>
 								<div class="form-group">
-									<label class="col-lg-3 control-label">Website Name</label>
+									<label class="col-lg-3 control-label"><?php lang('website_name'); ?></label>
 									<div class="col-lg-9">
 										<input name="website_name" class="form-control" value="Focus Technologies" type="text">
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-lg-3 control-label">Light Logo</label>
+									<label class="col-lg-3 control-label"><?php lang('light_logo'); ?></label>
 									<div class="col-lg-5">
 										<input class="form-control" type="file">
 										<span class="help-block">Recommended image size is 40px x 40px</span>
@@ -23,7 +23,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-lg-3 control-label">Dark Logo</label>
+									<label class="col-lg-3 control-label"><?php lang('dark_logo'); ?></label>
 									<div class="col-lg-5">
 										<input class="form-control" type="file">
 										<span class="help-block">Recommended image size is 140px x 40px</span>
@@ -33,7 +33,7 @@
 									</div>
 								</div>
 								<div class="form-group">
-									<label class="col-lg-3 control-label">Favicon</label>
+									<label class="col-lg-3 control-label"><?php lang('favicon'); ?></label>
 									<div class="col-lg-5">
 										<input class="form-control" type="file">
 										<span class="help-block">Recommended image size is 16px x 16px</span>

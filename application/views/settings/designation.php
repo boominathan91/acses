@@ -4,10 +4,10 @@
                 <div class="content container-fluid">
 					<div class="row">
 						<div class="col-sm-8">
-							<h4 class="page-title">Designations</h4>
+							<h4 class="page-title"><?php lang('designations'); ?></h4>
 						</div>
 						<div class="col-sm-4 text-right m-b-30">
-							<a href="#" class="btn btn-primary rounded" data-toggle="modal" data-target="#add_designation"><i class="fa fa-plus"></i> Add New Designation</a>
+							<a href="#" class="btn btn-primary rounded" data-toggle="modal" data-target="#add_designation"><i class="fa fa-plus"></i> <?php lang('add_new_designation') ?></a>
 						</div>
 					</div>
 					<div class="row">
@@ -17,9 +17,9 @@
 									<thead>
 										<tr>
 											<th>#</th>
-											<th>Designation </th>
-											<th>Department </th>
-											<th class="text-right">Action</th>
+											<th><?php lang('designation'); ?></th>
+											<th><?php lang('department'); ?></th>
+											<th class="text-right"><?php lang('action'); ?></th>
 										</tr>
 									</thead>
 									<tbody>

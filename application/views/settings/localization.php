@@ -5,11 +5,11 @@
 					<div class="row">
 						<div class="col-md-8 col-md-offset-2">
 							<form>
-								<h3 class="page-title">Basic Settings</h3>
+								<h3 class="page-title"><?php lang('basic_settings'); ?></h3>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Default Country</label>
+											<label><?php lang('default_country'); ?></label>
 											<select class="select">
 												<option selected="selected">USA</option>
 												<option>United Kingdom</option>
@@ -18,7 +18,7 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Date Format</label>
+											<label><?php lang('date_format'); ?></label>
 											<select class="select">
 												<option value="d/m/Y">15/05/2016</option>
 												<option value="d.m.Y">15.05.2016</option>
@@ -33,7 +33,7 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Timezone</label>
+											<label><?php lang('time_zone') ?></label>
 											<select class="select">
 												<option>(UTC +5:30) Antarctica/Palmer</option>
 											</select>
@@ -41,7 +41,7 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Default Language</label>
+											<label><?php lang('default_language') ?></label>
 											<select class="select">
 												<option selected="selected">English</option>
 												<option>French</option>
@@ -50,7 +50,7 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Currency Code</label>
+											<label><?php lang('currency_code') ?></label>
 											<select class="select">
 												<option selected="selected">USD</option>
 												<option>Pound</option>
@@ -61,13 +61,13 @@
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Currency Symbol</label>
+											<label><?php lang('currency_symbol') ?></label>
 											<input class="form-control" readonly value="$" type="text">
 										</div>
 									</div>
 									<div class="row">
 										<div class="col-sm-12 text-center m-t-20">
-											<button type="button" class="btn btn-primary">Save &amp; Update</button>
+											<button type="button" class="btn btn-primary"><?php lang('save_update') ?></button>
 										</div>
 									</div>
 								</div>

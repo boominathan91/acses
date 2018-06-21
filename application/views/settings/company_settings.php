@@ -5,17 +5,17 @@
 					<div class="row">
 						<div class="col-md-8 col-md-offset-2">
 							<form>
-								<h3 class="page-title">Company Details</h3>
+								<h3 class="page-title"><?php lang('company_details'); ?></h3>
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Company Name <span class="text-danger">*</span></label>
+											<label><?php lang('company_name'); ?><span class="text-danger">*</span></label>
 											<input class="form-control" type="text" value="Focus Technologies">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Contact Person</label>
+											<label><?php lang('contact_person'); ?></label>
 											<input class="form-control " value="Daniel Porter" type="text">
 										</div>
 									</div>
@@ -23,13 +23,13 @@
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="form-group">
-											<label>Address</label>
+											<label><?php lang('address'); ?></label>
 											<input class="form-control " value="3864 Quiet Valley Lane, Sherman Oaks, CA, 91403" type="text">
 										</div>
 									</div>
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
-											<label>Country</label>
+											<label><?php lang('country'); ?></label>
 											<select class="form-control select">
 												<option>USA</option>
 												<option>United Kingdom</option>
@@ -38,13 +38,13 @@
 									</div>
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
-											<label>City</label>
+											<label><?php lang('city'); ?></label>
 											<input class="form-control" value="Sherman Oaks" type="text">
 										</div>
 									</div>
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
-											<label>State/Province</label>
+											<label><?php lang('state_province'); ?></label>
 											<select class="form-control select">
 												<option>California</option>
 												<option>Alaska</option>
@@ -54,7 +54,7 @@
 									</div>
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
-											<label>Postal Code</label>
+											<label><?php lang('postal_code'); ?></label>
 											<input class="form-control" value="91403" type="text">
 										</div>
 									</div>
@@ -62,13 +62,13 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Email</label>
+											<label><?php lang('email'); ?></label>
 											<input class="form-control" value="danielporter@example.com" type="email">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Phone Number</label>
+											<label><?php lang('phone_number'); ?></label>
 											<input class="form-control" value="818-978-7102" type="text">
 										</div>
 									</div>
@@ -76,13 +76,13 @@
 								<div class="row">
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Mobile Number</label>
+											<label><?php lang('mobile_number'); ?></label>
 											<input class="form-control" value="818-635-5579" type="text">
 										</div>
 									</div>
 									<div class="col-sm-6">
 										<div class="form-group">
-											<label>Fax</label>
+											<label><?php lang('fax'); ?></label>
 											<input class="form-control" value="818-978-7102" type="text">
 										</div>
 									</div>
@@ -90,14 +90,14 @@
 								<div class="row">
 									<div class="col-sm-12">
 										<div class="form-group">
-											<label>Website Url</label>
+											<label><?php lang('website_url'); ?></label>
 											<input class="form-control" value="https://www.example.com" type="text">
 										</div>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-sm-12 text-center m-t-20">
-										<button type="button" class="btn btn-primary">Save &amp; update</button>
+										<button type="button" class="btn btn-primary"><?php lang('save_update') ?></button>
 									</div>
 								</div>
 							</form>
