@@ -57,7 +57,7 @@ $route['forgot_password'] = 'login/forgot_password';
 /*Settings Module*/
 $route['company-settings'] = 'settings/company_settings';
 $route['localization-settings'] = 'settings/localization_settings';
-$route['theme-settings'] = 'settings/localization_settings';
+$route['theme-settings'] = 'settings/theme_settings';
 $route['change-password'] = 'settings/change_password';
 $route['department-settings'] = 'settings/department';
 $route['designation-settings'] = 'settings/designation';
