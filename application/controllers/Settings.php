@@ -10,32 +10,32 @@ class Settings extends CI_Controller {
 	public function company_settings()
 	{
 		$data['title'] = 'Company Settings';		
-		render_page('company_settings',$data);
+		render_page('settings/company_settings',$data);
 	}
 	public function localization_settings()
 	{
 		$data['title'] = 'Localization';		
-		render_page('localization',$data);
+		render_page('settings/localization',$data);
 	}
 	public function theme_settings()
 	{
 		$data['title'] = 'Theme Settings';		
-		render_page('theme_settings',$data);
+		render_page('settings/theme_settings',$data);
 	}
 	public function change_password()
 	{
 		$data['title'] = 'Change Password';		
-		render_page('change_password',$data);
+		render_page('settings/change_password',$data);
 	}
 	public function department()
 	{
 		$data['title'] = 'Department Settings';		
-		render_page('department',$data);
+		render_page('settings/department',$data);
 	}
 	public function designation()
 	{
 		$data['title'] = 'Designation Settings';		
-		render_page('designation',$data);
+		render_page('settings/designation',$data);
 	}
 
 }
