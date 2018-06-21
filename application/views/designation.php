@@ -239,6 +239,51 @@
 						</div>
 					</div>
                 </div>
+                <!-- Popup -->
+                <div id="add_designation" class="modal custom-modal fade" role="dialog">
+				<div class="modal-dialog">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div class="modal-content modal-md">
+						<div class="modal-header">
+							<h4 class="modal-title">Add Designation</h4>
+						</div>
+						<div class="modal-body">
+							<form>
+								<div class="form-group">
+									<label>Designation Name <span class="text-danger">*</span></label>
+									<input class="form-control" required="" type="text">
+								</div>
+								<div class="m-t-20 text-center">
+									<button class="btn btn-primary">Create Designation</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="edit_designation" class="modal custom-modal fade" role="dialog">
+				<div class="modal-dialog">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<div class="modal-content modal-md">
+						<div class="modal-header">
+							<h4 class="modal-title">Edit Designation</h4>
+						</div>
+						<div class="modal-body">
+							<form>
+								<div class="form-group">
+									<label>Designation Name <span class="text-danger">*</span></label>
+									<input class="form-control" value="Web Developer" type="text">
+								</div>
+								<div class="m-t-20 text-center">
+									<button class="btn btn-primary">Edit Designation</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
+                <!-- Popup -->
 				<?php $this->load->view('notifications'); ?>
 			</div>
         </div>

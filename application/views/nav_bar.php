@@ -95,7 +95,7 @@
 							<li><a href="#">My Profile</a></li>
 							<li><a href="#">Edit Profile</a></li>
 							<li><a href="#">Settings</a></li>
-							<li><a href="#">Logout</a></li>
+							<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
 						</ul>
 					</li>
 				</ul>
@@ -105,7 +105,7 @@
 						<li><a href="#">My Profile</a></li>
 						<li><a href="#">Edit Profile</a></li>
 						<li><a href="#">Settings</a></li>
-						<li><a href="#">Logout</a></li>
+						<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
 					</ul>
 				</div>
             </div>
@@ -113,30 +113,44 @@
             <div class="sidebar" id="sidebar">
                 <div class="sidebar-inner slimscroll">
 					<div class="sidebar-menu">
+						<?php $uri = $this->uri->segment(1); ?>
 						<ul>
-							<li> 
-								<a href="#"><i class="fa fa-home"></i> Back to Home</a>
+							<?php
+							 /*Main Menu starts */
+							  if($uri == 'employees'){ ?>
 
+								<li <?php if($uri == 'employees'){ echo 'class="active"'; } ?> > 
+									<a href="<?php  echo base_url(); ?>employees">Employees</a>
+								</li>
+								<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
+							<?php } /*Main Menu ends*/ 
+							else{ /* Settings Menu starts */ ?>
+							<li> 
+								<a href="<?php echo base_url(); ?>employees"><i class="fa fa-home"></i> Back to Home</a>
 							</li>
 							<li class="menu-title">Settings</li>
-							<li <?php if($this->uri->segment(1) == 'company-settings'){ echo 'class="active"'; } ?> > 
+							<li <?php if($uri == 'company-settings'){ echo 'class="active"'; } ?> > 
 								<a href="<?php echo base_url(); ?>company-settings">Company Settings</a>
 							</li>
-							<li <?php if($this->uri->segment(1) == 'localization-settings'){ echo 'class="active"'; } ?>> 
+							<li <?php if($uri == 'localization-settings'){ echo 'class="active"'; } ?>> 
 								<a href="<?php echo base_url(); ?>localization-settings">Localization</a>
 							</li>
-							<li <?php if($this->uri->segment(1) == 'theme-settings'){ echo 'class="active"'; } ?>> 
+							<li <?php if($uri == 'theme-settings'){ echo 'class="active"'; } ?>> 
 								<a href="<?php echo base_url(); ?>theme-settings">Theme Settings</a>
 							</li>
-							<li <?php if($this->uri->segment(1) == 'change-password'){ echo 'class="active"'; } ?>> 
+							<li <?php if($uri == 'change-password'){ echo 'class="active"'; } ?>> 
 								<a href="<?php echo base_url(); ?>change-password">Change Password</a>
 							</li>							
-							<li <?php if($this->uri->segment(1) == 'department-settings'){ echo 'class="active"'; } ?>> 
+							<li <?php if($uri == 'department-settings'){ echo 'class="active"'; } ?>> 
 								<a href="<?php echo base_url(); ?>department-settings">Departments</a>
 							</li>	
-							<li <?php if($this->uri->segment(1) == 'designation-settings'){ echo 'class="active"'; } ?>> 
+							<li <?php if($uri == 'designation-settings'){ echo 'class="active"'; } ?>> 
 								<a href="<?php echo base_url(); ?>designation-settings">Designations</a>
-							</li>							
+							</li>	
+							<?php 
+									} /* Settings Menu ends */
+
+							?>						
 						</ul>
 					</div>
                 </div>
