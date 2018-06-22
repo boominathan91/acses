@@ -26,7 +26,7 @@ if(!function_exists('lang')){
 	function lang($data=null){
 		$CI = &get_instance();
 
-		/* Hiddable  */ 
+		/* Hidable  */ 
 
 		$default_lang = $CI->session->userdata('default_lang');	
 
@@ -43,7 +43,7 @@ if(!function_exists('lang')){
 		->result_array();
 		$CI->session->set_userdata(array('session_data'=>$output));	
 
-		/* Hiddable  ends */
+		/* Hidable  ends */
 
 		$datas = $CI->session->userdata('session_data');
 		foreach ( $datas as $key => $val) {

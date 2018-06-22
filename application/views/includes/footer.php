@@ -14,7 +14,8 @@
 		</script>
 		<?php 
 		$uri = $this->uri->segment(1);
-		if($uri == 'department-settings' || $uri == 'designation-settings' || $uri ='employees'){ ?>
+
+		if($uri == 'department-settings' || $uri == 'designation-settings' || $uri =='employees'){ ?>
 		<!-- 	CSS   -->
 		<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/dataTables.bootstrap.min.css">
 
@@ -25,15 +26,22 @@
 		<?php } ?>
 
 		<!-- Employees  -->
-		<?php if($uri = 'employees'){ ?>
+		<?php if($uri == 'employees'){ ?>
 			<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
 			<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.min.js"></script>
 			<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/employees.js"></script>
 		<?php } ?>
 
 		<!-- Company Settings  -->
-		<?php if($uri = 'company-settings'){ ?>
+		<?php if($uri == 'company-settings'){ ?>
 		<script src="<?php echo base_url(); ?>assets/js/company.js"></script>
 		<?php } ?>
+
+		<!-- Localization Settings  -->
+		<?php  if($uri == 'localization-settings'){ ?>
+		<script src="<?php echo base_url(); ?>assets/js/localization.js"></script>
+		<?php } ?>
+
+
     </body>
 </html>

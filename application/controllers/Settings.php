@@ -67,9 +67,7 @@ class Settings extends CI_Controller {
 				$result['city'] = $this->get_cities_by_id($data->state_id);	
 			}
 		}
-
 		echo json($result);
-
 	}
 
 
@@ -148,11 +146,55 @@ class Settings extends CI_Controller {
 	}
 
 	/*Company Settings ends  */
+
+	/*Localization Settings */
 	public function localization_settings()
 	{
 		$data['title'] = 'Localization';		
 		render_page('settings/localization',$data);
 	}
+	public function insert_localization_settings(){
+		$data = array(
+			'country_id' => $_POST['country_id'],
+			'date_format' => $_POST['date_format'],
+			'time_zone' => $_POST['time_zone'],
+			'default_language' => $_POST['default_language']
+		);
+		$result_data = $this->get_localization_settings_row(); /* Checking old Company settings */
+		if(count($result_data) == 0){  /*Insert New Settings */
+			$result = $this->settings->insert_localization_settings($data);		
+		}else{ /*Update  New Settings */
+			$where = array('local_id' => $result_data->local_id);
+			$result = $this->settings->update_localization_settings($data,$where);		
+		}
+		echo json(array('local_id'=>$result));
+	}
+
+	public function get_localization_settings(){
+		$data = $this->get_localization_settings_row();
+		$result = array();
+		$result['country']	 = $this->get_all_countries();
+		if(!empty($data)){
+			$result['country_id'] = $data->country_id;
+			$result['date_format'] = $data->date_format;
+			$result['time_zone'] = $data->time_zone;
+			$result['default_language'] = $data->default_language;		
+		}
+		echo json($result);
+	}
+
+
+	/*Get last company settings*/
+	public function get_localization_settings_row(){		
+		return $this->settings->get_localization_settings_row();
+	}
+
+	/*Localization Settings ends*/
+
+
+
+
+
 	public function theme_settings()
 	{
 		$data['title'] = 'Theme Settings';		

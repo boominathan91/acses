@@ -27,8 +27,6 @@ class Settings_model extends CI_Model {
 		$where =array('state_id' => $state_id);
 		return get_where('city_details',$where);
 	}
-
-
 	public function insert_company_settings($data){		
 		return insert('company_details',$data);					
 	}
@@ -36,9 +34,20 @@ class Settings_model extends CI_Model {
 		$this->db->update('company_details',$data,$where);		
 		return $where['company_id'];			
 	}
+	public function insert_localization_settings($data){		
+		return insert('localization_details',$data);					
+	}
+	public function update_localization_settings($data,$where){		
+		$this->db->update('localization_details',$data,$where);		
+		return $where['local_id'];			
+	}
 	public function get_company_settings_row(){
 		$where = array('status' => 1 );
 		return $this->db->order_by('company_id','desc')->get_where('company_details',$where)->row();
+	}	
+	public function get_localization_settings_row(){
+		$where = array('status' => 1 );
+		return $this->db->order_by('local_id','desc')->get_where('localization_details',$where)->row();
 	}	
 }
 

@@ -1,24 +1,7 @@
 	
 $('input').attr('autocomplete','off');
 
-	// 	/*Getting country details */
-	// $.ajax({
-	// 	type: 'GET',
-	// 	url: base_url+'settings/get_company_settings',        
-	// 	beforeSend :function(){
-	// 		$('#country').find("option:eq(0)").html("Please wait..");			
-	// 	},                         
-	// 	success: function (data) {
-	// 		$('#country').find("option:eq(0)").html("Select Country");
-	// 		var obj=jQuery.parseJSON(data);
-	// 		$(obj).each(function(){
-	// 			var option = $('<option />');
-	// 			option.attr('value', this.value).text(this.label);           
-	// 			$('#country').append(option);
-	// 		});            
-	// 	}
-	// });
-
+	
 	/*Getting company  details */
 	$.ajax({
 		type: 'GET',
