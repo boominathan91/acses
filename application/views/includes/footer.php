@@ -4,6 +4,14 @@
         <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/jquery.slimscroll.js"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/select2.min.js"></script>
 		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/app.js"></script>
+		<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/notify.js"></script>
+		
+
+		<script type="text/javascript">
+			var base_url = '<?php echo base_url(); ?>';	
+
+
+		</script>
 		<?php 
 		$uri = $this->uri->segment(1);
 		if($uri == 'department-settings' || $uri == 'designation-settings' || $uri ='employees'){ ?>
@@ -23,5 +31,9 @@
 			<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/employees.js"></script>
 		<?php } ?>
 
+		<!-- Company Settings  -->
+		<?php if($uri = 'company-settings'){ ?>
+		<script src="<?php echo base_url(); ?>assets/js/company.js"></script>
+		<?php } ?>
     </body>
 </html>
