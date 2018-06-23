@@ -38,5 +38,9 @@
 			<!-- Theme Settings  -->
 		<script src="<?php echo base_url(); ?>assets/js/theme.js"></script>
 		<?php } ?>
+		<?php  if($uri == 'department-settings'){ ?>
+			<!-- Department Settings  -->
+		<script src="<?php echo base_url(); ?>assets/js/department.js"></script>
+		<?php } ?>
     </body>
 </html>

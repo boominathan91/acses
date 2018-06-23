@@ -60,6 +60,74 @@ class Settings_model extends CI_Model {
 		$this->db->update('theme_details',$data,$where);		
 		return $where['theme_id'];			
 	}
+	public function check_department_settings_by_id(){
+		$where = array('status' => 1 ,'department_name' => $_POST['department_name']);
+		if(!empty($_POST['department_id'])){
+			$where +=array('department_id !=' => $_POST['department_id']);
+		}
+		return $this->db->get_where('department_details',$where)->row();
+	}
+	public function get_department_settings_by_id(){
+	
+		$where =array('department_id' => $_POST['department_id']);	
+		return $this->db->get_where('department_details',$where)->row()->department_name;
+	}
+	public function insert_department_settings($data){		
+		return insert('department_details',$data);					
+	}
+	public function update_department_settings($data,$where){		
+		$this->db->update('department_details',$data,$where);		
+		return $where['department_id'];			
+	}
+
+	private function _get_datatables_query()
+	{
+		$columns = array('department_id','department_name');
+		$search_value = trim($_POST['search']['value']);
+		$sql ="SELECT * FROM department_details  WHERE status = 1  ";
+			if($_POST['search']['value']){ 
+				$sql .=" AND (	department_name LIKE '%$search_value%' ) ";		
+			} 				
+		if(isset($_POST['order'])) {			
+			$orde = $columns[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'];
+			$sql .=" ORDER BY $orde";
+		}else if(isset($this->orders)){
+			$orders = $this->orders;	
+			$orde = key($orders).' '.$orders[key($orders)];	
+			$sql .=" ORDER BY $orde";
+		}
+		return $sql;
+	}
+	public function get_all_departments()
+	{
+		$sql = $this->_get_datatables_query();			
+		if($_POST['length'] != -1)
+			$limits = $_POST['start'].','.$_POST['length'];
+		$sql .=" LIMIT $limits"; 		
+		return $this->db->query($sql)->result();	
+	}	
+	public function count_filtered()
+	{
+		$sql = $this->_get_datatables_query();	
+		return $this->db->query($sql)->num_rows();		
+	}
+	public function count_all()
+	{
+		$sql = $this->_get_datatables_query();			
+		return $this->db->query($sql)->num_rows();
+	}
+
+	public function delete_department(){
+		$where = array('department_id'=> $_POST['department_id']);
+		$data = array('status' => 0);
+		return $this->db->update('department_details',$data,$where);
+	}
+	public function get_departments(){
+		$where = array('status' => 1);
+		return $this->db->order_by('department_name','asc')->get_where('department_details',$where)->result();
+	}
+
+
 
 }
 

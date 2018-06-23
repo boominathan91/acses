@@ -7,13 +7,13 @@
 						<h4 class="page-title"><?php lang('department'); ?></h4>
 					</div>
 					<div class="col-sm-4 text-right m-b-30">
-						<a href="#" class="btn btn-primary rounded" data-toggle="modal" data-target="#add_department"><i class="fa fa-plus"></i> <?php lang('add_new_department'); ?></a>
+						<a href="#" class="btn btn-primary rounded" data-toggle="modal" data-target="#add_department" onclick="show_modal(0)"><i class="fa fa-plus"></i> <?php lang('add_new_department'); ?></a>
 					</div>
 				</div>
 				<div class="row">
 					<div class="col-md-12">
 						<div>
-							<table class="table table-striped custom-table m-b-0 datatable">
+							<table class="table table-striped custom-table m-b-0 datatable" id="department_table">
 								<thead>
 									<tr>
 										<th>#</th>
@@ -21,86 +21,7 @@
 										<th class="text-right"><?php lang('action'); ?></th>
 									</tr>
 								</thead>
-								<tbody>
-									<tr>
-										<td>1</td>
-										<td>Web Development</td>
-										<td class="text-right">
-											<div class="dropdown">
-												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu pull-right">
-													<li><a href="#" data-toggle="modal" data-target="#edit_department" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-													<li><a href="#" data-toggle="modal" data-target="#delete_department" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>2</td>
-										<td>Application Development</td>
-										<td class="text-right">
-											<div class="dropdown">
-												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu pull-right">
-													<li><a href="#" data-toggle="modal" data-target="#edit_department" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-													<li><a href="#" data-toggle="modal" data-target="#delete_department" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>3</td>
-										<td>IT Management</td>
-										<td class="text-right">
-											<div class="dropdown">
-												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu pull-right">
-													<li><a href="#" data-toggle="modal" data-target="#edit_department" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-													<li><a href="#" data-toggle="modal" data-target="#delete_department" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>4</td>
-										<td>Accounts Management</td>
-										<td class="text-right">
-											<div class="dropdown">
-												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu pull-right">
-													<li><a href="#" data-toggle="modal" data-target="#edit_department" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-													<li><a href="#" data-toggle="modal" data-target="#delete_department" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>5</td>
-										<td>Support Management</td>
-										<td class="text-right">
-											<div class="dropdown">
-												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu pull-right">
-													<li><a href="#" data-toggle="modal" data-target="#edit_department" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-													<li><a href="#" data-toggle="modal" data-target="#delete_department" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-									<tr>
-										<td>6</td>
-										<td>Marketing</td>
-										<td class="text-right">
-											<div class="dropdown">
-												<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-												<ul class="dropdown-menu pull-right">
-													<li><a href="#" data-toggle="modal" data-target="#edit_department" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-													<li><a href="#" data-toggle="modal" data-target="#delete_department" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-												</ul>
-											</div>
-										</td>
-									</tr>
-								</tbody>
+								<tbody></tbody>								
 							</table>
 						</div>
 					</div>
@@ -108,48 +29,45 @@
 			</div>
 
 			<!-- Popup --> 
+			<div id="delete_department" class="modal custom-modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content modal-md">
+						<div class="modal-header">
+							<h4 class="modal-title">Delete Department</h4>
+						</div>
+						<div class="modal-body card-box">
+							<p>Are you sure want to delete this?</p>
+							<div class="m-t-20 text-left">
+								<a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
+								<button type="button" class="btn btn-danger" onclick="delete_department()">Delete</button>
+								<input type="hidden" name="department_id" id="department_hidden_id">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 			<div id="add_department" class="modal custom-modal fade" role="dialog">
 				<div class="modal-dialog">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<div class="modal-content modal-md">
 						<div class="modal-header">
-							<h4 class="modal-title">Add Department</h4>
+							<h4 class="modal-title"></h4>
 						</div>
 						<div class="modal-body">
-							<form>
+							<form method="post" id="department_form">
 								<div class="form-group">
-									<label>Department Name <span class="text-danger">*</span></label>
-									<input class="form-control" required="" type="text">
+									<label><?php lang('department_name'); ?><span class="text-danger">*</span></label>
+									<input class="form-control"  name="department_name" id="department_name" type="text">
+									<input type="hidden" class="form-control"  name="department_id" id="department_id" >
 								</div>
 								<div class="m-t-20 text-center">
-									<button class="btn btn-primary">Create Department</button>
+									<button class="btn btn-primary" type="submit" > <?php lang('save_new_department'); ?></button>
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div id="edit_department" class="modal custom-modal fade" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content modal-md">
-						<div class="modal-header">
-							<h4 class="modal-title">Edit Department</h4>
-						</div>
-						<div class="modal-body">
-							<form>
-								<div class="form-group">
-									<label>Department Name <span class="text-danger">*</span></label>
-									<input class="form-control" value="IT Management" type="text">
-								</div>
-								<div class="m-t-20 text-center">
-									<button class="btn btn-primary">Save Changes</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
+			</div>			
         </div>
         <!-- Popup --> 
 				<!-- Notifications -->

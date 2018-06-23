@@ -235,7 +235,7 @@ class Settings extends CI_Controller {
 		$this->insert_theme_settings($result,$data[0]);
 	}
 
-/*Theme settings ends */	
+	/*Theme settings ends */	
 
 	public function change_password()
 	{
@@ -247,9 +247,75 @@ class Settings extends CI_Controller {
 		$data['title'] = 'Department Settings';		
 		render_page('settings/department',$data);
 	}
+	public function insert_department_settings(){
+		$data = array('department_name' => trim($_POST['department_name']));
+		$result_data = $this->check_department_settings_by_id(); /* Checking old department settings */
+		
+		if(count($result_data) == 0){
+
+			if(empty($_POST['department_id'])){  /*Insert New Settings */
+				$result = $this->settings->insert_department_settings($data);		
+			}else{ /*Update  New Settings */
+				$where = array('department_id' => $_POST['department_id']);
+				$result = $this->settings->update_department_settings($data,$where);		
+			}
+			$response = array('department_id' => $result);
+		}else{
+			$response = array('error' =>'Department name already exist!');
+		}
+		
+
+		echo json($response);
+	}
+	public function delete_department(){
+		echo  $this->settings->delete_department();
+	}
+
+
+
+	/*Check department settings*/
+	public function check_department_settings_by_id(){		
+
+		return $this->settings->check_department_settings_by_id();
+	}
+	/*get department settings*/
+	public function get_department_settings_by_id(){		
+
+		echo $this->settings->get_department_settings_by_id();
+	}
+	public function get_all_departments(){		
+
+		$list = $this->settings->get_all_departments();
+		$data = array();
+		$no = $_POST['start'];
+		$i = 1;
+		foreach ($list as $g) {
+			$row = array(); 
+			$row[] = $i++;  
+			$row[] = $g->department_name;  
+			$row[] = '<div class="dropdown">
+			<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+			<ul class="dropdown-menu pull-right">
+			<li><a href="#"  data-toggle="modal" data-target="#add_department" title="Edit" onclick="show_modal('.$g->department_id.')"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+			<li><a href="#"   data-toggle="modal" data-target="#delete_department"  title="Delete" onclick="show_delete_modal('.$g->department_id.')"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+			</ul>
+			</div>';  
+			$data[] = $row;
+		}
+		$output = array(
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->settings->count_all(),
+			"recordsFiltered" => $this->settings->count_filtered(),
+			"data" => $data,
+		);
+                //output to json format
+		echo json_encode($output);
+	}	
+
 	public function designation()
 	{
-		$data['title'] = 'Designation Settings';		
+		$data['title'] = 'Designation Settings';
+		$data['department'] = $this->settings->get_departments();		
 		render_page('settings/designation',$data);
 	}
 
