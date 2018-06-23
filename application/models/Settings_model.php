@@ -49,6 +49,18 @@ class Settings_model extends CI_Model {
 		$where = array('status' => 1 );
 		return $this->db->order_by('local_id','desc')->get_where('localization_details',$where)->row();
 	}	
+	public function get_theme_settings_row(){
+		$where = array('status' => 1 );
+		return $this->db->order_by('theme_id','desc')->get_where('theme_details',$where)->row();
+	}	
+	public function insert_theme_settings($data){		
+		return insert('theme_details',$data);					
+	}
+	public function update_theme_settings($data,$where){		
+		$this->db->update('theme_details',$data,$where);		
+		return $where['theme_id'];			
+	}
+
 }
 
 /* End of file  */

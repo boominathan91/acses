@@ -184,7 +184,7 @@ class Settings extends CI_Controller {
 	}
 
 
-	/*Get last company settings*/
+	/*Get last localization settings*/
 	public function get_localization_settings_row(){		
 		return $this->settings->get_localization_settings_row();
 	}
@@ -193,13 +193,50 @@ class Settings extends CI_Controller {
 
 
 
-
+	/*Theme settings*/
 
 	public function theme_settings()
 	{
 		$data['title'] = 'Theme Settings';		
+		$data['theme'] = $this->get_theme_settings_row();
 		render_page('settings/theme_settings',$data);
 	}
+
+	/*Get last theme settings*/
+	public function get_theme_settings_row(){		
+		return $this->settings->get_theme_settings_row();
+	}
+
+	public function insert_theme_settings($data=null,$field_name=null){
+		if($data == null){
+			$data = array('website_name' => $_POST['website_name']);
+			$field_name = 'website_name';
+		}
+
+		$result_data = $this->get_theme_settings_row(); /* Checking old Company settings */
+		if(count($result_data) == 0){  /*Insert New Settings */
+			$result = $this->settings->insert_theme_settings($data);		
+		}else{ /*Update  New Settings */
+			$where = array('theme_id' => $result_data->theme_id);
+			$result = $this->settings->update_theme_settings($data,$where);		
+		}
+		echo json(array('file_name' => $data[$field_name] ,'field_name' => $field_name));
+	}
+
+	public function upload_image(){					
+		$data = array_keys($_FILES);
+		$field_name = $data[0];			
+		$config['upload_path'] = './uploads/';
+		$config['allowed_types'] = 'gif|jpg|png|jpeg';				
+		$this->load->library('upload', $config);
+		$this->upload->do_upload($field_name);
+		$file = $this->upload->data();
+		$result = array($data[0] => $file['file_name']);
+		$this->insert_theme_settings($result,$data[0]);
+	}
+
+/*Theme settings ends */	
+
 	public function change_password()
 	{
 		$data['title'] = 'Change Password';		

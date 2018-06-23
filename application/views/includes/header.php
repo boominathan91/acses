@@ -21,8 +21,8 @@
         <!-- Notification -->
         <div class="notification-popup success hide">
             <p>
-                <span class="task">Appointment booking with payment gateway</span>
-                <span class="notification-text"> marked as complete.</span>
+                <span class="task"></span>
+                <span class="notification-text"></span>
             </p>
         </div>
 

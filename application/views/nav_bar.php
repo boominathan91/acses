@@ -1,3 +1,4 @@
+ <?php   $result = $this->db->get_where('theme_details',array('status'=>1))->row_array();   ?>
  <div class="header">
                 <div class="header-left">
                     <a href="#" class="logo">
@@ -5,7 +6,7 @@
 					</a>
                 </div>
                 <div class="page-title-box pull-left">
-					<h3>Focus Technologies</h3>
+					<h3 class="website_name"><?php echo (!empty($result['website_name']))?$result['website_name']:'Focus Technologies'; ?></h3>
                 </div>
 				<a id="mobile_btn" class="mobile_btn pull-left" href="#sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a>
 				<ul class="nav navbar-nav navbar-right user-menu pull-right">
