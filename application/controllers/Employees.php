@@ -6,6 +6,7 @@ class Employees extends CI_Controller {
 	{
 		parent::__construct();
 		if(!$this->session->userdata('login_id')){
+			$this->session->set_flashdata('msg','Please login to continue !');
 			redirect('login');
 		}
 	}

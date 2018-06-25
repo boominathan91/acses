@@ -672,6 +672,41 @@ transform-origin: left top;transition: 240ms;left: 12px;top: -8px;z-index: 1;col
 .view-icons .btn {color: #888;font-size: 18px;margin-right: 5px;padding: 4px;}
 .view-icons .btn.active {color:#333;}
 
+/* List View */
+
+.div-table{display: table;width:100%;border-collapse: collapse;border-spacing: 0;background-color: transparent;margin-bottom: 20px;max-width: 100%;width: 100%;color: #000;}
+.div-heading {display: table-row;font-weight: bold;}
+.div-row {display: table-row;}
+.div-cell{display: table-cell;border-top:1px solid #ddd;padding: 10px 8px;vertical-align: middle;}
+.div-heading .div-cell {padding: 10px 8px;vertical-align: middle;border-bottom: 2px solid #ddd;}
+.user_det_list h2 {display: inline-block;font-size: inherit;font-weight: 400;margin: 0;padding: 0;vertical-align: middle;}
+.user_det_list h2 a {color: #757575;}
+.user_det_list h2 a:hover {color: #ff9b44;}
+.user_det_list h2 span.userrole-info {color: #9e9e9e;display: block;font-size: 12px;margin-top: 3px;}
+.user_det_list .avatar {margin: 0 5px 0 0;}
+.div-row {background-color: #fff;box-shadow: 0 0 3px #e5e5e5;}
+.div-row:nth-of-type(2n+1) {background-color: #f6f6f6;}
+.div-heading {background-color: #fff;box-shadow: 0 0 3px #e5e5e5;}
+.div-heading .div-cell p {font-weight:normal;}
+.div-cell p {margin:0;font-weight:300;}
+
+
+/* Grid View */
+
+.grid-view .div-heading {display:none;}
+.grid-view .user-identity {display:none;}
+.grid-view .user-mail-info, .grid-view .create-date-info, .grid-view .user-role-info {display:none;}
+.grid-view .number-info {display:none;}
+.grid-view.div-table {display: inherit;margin: 0 -15px;max-width: inherit;width: inherit;}
+.grid-view .div-row {background-color: transparent;box-shadow: inherit;display: block;float: left;margin-bottom: 30px;padding: 0 15px;position: relative;text-align: center;width: 25%;}
+.grid-view .div-cell.user-cell {background: #fff none repeat scroll 0 0;border: 1px solid #ededed;border-radius: 4px;box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.2);display: block;padding: 20px;}
+.grid-view .user_det_list h2 {display:block;}
+.grid-view .user_det_list .avatar {font-size: 24px;height: 80px;line-height: 80px;margin: 0;width: 80px;}
+.grid-view .username-info {color: #333;display: block;max-width: 100%;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;font-size: 18px;margin-top: 10px;}
+.grid-view .div-cell.user-action-info {border: 0 none;display: inline-block;position: absolute;right: 15px;top: 0;}
+.grid-view.div-table::after {clear: both;}
+.grid-view.div-table::after, .grid-view.div-table::before {content: " ";display: table;}
+
 /*------------------------------------------------------------------
 [20. Events]
 */

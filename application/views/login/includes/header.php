@@ -24,5 +24,18 @@
         </div>
 
         <!-- Notification -->
+        <?php 
+            $msg = $this->session->flashdata('msg');
+        if(!empty($msg)){ ?>
+        <!-- Notification -->
+        <div class="notification-popup error">
+            <p>
+                <span class="task">Warning !</span>
+                <span class="notification-text"><?php echo $msg; ?></span>
+            </p>
+        </div>
+    <?php } ?>
+
+        <!-- Notification -->
         
        
