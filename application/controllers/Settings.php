@@ -271,7 +271,7 @@ class Settings extends CI_Controller {
 		echo  $this->settings->delete_department();
 	}
 
-
+	
 
 	/*Check department settings*/
 	public function check_department_settings_by_id(){		
@@ -317,6 +317,73 @@ class Settings extends CI_Controller {
 		$data['title'] = 'Designation Settings';
 		$data['department'] = $this->settings->get_departments();		
 		render_page('settings/designation',$data);
+	}
+	public function insert_designation_settings(){
+	$data = array(
+			'status' => 1 ,
+			'department_id' => $_POST['department_id'],
+			'designation_name' => $_POST['designation_name']
+		);
+		$result_data = $this->check_designation_settings_by_id($data); /* Checking old designation settings */
+		
+		if(count($result_data) == 0){
+
+			if(empty($_POST['designation_id'])){  /*Insert New Settings */
+				$result = $this->settings->insert_designation_settings($data);		
+			}else{ /*Update  New Settings */
+				$where = array('designation_id' => $_POST['designation_id']);
+				$result = $this->settings->update_designation_settings($data,$where);		
+			}
+			$response = array('designation_id' => $result);
+		}else{
+			$response = array('error' =>'Designation name already exist in this deparment!');
+		}		
+
+		echo json($response);
+	}
+	public function check_designation_settings_by_id($data){
+		return $this->settings->check_designation_settings_by_id($data);
+	}
+	
+	public function get_all_designations(){		
+
+		$list = $this->settings->get_all_designations();
+		$data = array();
+		$no = $_POST['start'];
+		$i = 1;
+		foreach ($list as $g) {
+			$row = array(); 
+			$row[] = $i++;  
+			$row[] = $g->designation_name;  
+			$row[] = $g->department_name;  
+			$row[] = '<div class="dropdown">
+			<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+			<ul class="dropdown-menu pull-right">
+			<li><a href="#"  data-toggle="modal" data-target="#add_designation" title="Edit" onclick="show_modal('.$g->designation_id.')"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
+			<li><a href="#"   data-toggle="modal" data-target="#delete_designation"  title="Delete" onclick="show_delete_modal('.$g->designation_id.')"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
+			</ul>
+			</div>';  
+			$data[] = $row;
+		}
+		$output = array(
+			"draw" => $_POST['draw'],
+			"recordsTotal" => $this->settings->count_all_design(),
+			"recordsFiltered" => $this->settings->count_filtered_design(),
+			"data" => $data,
+		);
+                //output to json format
+		echo json_encode($output);
+	}	
+
+	/*get designation settings*/
+	public function get_designation_settings_by_id(){		
+
+		$result = $this->settings->get_designation_settings_by_id();
+		echo json($result);
+	}
+
+	public function delete_designation(){
+		echo  $this->settings->delete_designation();
 	}
 
 

@@ -9,7 +9,6 @@ class Employees extends CI_Controller {
 
 	public function index()
 	{	
-
 		
 		$data['title'] = 'Employees';
 		render_page('employees',$data);

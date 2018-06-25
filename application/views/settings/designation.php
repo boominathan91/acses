@@ -13,7 +13,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="table-responsive">
-								<table class="table table-striped custom-table m-b-0 datatable">
+								<table class="table table-striped custom-table m-b-0 datatable" id="designation_table">
 									<thead>
 										<tr>
 											<th>#</th>
@@ -22,22 +22,7 @@
 											<th class="text-right"><?php lang('action'); ?></th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<td>1</td>
-											<td>Web Designer</td>
-											<td>Web Development</td>
-											<td class="text-right">
-												<div class="dropdown">
-													<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-													<ul class="dropdown-menu pull-right">
-														<li><a href="#" data-toggle="modal" data-target="#edit_designation" title="Edit"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-														<li><a href="#" data-toggle="modal" data-target="#delete_designation" title="Delete"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-													</ul>
-												</div>
-											</td>
-										</tr>										
-									</tbody>
+									<tbody></tbody>
 								</table>
 							</div>
 						</div>
@@ -55,7 +40,7 @@
 							<form id="designation_form" method="post" >
 								<div class="form-group">
 									<label>Department Name <span class="text-danger">*</span></label>
-									<select class="form-control" id="department_id">
+									<select class="form-control" id="department_id" name="department_id">
 										<option value="">Select Department</option>	
 										<?php if(!empty($department)){
 											foreach ($department as $d) {
@@ -66,11 +51,11 @@
 								</div>
 								<div class="form-group">
 									<label>Designation Name <span class="text-danger">*</span></label>
-									<input class="form-control" type="text" name="designation_name">
-									<input class="form-control" type="hidden" name="designation_id">
+									<input class="form-control" type="text" name="designation_name" id="designation_name"> 
+									<input class="form-control" type="hidden" name="designation_id" id="designation_id"> 
 								</div>
 								<div class="m-t-20 text-center">
-									<button class="btn btn-primary" type="submit">Create Designation</button>
+									<button class="btn btn-primary" type="submit">Save Designation</button>
 								</div>
 							</form>
 						</div>

@@ -57,6 +57,11 @@ function reload_table()
 
 
 $('#department_form').submit(function(){
+	var department_name = $('#department_name').val();
+	if(department_name == ''){
+		updateNotification('Warning   !', 'Enter department name!', 'error');
+		return false;
+	}
 	var url = base_url+"settings/insert_department_settings";
 	var formData = $('#department_form').serialize(); 
 	$.ajax({
@@ -64,13 +69,13 @@ $('#department_form').submit(function(){
 		url:url,
 		data:formData,
 		success:function(response){
-			$('#department_form')[0].reset();
-			$('#add_department').modal('hide');
+			
 			var obj = jQuery.parseJSON(response);
 			if(obj.department_id){
-				updateNotification('Success   !', 'Department settings updated !', 'success');	
-
-				reload_table();
+			$('#department_form')[0].reset();
+			$('#add_department').modal('hide');
+			updateNotification('Success   !', 'Department settings updated !', 'success');	
+			reload_table();
 			}else if(obj.error){					
 				updateNotification('Warning  !', obj.error , 'error');	
 			}

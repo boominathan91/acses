@@ -67,11 +67,13 @@ class Settings_model extends CI_Model {
 		}
 		return $this->db->get_where('department_details',$where)->row();
 	}
-	public function get_department_settings_by_id(){
 	
+	public function get_department_settings_by_id(){
+
 		$where =array('department_id' => $_POST['department_id']);	
 		return $this->db->get_where('department_details',$where)->row()->department_name;
 	}
+
 	public function insert_department_settings($data){		
 		return insert('department_details',$data);					
 	}
@@ -85,9 +87,9 @@ class Settings_model extends CI_Model {
 		$columns = array('department_id','department_name');
 		$search_value = trim($_POST['search']['value']);
 		$sql ="SELECT * FROM department_details  WHERE status = 1  ";
-			if($_POST['search']['value']){ 
-				$sql .=" AND (	department_name LIKE '%$search_value%' ) ";		
-			} 				
+		if($_POST['search']['value']){ 
+			$sql .=" AND (	department_name LIKE '%$search_value%' ) ";		
+		} 				
 		if(isset($_POST['order'])) {			
 			$orde = $columns[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'];
 			$sql .=" ORDER BY $orde";
@@ -126,6 +128,77 @@ class Settings_model extends CI_Model {
 		$where = array('status' => 1);
 		return $this->db->order_by('department_name','asc')->get_where('department_details',$where)->result();
 	}
+
+
+
+	public function check_designation_settings_by_id($where){
+		
+
+		if(!empty($_POST['designation_id'])){
+			$where +=array('designation_id !=' => $_POST['designation_id']);
+		}
+		return $this->db->get_where('designation_details',$where)->row();
+	}
+
+	public function insert_designation_settings($data){		
+		return insert('designation_details',$data);					
+	}
+	public function update_designation_settings($data,$where){		
+		$this->db->update('designation_details',$data,$where);		
+		return $where['designation_id'];			
+	}
+	
+	private function _get_datatables()
+	{
+		$columns = array('ds.designation_id','ds.designation_name','dp.department_name');
+		$search_value = trim($_POST['search']['value']);
+		$sql ="SELECT ds.designation_id,ds.designation_name,dp.department_name FROM designation_details as ds 
+		JOIN department_details as dp ON dp.department_id = ds.department_id
+		WHERE ds.status = 1 ";
+		
+		if($_POST['search']['value']){ 
+			$sql .=" AND (	ds.designation_name LIKE '%$search_value%' OR dp.department_name LIKE '%$search_value%' ) ";	
+		} 				
+
+		if(isset($_POST['order'])) {			
+			$orde = $columns[$_POST['order']['0']['column']].' '.$_POST['order']['0']['dir'];
+			$sql .=" ORDER BY $orde";
+		}else if(isset($this->orders)){
+			$orders = $this->orders;	
+			$orde = key($orders).' '.$orders[key($orders)];	
+			$sql .=" ORDER BY $orde";
+		}
+		return $sql;
+	}
+	public function get_all_designations()
+	{
+		$sql = $this->_get_datatables();			
+		if($_POST['length'] != -1)
+			$limits = $_POST['start'].','.$_POST['length'];
+		$sql .=" LIMIT $limits"; 		
+		return $this->db->query($sql)->result();	
+	}	
+	public function count_all_design()
+	{
+		$sql = $this->_get_datatables();	
+		return $this->db->query($sql)->num_rows();		
+	}
+	public function count_filtered_design()
+	{
+		$sql = $this->_get_datatables();			
+		return $this->db->query($sql)->num_rows();
+	}
+	public function get_designation_settings_by_id(){
+
+		$where =array('designation_id' => $_POST['designation_id']);	
+		return $this->db->get_where('designation_details',$where)->row();
+	}
+	public function delete_designation(){
+		$where = array('designation_id'=> $_POST['designation_id']);
+		$data = array('status' => 0);
+		return $this->db->update('designation_details',$data,$where);
+	}
+
 
 
 

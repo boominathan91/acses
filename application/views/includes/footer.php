@@ -41,6 +41,10 @@
 		<?php  if($uri == 'department-settings'){ ?>
 			<!-- Department Settings  -->
 		<script src="<?php echo base_url(); ?>assets/js/department.js"></script>
+		<?php } ?>	
+		<?php  if($uri == 'designation-settings'){ ?>
+			<!-- Designation Settings  -->
+		<script src="<?php echo base_url(); ?>assets/js/designation.js"></script>
 		<?php } ?>
     </body>
 </html>
