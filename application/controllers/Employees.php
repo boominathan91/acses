@@ -9,12 +9,13 @@ class Employees extends CI_Controller {
 			$this->session->set_flashdata('msg','Please login to continue !');
 			redirect('login');
 		}
+		$this->load->model('settings_model','settings');
 	}
 
 	public function index()
-	{	
-		
+	{			
 		$data['title'] = 'Employees';
+		$data['department'] = $this->settings->get_departments();
 		render_page('employees',$data);
 	}
 

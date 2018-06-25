@@ -19,6 +19,7 @@ class Login_model extends CI_Model {
 			}else{
 				$this->session->set_userdata($result);
 				$this->get_default_language_data();
+				$this->get_default_company_data();
 				$response = $result;	
 			}						
 		}	
@@ -55,7 +56,14 @@ class Login_model extends CI_Model {
 		->get_where('lang_details l',$where)
 		->result_array();
 
-		$this->session->set_userdata(array('session_data'=>$output));	
+		$this->session->set_userdata(array('label_data'=>$output));	
+	}
+	/*Gettings Default Company Data*/
+	Public function get_default_company_data(){
+
+		$where = array('status'=>1);
+		$output = $this->db->get_where('company_details',$where)->row_array();
+		$this->session->set_userdata($output);	
 	}
 
 }

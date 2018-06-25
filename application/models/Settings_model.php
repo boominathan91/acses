@@ -128,6 +128,10 @@ class Settings_model extends CI_Model {
 		$where = array('status' => 1);
 		return $this->db->order_by('department_name','asc')->get_where('department_details',$where)->result();
 	}
+	public function get_designation_by_id(){
+		$where = array('status' => 1,'department_id'=>$_POST['department_id']);
+		return $this->db->order_by('designation_name','asc')->get_where('designation_details',$where)->result_array();
+	}
 
 
 

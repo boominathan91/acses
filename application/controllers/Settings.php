@@ -389,6 +389,18 @@ class Settings extends CI_Controller {
 	public function delete_designation(){
 		echo  $this->settings->delete_designation();
 	}
+	
+	/*Gettings designation details */
+	public function get_designation_by_id(){
+		$result = $this->settings->get_designation_by_id();
+		$data=array();
+		foreach($result as $r){
+			$data['value']=$r['designation_id'];
+			$data['label']=$r['designation_name'];
+			$json[]=$data;
+		}
+		echo json($json);
+	}
 
 
 }

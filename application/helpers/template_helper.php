@@ -27,7 +27,7 @@ if(!function_exists('lang')){
 		$CI = &get_instance();		
 		$result='';
 		$default_lang = $CI->session->userdata('default_lang');
-		if(!$CI->session->userdata('session_data')){
+		if(!$CI->session->userdata('label_data')){
 
 			//if(empty($default_lang)){ /*Default language is empty */
 				$where = array('l.lang_id'=>1);
@@ -39,10 +39,10 @@ if(!function_exists('lang')){
 			->join('label_details lb','lb.lang_id = l.lang_id')
 			->get_where('lang_details l',$where)
 			->result_array();
-			$CI->session->set_userdata(array('session_data'=>$output,'default_lang'=>'English'));
+			$CI->session->set_userdata(array('label_data'=>$output,'default_lang'=>'English'));
 
 
-			$datas = $CI->session->userdata('session_data');
+			$datas = $CI->session->userdata('label_data');
 			foreach ( $datas as $key => $val) {
 				if ($val['label_key'] === $data) {
 					$result =  $datas[$key]['label_value'];				
@@ -50,7 +50,7 @@ if(!function_exists('lang')){
 			}
 
 		}else{
-			$datas = $CI->session->userdata('session_data');
+			$datas = $CI->session->userdata('label_data');
 			foreach ( $datas as $key => $val) {
 				if ($val['label_key'] === $data) {
 					$result =  $datas[$key]['label_value'];				

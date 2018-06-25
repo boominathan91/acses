@@ -224,29 +224,27 @@
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label">Company</label>
-								<select class="select">
-									<option value="">Global Technologies</option>
-									<option value="1">Delta Infotech</option>
-								</select>
+								<input type="text" name="company" class="form-control" value="<?php echo $this->session->userdata('company_name'); ?>">
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label">Department</label>
-								<select class="select">
-									<option>Web Development</option>
-									<option>Application Development</option>
-									<option>IT Management</option>
-								</select>
+								<select class="form-control" id="department_id" name="department_id">
+										<option value="">Select Department</option>	
+										<?php if(!empty($department)){
+											foreach ($department as $d) {
+											echo '<option value="'.$d->department_id.'">'.$d->department_name.'</option>';
+											}
+										} ?>									
+									</select>
 							</div>
 						</div>
 						<div class="col-sm-6">
 							<div class="form-group">
 								<label class="control-label">Designation</label>
-								<select class="select">
-									<option>Web Developer</option>
-									<option>Web Designer</option>
-									<option>SEO Analyst</option>
+								<select id="designation_id" name="designation_id" class="form-control">
+									<option value="">Select Designation</option>
 								</select>
 							</div>
 						</div>
