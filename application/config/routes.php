@@ -62,5 +62,8 @@ $route['change-password'] = 'settings/change_password';
 $route['department-settings'] = 'settings/department';
 $route['designation-settings'] = 'settings/designation';
 
+/*Login */
+$route['logout'] = 'login/logout';
+
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;

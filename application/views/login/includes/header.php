@@ -15,5 +15,14 @@
 		<![endif]-->
     </head>
     <body>
+        <!-- Notification -->
+        <div class="notification-popup success hide">
+            <p>
+                <span class="task"></span>
+                <span class="notification-text"></span>
+            </p>
+        </div>
+
+        <!-- Notification -->
         
        

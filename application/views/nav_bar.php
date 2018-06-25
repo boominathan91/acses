@@ -96,7 +96,7 @@
 							<li><a href="#">My Profile</a></li>
 							<li><a href="#">Edit Profile</a></li>
 							<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
-							<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
+							<li><a href="<?php echo base_url(); ?>logout">Logout</a></li>
 						</ul>
 					</li>
 				</ul>

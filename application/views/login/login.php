@@ -7,14 +7,14 @@
 							<div class="account-logo">
 								<a href="#"><img src="<?php echo base_url(); ?>assets/img/logo2.png" alt="Focus Technologies"></a>
 							</div>
-							<form action="<?php echo base_url(); ?>company-settings" method="post">
+							<form id="login_form" method="post">
 								<div class="form-group form-focus">
 									<label class="control-label"><?php lang('user_name_or_email'); ?></label>
-									<input class="form-control floating" type="text">
+									<input class="form-control floating" type="text" name="user_name" id="user_name">
 								</div>
 								<div class="form-group form-focus">
 									<label class="control-label"><?php lang('password'); ?></label>
-									<input class="form-control floating" type="password">
+									<input class="form-control floating" type="password" name="password" id="password">
 								</div>
 								<div class="form-group text-center">
 									<button class="btn btn-primary btn-block account-btn" type="submit"><?php lang('login'); ?></button>
@@ -28,4 +28,4 @@
 				</div>
 			</div>
         </div>
-		<div class="sidebar-overlay" data-reff="#sidebar"></div>
+		<div class="sidebar-overlay" data-reff="#sidebar"></div>		
