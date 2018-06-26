@@ -14,6 +14,7 @@ class Employees extends CI_Controller {
 
 	public function index()
 	{			
+		
 		$data['title'] = 'Employees';
 		$data['department'] = $this->settings->get_departments();
 		render_page('employees',$data);

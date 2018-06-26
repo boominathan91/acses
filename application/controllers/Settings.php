@@ -18,6 +18,7 @@ class Settings extends CI_Controller {
 		render_page('settings/company_settings',$data);
 	}
 
+
 	public function insert_company_settings(){	
 
 		$data = array(
@@ -402,6 +403,13 @@ class Settings extends CI_Controller {
 		echo json($json);
 	}
 
+	public function check_old_pwd(){
+		$result = $this->settings->check_old_pwd();
+		echo json(array('match'=>$result));
+	}
+	public function update_password(){
+		echo $this->settings->update_password();
+	}
 
 }
 

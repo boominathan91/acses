@@ -20,6 +20,8 @@ class Login_model extends CI_Model {
 				$this->session->set_userdata($result);
 				$this->get_default_language_data();
 				$this->get_default_company_data();
+				$this->get_default_theme_data();
+				$this->get_default_localize_data();
 				$response = $result;	
 			}						
 		}	
@@ -63,6 +65,20 @@ class Login_model extends CI_Model {
 
 		$where = array('status'=>1);
 		$output = $this->db->get_where('company_details',$where)->row_array();
+		$this->session->set_userdata($output);	
+	}
+	/*Gettings Default Theme Data*/
+	Public function get_default_theme_data(){
+
+		$where = array('status'=>1);
+		$output = $this->db->get_where('theme_details',$where)->row_array();
+		$this->session->set_userdata($output);	
+	}
+	/*Gettings Default Theme Data*/
+	Public function get_default_localize_data(){
+
+		$where = array('status'=>1);
+		$output = $this->db->get_where('localization_details',$where)->row_array();
 		$this->session->set_userdata($output);	
 	}
 

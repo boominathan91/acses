@@ -14,7 +14,8 @@ class Login extends CI_Controller {
 	{	if($this->session->userdata('login_id')){
 			redirect('employees');
 		}
-		render_login('login');		
+		$data['title'] = 'Login';
+		render_login('login',$data);		
 	}
 	public function check_login(){
 
@@ -22,8 +23,9 @@ class Login extends CI_Controller {
 	}
 	/*Forgot Password   Page */
 	public function forgot_password()
-	{				
-		render_login('forgot_password');		
+	{
+		$data['title'] = 'Forgot Password';
+		render_login('forgot_password',$data);		
 	}
 	public function logout(){
 		$data = array('login_id','user_name','email','label_data');

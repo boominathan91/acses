@@ -4,8 +4,8 @@ if(!function_exists('render_login')){
 	/* Rendering Login Page */
 	function render_login($page,$data=null){
 		$CI = &get_instance();
-		$CI->load->view('login/includes/header');
-		$CI->load->view('login/'.$page,$data);
+		$CI->load->view('login/includes/header',$data);
+		$CI->load->view('login/'.$page);
 		$CI->load->view('login/includes/footer');
 
 	}

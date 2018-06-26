@@ -2,7 +2,6 @@
 
 class Settings_model extends CI_Model {
 
-	public $variable;
 
 	public function __construct()
 	{
@@ -201,6 +200,15 @@ class Settings_model extends CI_Model {
 		$where = array('designation_id'=> $_POST['designation_id']);
 		$data = array('status' => 0);
 		return $this->db->update('designation_details',$data,$where);
+	}
+	public function update_password(){
+		$where = array('login_id' => $this->session->userdata('login_id'));
+			$data = array('password'=> md5($_POST['password']));
+		return $this->db->update('login_details',$data,$where);
+	}
+	public function check_old_pwd(){
+		$where = array('login_id'=>$this->session->userdata('login_id'),'password' => md5($_POST['password']));
+		return $this->db->get_where('login_details',$where)->num_rows();
 	}
 
 

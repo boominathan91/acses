@@ -1,12 +1,26 @@
- <?php   $result = $this->db->get_where('theme_details',array('status'=>1))->row_array();   ?>
+ <?php   
+
+    $light_logo = $this->session->userdata('light_logo');
+    if(!empty($light_logo)){
+        $light_logo = 'uploads/'.$light_logo;
+    }else{
+        $light_logo = 'assets/img/logo.png';
+    }
+
+    $website_name = $this->session->userdata('website_name');
+    ?>
+
+
  <div class="header">
                 <div class="header-left">
                     <a href="#" class="logo">
-						<img src="<?php echo base_url(); ?>assets/img/logo.png" width="40" height="40" alt="">
+						<img src="<?php echo base_url().$light_logo; ?>" width="40" height="40" alt="">
 					</a>
                 </div>
                 <div class="page-title-box pull-left">
-					<h3 class="website_name"><?php echo (!empty($result['website_name']))?$result['website_name']:'Focus Technologies'; ?></h3>
+					<h3 class="website_name"><?php 
+					echo (!empty($website_name))?$website_name:'Focus Technologies'; ?>
+						</h3>
                 </div>
 				<a id="mobile_btn" class="mobile_btn pull-left" href="#sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a>
 				<ul class="nav navbar-nav navbar-right user-menu pull-right">

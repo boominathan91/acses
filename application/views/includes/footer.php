@@ -46,5 +46,9 @@
 			<!-- Designation Settings  -->
 		<script src="<?php echo base_url(); ?>assets/js/designation.js"></script>
 		<?php } ?>
+		<?php  if($uri == 'change-password'){ ?>
+			<!-- Password Settings  -->
+		<script src="<?php echo base_url(); ?>assets/js/password.js"></script>
+		<?php } ?>
     </body>
 </html>

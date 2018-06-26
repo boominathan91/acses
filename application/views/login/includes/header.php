@@ -3,8 +3,16 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-		<link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.png">
-        <title>Acses Technologies</title>
+        <?php   
+        $session_favicon = $this->session->userdata('favicon');
+        if(!empty($session_favicon)){
+        $favicon = 'uploads/'.$session_favicon;
+        }else{
+        $favicon = 'assets/img/favicon.png';
+        }
+        ?>
+        <link rel="shortcut icon" type="image/x-icon" href="<?php echo base_url().$favicon ?>">
+        <title><?php echo $title; ?></title>
 		<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css">
@@ -29,10 +37,7 @@
         if(!empty($msg)){ ?>
         <!-- Notification -->
         <div class="notification-popup error">
-            <p>
-                <span class="task">Warning !</span>
-                <span class="notification-text"><?php echo $msg; ?></span>
-            </p>
+            <p><span class="notification-text"><?php echo $msg; ?></span></p>
         </div>
     <?php } ?>
 
