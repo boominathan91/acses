@@ -689,6 +689,8 @@ transform-origin: left top;transition: 240ms;left: 12px;top: -8px;z-index: 1;col
 .div-heading {background-color: #fff;box-shadow: 0 0 3px #e5e5e5;}
 .div-heading .div-cell p {font-weight:normal;}
 .div-cell p {margin:0;font-weight:300;}
+.div-table .div-row .div-cell{ width: 100%; }
+.div-table .div-row .div-cell .div-table{ width: 100%; }
 
 
 /* Grid View */

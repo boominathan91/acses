@@ -27,11 +27,21 @@ class Settings_model extends CI_Model {
 		return get_where('city_details',$where);
 	}
 	public function insert_company_settings($data){		
-		return insert('company_details',$data);					
+		insert('company_details',$data);		
+		$this->get_default_company_data();
+		return true;			
 	}
 	public function update_company_settings($data,$where){		
-		$this->db->update('company_details',$data,$where);		
+		$this->db->update('company_details',$data,$where);
+		$this->get_default_company_data();		
 		return $where['company_id'];			
+	}
+	/*Gettings Default Company Data*/
+	Public function get_default_company_data(){
+
+		$where = array('status'=>1);
+		$output = $this->db->get_where('company_details',$where)->row_array();
+		$this->session->set_userdata($output);	
 	}
 	public function insert_localization_settings($data){		
 		return insert('localization_details',$data);					
