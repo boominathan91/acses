@@ -30,7 +30,7 @@
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
 											<label><?php lang('country'); ?></label>
-											<select class="form-control" name="country_id" id="country">
+											<select class="form-control select2-option" name="country_id" id="country">
 												<option value="">Select Country</option>
 											</select>
 										</div>
@@ -38,7 +38,7 @@
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
 											<label><?php lang('state_province'); ?></label>
-											<select class="form-control" name="state_id" id="state">
+											<select class="form-control select2-option" name="state_id" id="state">
 												<option value="">Select State</option>
 											</select>
 										</div>
@@ -46,7 +46,7 @@
 									<div class="col-sm-6 col-md-6 col-lg-3">
 										<div class="form-group">
 											<label><?php lang('city'); ?></label>
-												<select class="form-control" name="city_id" id="city">
+												<select class="form-control select2-option" name="city_id" id="city">
 														<option value="">Select City</option>
 											</select>
 										</div>

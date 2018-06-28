@@ -33,8 +33,8 @@ class Employees_model extends CI_Model {
 		}
 		
 		if(!empty($_POST['employee_name'])){
-			$this->db->where('l.first_name',$_POST['employee_name']);
-			$this->db->or_where('l.last_name',$_POST['employee_name']);
+			$this->db->like('l.first_name',$_POST['employee_name']);
+			$this->db->or_like('l.last_name',$_POST['employee_name']);
 		}
 
 

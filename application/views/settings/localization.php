@@ -10,7 +10,7 @@
         							<div class="col-sm-6">
         								<div class="form-group">
         									<label><?php lang('default_country'); ?></label>
-        									<select class="form-control" name="country_id" id="country">
+        									<select class="form-control select2-option" name="country_id" id="country">
         										<option value="">Select Country</option>
         									</select>
         								</div>
@@ -18,7 +18,7 @@
         							<div class="col-sm-6">
         								<div class="form-group">
         									<label><?php lang('date_format'); ?></label>
-        									<select class="form-control" name="date_format" id="date_format">
+        									<select class="form-control" name="date_format" id="date_format" >
         										<option value="">Select Date Format</option>
         										<option value="d/m/Y">15/05/2018</option>
         										<option value="d.m.Y">15.05.2018</option>
@@ -34,7 +34,7 @@
         							<div class="col-sm-6">
         								<div class="form-group">
         									<label><?php lang('time_zone') ?></label>
-        									<select class="form-control" name="time_zone" id="time_zone" >
+        									<select class="form-control select2-option" name="time_zone" id="time_zone" >
         										<option value="Pacific/Midway">Midway Island, Samoa (GMT-11:00)</option>
         										<option value="America/Adak">Hawaii-Aleutian (GMT-10:00)</option>
         										<option value="Etc/GMT+10">Hawaii (GMT-10:00)</option>

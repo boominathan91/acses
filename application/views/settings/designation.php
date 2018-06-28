@@ -40,7 +40,7 @@
 							<form id="designation_form" method="post" >
 								<div class="form-group">
 									<label>Department Name <span class="text-danger">*</span></label>
-									<select class="form-control" id="department_id" name="department_id">
+									<select class="form-control select2-option" id="department_id" name="department_id">
 										<option value="">Select Department</option>	
 										<?php if(!empty($department)){
 											foreach ($department as $d) {
