@@ -107,8 +107,8 @@
 							<i class="caret"></i>
 						</a>
 						<ul class="dropdown-menu">
-							<li><a href="#">My Profile</a></li>
-							<li><a href="#">Edit Profile</a></li>
+							<!-- <li><a href="#">My Profile</a></li>
+							<li><a href="#">Edit Profile</a></li> -->
 							<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
 							<li><a href="<?php echo base_url(); ?>logout">Logout</a></li>
 						</ul>
@@ -117,8 +117,8 @@
 				<div class="dropdown mobile-user-menu pull-right">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
 					<ul class="dropdown-menu pull-right">
-						<li><a href="#">My Profile</a></li>
-						<li><a href="#">Edit Profile</a></li>
+						<!-- <li><a href="#">My Profile</a></li>
+						<li><a href="#">Edit Profile</a></li> -->
 						<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
 						<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
 					</ul>

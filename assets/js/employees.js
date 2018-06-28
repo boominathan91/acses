@@ -173,7 +173,7 @@ $('#employee_form').submit(function(){
 			}else{
 				updateNotification('Success   !', 'Employee details saved successfully!', 'success');
 				$('#add_employee').modal('hide');
-				loadPagination(0);						
+				filter_next_page(0);						
 			}
 		}
 	});		
