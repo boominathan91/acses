@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS `city_details` (
   PRIMARY KEY (`city_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47577 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.city_details: ~47,576 rows (approximately)
+-- Dumping data for table acses.city_details: ~48,702 rows (approximately)
 /*!40000 ALTER TABLE `city_details` DISABLE KEYS */;
-INSERT IGNORE INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
+INSERT  INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
 	(1, 'Bombuflat', 1),
 	(2, 'Garacharma', 1),
 	(3, 'Port Blair', 1),
@@ -32796,7 +32796,7 @@ INSERT IGNORE INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
 	(32767, 'Castro Marim', 2899),
 	(32768, 'Estombar', 2899),
 	(32769, 'Faro', 2899);
-INSERT IGNORE INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
+INSERT  INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
 	(32770, 'Ferreiras', 2899),
 	(32771, 'Guia', 2899),
 	(32772, 'Lagoa', 2899),
@@ -47627,10 +47627,10 @@ CREATE TABLE IF NOT EXISTS `company_details` (
   PRIMARY KEY (`company_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.company_details: ~1 rows (approximately)
+-- Dumping data for table acses.company_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `company_details` DISABLE KEYS */;
-INSERT IGNORE INTO `company_details` (`company_id`, `company_name`, `contact_person`, `address`, `country_id`, `state_id`, `city_id`, `postal_code`, `email`, `phone_number`, `mobile_number`, `fax`, `website_url`, `date_created`, `last_updated`, `status`) VALUES
-	(1, 'Company Name', 'Contact Person', 'Address', '101', '35', '3659', '123456', 'test@ttest.com', '8458545512', '8458545512', '345345', 'https://www.google.co.in', '2018-06-22 10:34:51', '2018-06-22 12:14:44', 1);
+INSERT  INTO `company_details` (`company_id`, `company_name`, `contact_person`, `address`, `country_id`, `state_id`, `city_id`, `postal_code`, `email`, `phone_number`, `mobile_number`, `fax`, `website_url`, `date_created`, `last_updated`, `status`) VALUES
+	(1, 'Dreamguys Technologies', 'Contact Person', 'Address', '101', '35', '3659', '123456', 'test@ttest.com', '8458545512', '8458545512', '345345', 'https://www.google.co.in', '2018-06-22 10:34:51', '2018-06-26 11:44:03', 1);
 /*!40000 ALTER TABLE `company_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.country_details
@@ -47644,7 +47644,7 @@ CREATE TABLE IF NOT EXISTS `country_details` (
 
 -- Dumping data for table acses.country_details: ~246 rows (approximately)
 /*!40000 ALTER TABLE `country_details` DISABLE KEYS */;
-INSERT IGNORE INTO `country_details` (`country_id`, `sortname`, `country`, `tcode`) VALUES
+INSERT  INTO `country_details` (`country_id`, `sortname`, `country`, `tcode`) VALUES
 	(1, 'AF', 'Afghanistan', ''),
 	(2, 'AL', 'Albania', ''),
 	(3, 'DZ', 'Algeria', ''),
@@ -47905,7 +47905,7 @@ CREATE TABLE IF NOT EXISTS `department_details` (
 
 -- Dumping data for table acses.department_details: ~2 rows (approximately)
 /*!40000 ALTER TABLE `department_details` DISABLE KEYS */;
-INSERT IGNORE INTO `department_details` (`department_id`, `department_name`, `date_created`, `last_updated`, `status`) VALUES
+INSERT  INTO `department_details` (`department_id`, `department_name`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'Application Development', '2018-06-23 11:59:40', '2018-06-23 15:16:48', 1),
 	(2, 'Web Development', '2018-06-23 12:15:37', '2018-06-23 15:17:39', 1);
 /*!40000 ALTER TABLE `department_details` ENABLE KEYS */;
@@ -47919,11 +47919,11 @@ CREATE TABLE IF NOT EXISTS `designation_details` (
   `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`designation_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table acses.designation_details: ~4 rows (approximately)
 /*!40000 ALTER TABLE `designation_details` DISABLE KEYS */;
-INSERT IGNORE INTO `designation_details` (`designation_id`, `designation_name`, `department_id`, `date_created`, `last_updated`, `status`) VALUES
+INSERT  INTO `designation_details` (`designation_id`, `designation_name`, `department_id`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'IOS', 1, '2018-06-25 10:15:43', '2018-06-25 11:56:19', 1),
 	(3, 'Angular', 2, '2018-06-25 10:24:07', '2018-06-25 11:56:20', 1),
 	(4, 'React js', 2, '2018-06-25 10:28:03', '2018-06-25 11:52:07', 1),
@@ -47940,11 +47940,11 @@ CREATE TABLE IF NOT EXISTS `label_details` (
   `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`label_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.label_details: ~53 rows (approximately)
+-- Dumping data for table acses.label_details: ~48 rows (approximately)
 /*!40000 ALTER TABLE `label_details` DISABLE KEYS */;
-INSERT IGNORE INTO `label_details` (`label_id`, `label_key`, `label_value`, `lang_id`, `date_created`, `last_updated`, `status`) VALUES
+INSERT  INTO `label_details` (`label_id`, `label_key`, `label_value`, `lang_id`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'management_login', 'Management Login', 1, '2018-06-21 15:02:59', '2018-06-21 15:33:03', 1),
 	(2, 'user_name_or_email', 'Username or Email', 1, '2018-06-21 15:36:38', '2018-06-21 15:36:42', 1),
 	(3, 'password', 'Password', 1, '2018-06-21 15:37:18', '2018-06-21 15:37:18', 1),
@@ -47997,7 +47997,13 @@ INSERT IGNORE INTO `label_details` (`label_id`, `label_key`, `label_value`, `lan
 	(50, 'designations', 'Designations', 1, '2018-06-21 17:16:55', '2018-06-21 17:16:55', 1),
 	(51, 'add_new_designation', 'Add New Designation', 1, '2018-06-21 17:19:26', '2018-06-21 17:19:26', 1),
 	(52, 'designation', 'Designation', 1, '2018-06-21 17:19:52', '2018-06-21 17:19:52', 1),
-	(53, 'save_new_department', 'Save Department', 1, '2018-06-23 11:50:28', '2018-06-23 11:50:28', 1);
+	(53, 'save_new_department', 'Save Department', 1, '2018-06-23 11:50:28', '2018-06-23 11:50:28', 1),
+	(54, 'role', 'Role', 1, '2018-06-25 17:27:37', '2018-06-25 17:27:37', 1),
+	(55, 'first_name', 'First Name ', 1, '2018-06-26 11:57:29', '2018-06-26 11:57:29', 1),
+	(56, 'last_name', 'Last Name', 1, '2018-06-26 11:58:18', '2018-06-26 11:58:18', 1),
+	(57, 'user_name', 'Username', 1, '2018-06-26 11:58:50', '2018-06-26 11:58:50', 1),
+	(58, 'joining_date', 'Joining Date', 1, '2018-06-26 12:03:26', '2018-06-26 12:03:26', 1),
+	(59, 'save_employee', 'Save Employee', 1, '2018-06-26 12:05:00', '2018-06-26 12:05:00', 1);
 /*!40000 ALTER TABLE `label_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.lang_details
@@ -48012,7 +48018,7 @@ CREATE TABLE IF NOT EXISTS `lang_details` (
 
 -- Dumping data for table acses.lang_details: ~1 rows (approximately)
 /*!40000 ALTER TABLE `lang_details` DISABLE KEYS */;
-INSERT IGNORE INTO `lang_details` (`lang_id`, `lang`, `date_created`, `last_updated`, `status`) VALUES
+INSERT  INTO `lang_details` (`lang_id`, `lang`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'English', '2018-06-21 14:48:00', '2018-06-21 14:48:00', 1);
 /*!40000 ALTER TABLE `lang_details` ENABLE KEYS */;
 
@@ -48029,28 +48035,60 @@ CREATE TABLE IF NOT EXISTS `localization_details` (
   PRIMARY KEY (`local_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.localization_details: ~1 rows (approximately)
+-- Dumping data for table acses.localization_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `localization_details` DISABLE KEYS */;
-INSERT IGNORE INTO `localization_details` (`local_id`, `country_id`, `date_format`, `time_zone`, `default_language`, `date_created`, `last_updated`, `status`) VALUES
-	(1, 101, 'd.m.Y', 'Asia/Kolkata', 'English', '2018-06-22 14:44:39', '2018-06-22 14:55:30', 1);
+INSERT  INTO `localization_details` (`local_id`, `country_id`, `date_format`, `time_zone`, `default_language`, `date_created`, `last_updated`, `status`) VALUES
+	(1, 101, 'd/m/Y', 'Asia/Kolkata', 'English', '2018-06-22 14:44:39', '2018-06-27 16:01:02', 1);
 /*!40000 ALTER TABLE `localization_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.login_details
 CREATE TABLE IF NOT EXISTS `login_details` (
   `login_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(255) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `employee_id` varchar(255) NOT NULL,
+  `joining_date` date NOT NULL,
+  `phone_number` varchar(255) NOT NULL,
+  `company` varchar(255) NOT NULL,
+  `department_id` int(11) NOT NULL,
+  `designation_id` int(11) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
+  `decrypted` varchar(255) NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`login_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.login_details: ~1 rows (approximately)
+-- Dumping data for table acses.login_details: ~23 rows (approximately)
 /*!40000 ALTER TABLE `login_details` DISABLE KEYS */;
-INSERT IGNORE INTO `login_details` (`login_id`, `user_name`, `email`, `password`, `date_created`, `last_updated`, `status`) VALUES
-	(1, 'admin', 'admin@admin.com', '0192023a7bbd73250516f069df18b500', '2018-06-25 14:39:15', '2018-06-25 14:39:40', 1);
+INSERT  INTO `login_details` (`login_id`, `user_name`, `first_name`, `last_name`, `employee_id`, `joining_date`, `phone_number`, `company`, `department_id`, `designation_id`, `email`, `password`, `decrypted`, `date_created`, `last_updated`, `status`) VALUES
+	(1, 'admin', 'Admin', 'admin', '', '0000-00-00', '', '', 0, 0, 'admin@admin.com', '0192023a7bbd73250516f069df18b500', '', '2018-06-25 14:39:15', '2018-06-27 10:47:45', 1),
+	(3, 'eboominathan', 'Boomi', 'Nathan', '1', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 5, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:43:06', 1),
+	(18, 'eboominathan', 'Boomi', 'Nathan', '2', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:07', 1),
+	(19, 'eboominathan', 'Boomi', 'Nathan', '3', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:08', 1),
+	(20, 'eboominathan', 'Boomi', 'Nathan', '4', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:09', 1),
+	(21, 'eboominathan', 'Boomi', 'Nathan', '5', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:12', 1),
+	(22, 'eboominathan', 'Boomi', 'Nathan', '6', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:14', 1),
+	(23, 'eboominathan', 'Boomi', 'Nathan', '7', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:15', 1),
+	(24, 'eboominathan', 'Boomi', 'Nathan', '8', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:17', 1),
+	(25, 'eboominathan', 'Boomi', 'Nathan', '9', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:18', 1),
+	(26, 'eboominathan', 'Boomi', 'Nathan', '10', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:20', 1),
+	(27, 'eboominathan', 'Boomi', 'Nathan', '11', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:42', 1),
+	(28, 'eboominathan', 'Boomi', 'Nathan', '12', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:44', 1),
+	(29, 'eboominathan', 'Boomi', 'Nathan', '13', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:48', 1),
+	(30, 'eboominathan', 'Boomi', 'Nathan', '14', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:52', 1),
+	(31, 'eboominathan', 'Boomi', 'Nathan', '15', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:55', 1),
+	(32, 'eboominathan', 'Boomi', 'Nathan', '16', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:58', 1),
+	(33, 'eboominathan', 'Boomi', 'Nathan', '17', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:15:01', 1),
+	(34, 'eboominathan', 'Boomi', 'Nathan', '18', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'admin@admin.coms', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:43:51', 1),
+	(35, 'eboominathan', 'Boomi', 'Nathan', '19', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:15:07', 1),
+	(36, 'eboominathan', 'Boomi', 'Nathan', '20', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:15:09', 1),
+	(37, 'eboominathan', 'Boomi', 'Nathan', '21', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 5, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:42:26', 1),
+	(38, 'eboominathan', 'Boomi', 'Nathan', '22', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-28 09:55:25', 1),
+	(39, 'eboominathan', 'Siva', 'Mani', '23', '2018-06-26', '9843014641', 'Dreamguys Technologies', 2, 4, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-28 09:57:09', 1);
 /*!40000 ALTER TABLE `login_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.state_details
@@ -48063,7 +48101,7 @@ CREATE TABLE IF NOT EXISTS `state_details` (
 
 -- Dumping data for table acses.state_details: ~4,119 rows (approximately)
 /*!40000 ALTER TABLE `state_details` DISABLE KEYS */;
-INSERT IGNORE INTO `state_details` (`state_id`, `statename`, `country_id`) VALUES
+INSERT  INTO `state_details` (`state_id`, `statename`, `country_id`) VALUES
 	(1, 'Andaman and Nicobar Islands', 101),
 	(2, 'Andhra Pradesh', 101),
 	(3, 'Arunachal Pradesh', 101),
@@ -52198,10 +52236,10 @@ CREATE TABLE IF NOT EXISTS `theme_details` (
   PRIMARY KEY (`theme_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.theme_details: ~1 rows (approximately)
+-- Dumping data for table acses.theme_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `theme_details` DISABLE KEYS */;
-INSERT IGNORE INTO `theme_details` (`theme_id`, `website_name`, `light_logo`, `dark_logo`, `favicon`, `date_created`, `last_updated`, `status`) VALUES
-	(1, 'Dreamguys Technologies', 'favicon.png', 'logo3.png', 'favicon.ico', '2018-06-22 18:31:11', '2018-06-25 16:14:30', 1);
+INSERT  INTO `theme_details` (`theme_id`, `website_name`, `light_logo`, `dark_logo`, `favicon`, `date_created`, `last_updated`, `status`) VALUES
+	(1, 'Acses Technologies', 'logo.png', 'logo3.png', 'favicon.png', '2018-06-22 18:31:11', '2018-06-27 16:21:52', 1);
 /*!40000 ALTER TABLE `theme_details` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
