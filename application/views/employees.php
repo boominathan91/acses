@@ -18,19 +18,19 @@
 				<div class="col-sm-3 col-xs-6">  
 					<div class="form-group form-focus">
 						<label class="control-label"><?php lang('employee_id'); ?></label>
-						<input type="text" class="form-control floating" />
+						<input type="text" class="form-control floating"  name="employee_id" id="employee_ids" />
 					</div>
 				</div>
 				<div class="col-sm-3 col-xs-6">  
 					<div class="form-group form-focus">
 						<label class="control-label"><?php lang('employee_name'); ?></label>
-						<input type="text" class="form-control floating" />
+						<input type="text" class="form-control floating"  name="employee_name" id="employee_names" />
 					</div>
 				</div>
 				<div class="col-sm-3 col-xs-6"> 
 					<div class="form-group form-focus select-focus">
 						<label class="control-label"><?php lang('designation'); ?></label>
-						<select class="select floating"> 
+						<select class="select floating" name="designation" id="designations" > 
 							<option value=""><?php lang('select_designation'); ?></option>							
 						</select>
 					</div>
@@ -40,7 +40,7 @@
 				</div>     
 			</div>
 			<div class="div-table"></div> <!-- ajax table -->
-				 <div class="pagination" id='pagination'></div>
+				 <div id='pagination'></div>
 			</div>
 			
 		</div>
@@ -140,7 +140,7 @@
 						</div>
 					</div>
 					<div class="m-t-20 text-center">
-						<input type="text" name="login_id" id="login_id">
+						<input type="hidden" name="login_id" id="login_id">
 						<button class="btn btn-primary" type="submit" id="btn"><?php echo lang('save_employee'); ?></button>
 					</div>
 				</form>
@@ -159,7 +159,8 @@
 				<div class="modal-body card-box">
 					<p>Are you sure want to delete this?</p>
 					<div class="m-t-20"> <a href="#" class="btn btn-default" data-dismiss="modal">Close</a>
-						<button type="submit" class="btn btn-danger">Delete</button>
+						<input type="hidden" id="employee_hidden_id" name="employee_hidden_id">
+						<button type="button" class="btn btn-danger" onclick="delete_employee()"> Delete</button>
 					</div>
 				</div>
 			</form>

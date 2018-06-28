@@ -13,42 +13,7 @@ class Employees extends CI_Controller {
 		$this->load->model('employees_model','employees');
 		// Load Pagination library
 		$this->load->library('pagination');
-	}
-
-
-	public function loadRecord($rowno=0){
-
-    // Row per page
-		$rowperpage = 5;
-
-    // Row position
-		if($rowno != 0){
-			$rowno = ($rowno-1) * $rowperpage;
-		}
-		
-    // All records count
-		$allcount = $this->employees->getrecordCount();
-
-    // Get records
-		$users_record = $this->employees->getData($rowno,$rowperpage);
-		
-    // Pagination Configuration
-		$config['base_url'] = base_url().'employees/loadRecord';
-		$config['use_page_numbers'] = TRUE;
-		$config['total_rows'] = $allcount;
-		$config['per_page'] = $rowperpage;
-
-    // Initialize
-		$this->pagination->initialize($config);
-
-    // Initialize $data Array
-		$data['pagination'] = $this->pagination->create_links();
-		$data['result'] = $users_record;
-		$data['row'] = $rowno;
-
-		echo json_encode($data);
-		
-	}
+	}	
 
 	public function index()
 	{					
@@ -64,13 +29,14 @@ class Employees extends CI_Controller {
 		}else{
 			$joining_date = '0000-00-00';
 		}
+		$password = (!empty($_POST['password']))?$_POST['password']:'adminadmin';
 		$data = array(
 			'first_name' => $_POST['first_name'],
 			'last_name' => $_POST['last_name'],
 			'user_name' => $_POST['user_name'],
 			'email' => $_POST['email'],
-			'password' => md5($_POST['password']),
-			'decrypted' => $_POST['password'],
+			'password' => md5($password),
+			'decrypted' => $password,
 			'employee_id' => $_POST['employee_id'],
 			'joining_date' => $joining_date,
 			'phone_number' => $_POST['phone_number'],
@@ -83,7 +49,7 @@ class Employees extends CI_Controller {
 		}else{
 			$result = $this->employees->update_employees($data);
 		}
-		
+
 		echo json($result);
 
 	}
@@ -117,38 +83,66 @@ class Employees extends CI_Controller {
 	}
 
 
-	public function get_all_employees(){
-		$list = $this->employees->get_all_employees();
-		foreach ($list as $g) {
-			$row = array(); 
-			$row[] = $g->first_name.' '.$g->last_name;
-			$row[] = $g->employee_id;
-			$row[] = $g->email;
-			$row[] = $g->phone_number;
-			$row[] = $g->joining_date;			
-			$row[] = $g->company;
-			$row[] = '<div class="dropdown">
-			<a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
-			<ul class="dropdown-menu pull-right">
-			<li><a href="#"  data-toggle="modal" data-target="#add_department" title="Edit" onclick="show_modal('.$g->login_id.')"><i class="fa fa-pencil m-r-5"></i> Edit</a></li>
-			<li><a href="#"   data-toggle="modal" data-target="#delete_department"  title="Delete" onclick="show_delete_modal('.$g->login_id.')"><i class="fa fa-trash-o m-r-5"></i> Delete</a></li>
-			</ul>
-			</div>';  
-			$data[] = $row;
+	public function loadRecord(){
+		
+		$total_page = 1;
+		$inputs  = $this->input->post();
+		$limit   = 5;
+		$inputs['limit']  = $limit;
+		$records = $this->employees->getData(1,$limit);
+		$count   = $this->employees->getData(2,$limit);
+		if($count > $limit){
+			$total_page = ceil($count /$limit);
 		}
-		$output = array(
-		//	"draw" => $_POST['draw'],
-			"recordsTotal" => $this->employees->count_all(),
-			"recordsFiltered" => $this->employees->count_filtered(),
-			"data" => $data,
+		$array = array();
+		$users_record = array();
+		foreach($records as $u){
+			$datas['first_letter'] = substr($u['first_name'], 0, 1);
+			$datas['first_name'] = $u['first_name'];
+			$datas['last_name'] = $u['last_name'];
+			$datas['employee_id'] = $u['employee_id'];
+			$datas['email'] = $u['email'];
+			$datas['phone_number'] = $u['phone_number'];
+			$datas['joining_date'] = date('d-m-Y',strtotime($u['joining_date']));
+			$datas['company'] = $u['company'];
+			$datas['login_id'] = $u['login_id'];
+			$datas['designation_id'] = $u['designation_id'];
+			$datas['designation_name'] = $u['designation_name'];
+			$datas['department_name'] = $u['department_name'];
+			$datas['department_id'] = $u['department_id'];
+			$datas['drop_down'] = $this->employees->get_department_by_id($u['department_id']);
+			$users_record[] = $datas;
+		}
+		$array['result'] = $users_record;
+		$array['designations'] = $this->employees->get_designation_names();
+		$array['header']=array('employee_name' =>lang_new('employee_name'),
+			'employee_id' =>lang_new('employee_id'),
+			'email' =>lang_new('email'),
+			'phone_number' =>lang_new('phone_number'),
+			'joining_date' =>lang_new('joining_date'),
+			'role' =>lang_new('role'),
+			'action' =>lang_new('action')
 		);
-                //output to json format
-		echo '<pre>';
-		print_r($output);
-		//echo json($output);
-
+		$array['current_page'] = $_POST['pageno'];
+		$array['total_page']   = $total_page;
+		echo json($array);
+		
+	}
+	public function get_employee_by_id(){
+		$data['result'] =  $this->employees->get_employee_by_id();
+		$data['result']['joining_date'] = date('d-m-Y',strtotime($data['result']['joining_date']));
+		$data['designation'] = $this->employees->get_designation_by_id($data['result']['department_id']);
+		echo json($data);
 	}
 
+	public function change_role(){
+		$result  = $this->employees->change_role();
+		echo json(array('status'=>$result));
+	}
+	public function delete_employee(){
+		$result  = $this->employees->delete_employee();
+		echo json(array('status'=>$result));
+	}
 
 }
 
