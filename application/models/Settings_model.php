@@ -69,6 +69,16 @@ class Settings_model extends CI_Model {
 		$this->db->update('theme_details',$data,$where);		
 		return $where['theme_id'];			
 	}
+
+	/*Gettings Default Theme Data*/
+	Public function get_default_theme_data(){
+
+		$where = array('status'=>1);
+		$output = $this->db->get_where('theme_details',$where)->row_array();
+		$this->session->set_userdata($output);	
+	}
+
+	
 	public function check_department_settings_by_id(){
 		$where = array('status' => 1 ,'department_name' => $_POST['department_name']);
 		if(!empty($_POST['department_id'])){

@@ -225,6 +225,7 @@ class Settings extends CI_Controller {
 			$where = array('theme_id' => $result_data->theme_id);
 			$result = $this->settings->update_theme_settings($data,$where);		
 		}
+		$this->settings->get_default_theme_data();
 		echo json(array('file_name' => $data[$field_name] ,'field_name' => $field_name));
 	}
 
