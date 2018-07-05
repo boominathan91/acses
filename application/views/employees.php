@@ -27,11 +27,15 @@
 						<input type="text" class="form-control floating"  name="employee_name" id="employee_names" />
 					</div>
 				</div>
+				
 				<div class="col-sm-3 col-xs-6"> 
 					<div class="form-group form-focus select-focus">
 						<label class="control-label"><?php lang('designation'); ?></label>
 						<select class="select floating" name="designation" id="designations" > 
-							<option value=""><?php lang('select_designation'); ?></option>							
+							<option value=""><?php lang('select_designation'); ?></option>	
+							<?php foreach($designations as $d){ ?>
+								<option value="<?php echo $d['designation_id']?>"><?php echo $d['designation_name']?></option>
+							 <?php } ?>						
 						</select>
 					</div>
 				</div>

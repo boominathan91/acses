@@ -19,6 +19,7 @@ class Employees extends CI_Controller {
 	{					
 		$data['title'] = 'Employees';
 		$data['department'] = $this->settings->get_departments();
+		$data['designations'] = $this->employees->get_designation_names();
 		render_page('employees',$data);
 	}
 	public function  insert_employees(){
@@ -114,7 +115,7 @@ class Employees extends CI_Controller {
 			$users_record[] = $datas;
 		}
 		$array['result'] = $users_record;
-		$array['designations'] = $this->employees->get_designation_names();
+		// $array['designations'] = $this->employees->get_designation_names();
 		$array['header']=array('employee_name' =>lang_new('employee_name'),
 			'employee_id' =>lang_new('employee_id'),
 			'email' =>lang_new('email'),

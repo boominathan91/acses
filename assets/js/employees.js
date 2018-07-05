@@ -255,16 +255,16 @@ function inital_loading_employee(pageno,employee_id,employee_name,designation) {
 			pagination_html += '</ul></div></div></div>';
 		}
 		$('#pagination').html(pagination_html);
-		createTable(obj.result,obj.row,obj.header,obj.designations);
+		createTable(obj.result,obj.row,obj.header);
 
 	});
 }
 
 
     //   // Create table list
-    function createTable(result,sno,header,designations){
+    function createTable(result,sno,header){
 
-    	$("#designations option:gt(0)").remove();
+    	
     	$('.div-table').html('');
 
     	/*Table Header */
@@ -360,11 +360,11 @@ function inital_loading_employee(pageno,employee_id,employee_name,designation) {
 
     $('.div-table').append(data);
 
-    for(index in designations){
-    	var option = $('<option />');
-    	option.attr('value', designations[index].designation_id).text(designations[index].designation_name);           
-    	$('#designations').append(option);
-    }
+    // for(index in designations){
+    // 	var option = $('<option />');
+    // 	option.attr('value', designations[index].designation_id).text(designations[index].designation_name);           
+    // 	$('#designations').append(option);
+    // }
 
 
 
