@@ -11,7 +11,7 @@ class Login extends CI_Controller {
 
 	/*Login  Page */
 	public function index()
-	{	if($this->session->userdata('login_id')){
+	{	if($this->session->userdata('login_id') && $this->session->userdata('type') == 'admin'){
 			redirect('employees');
 		}
 		$data['title'] = 'Login';
@@ -28,7 +28,7 @@ class Login extends CI_Controller {
 		render_login('forgot_password',$data);		
 	}
 	public function logout(){
-		$data = array('login_id','user_name','email','label_data');
+		$data = array('login_id','user_name','email','label_data','type');
 		$this->session->unset_userdata($data);
 		redirect('login');
 	}

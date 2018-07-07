@@ -5,12 +5,10 @@ class Employees extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
-		if(!$this->session->userdata('login_id')){
-			$this->session->set_flashdata('msg','Please login to continue !');
+		if(empty($this->session->userdata('login_id')) || $this->session->userdata('type') !='admin'){
+			$this->session->set_flashdata('msg','Please login as admin to continue !');
 			redirect('login');
-		}elseif($this->session->userdata('type')!='admin'){
-            $this->session->set_flashdata('msg','You dont have permission to access that page !');
-        }
+		}
 		$this->load->model('settings_model','settings');
 		$this->load->model('employees_model','employees');
 		// Load Pagination library
@@ -18,11 +16,12 @@ class Employees extends CI_Controller {
 	}	
 
 	public function index()
-	{					
-		$data['title'] = 'Employees';
+	{				
+
+        $data['title'] = 'Employees';
 		$data['department'] = $this->settings->get_departments();
 		$data['designations'] = $this->employees->get_designation_names();
-		render_page('employees',$data);
+        render_page('employees',$data);
 	}
 
 	 //generate a username from Full name
@@ -67,7 +66,7 @@ class Employees extends CI_Controller {
     	if(empty($_POST['login_id'])){
     		$data += array('sinch_username' => $sinch_username);
     		$this->employees->insert_employees($data);
-    		$result = array('user_name' => $sinch_username,'email'=>$_POST['email'],'password'=>$password);
+    		$result = array('sinch_username' => $sinch_username);
     	}else{
     		$result = $this->employees->update_employees($data);
     	}

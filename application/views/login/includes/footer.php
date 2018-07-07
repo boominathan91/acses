@@ -7,5 +7,7 @@
 </script>
 
 <script src="<?php echo base_url(); ?>assets/js/login.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/sinch.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/js/custom_sinch.js"></script>
     </body>
 </html>

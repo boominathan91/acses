@@ -1,3 +1,4 @@
+localStorage.clear();
 $('#login_form').submit(function(e){
 	e.preventDefault();
 	var user_name = $('#user_name').val();
@@ -12,16 +13,21 @@ $('#login_form').submit(function(e){
 	}
 	$.post(base_url+'login/check_login',{user_name:user_name,password:password},function(res){
 		var obj = jQuery.parseJSON(res);
+
 		if(obj.invalid_username){
 			updateNotification('', 'Invalid username!', 'error');	
 			return false;
 		}else if(obj.invalid_password){
 			updateNotification('', 'Invalid password!', 'error');	
 			return false;
-		}else if(obj.login_id){
+		}else if(obj.type == 'admin'){
 			updateNotification('Success !', 'Logged in successfully!', 'success');	
 			setTimeout(function() {window.location.href=base_url+"employees";}, 1000);
-			
+		}else if(obj.type == 'user'){
+			updateNotification('Success !', 'Logged in successfully!', 'success');				
+			login(obj);
+			window.location.href=base_url+"chat";
+
 		}		
 	});	
 	return false;
