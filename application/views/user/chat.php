@@ -1,7 +1,24 @@
 <div class="main-wrapper">
-	<?php $this->load->view('user/includes/nav_bar'); ?>
+	<?php $this->load->view('user/includes/nav_bar'); 
+	
+	if(!empty($chat)){
+		$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
+		$class = 'hidden';
+		$online_status = $chat['online_status'];
+	}else{
+		$name = '';
+		$class = 'hidden';
+		$online_status = 'offline';
+	} 
+
+	?>
+
+
+	<!-- From USER  -->
+
+	<input type="hidden" name="sender_id" id="sender_id" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 	 <div class="page-wrapper">
-				<div class="chat-main-row">
+				<div class="chat-main-row <?php echo $class; ?>">
 					<div class="chat-main-wrapper">
 						<div class="col-xs-9 message-view task-view">
 							<div class="chat-window">
@@ -9,400 +26,23 @@
 									<div class="navbar">
 										<div class="user-details">
 											<div class="pull-left user-img m-r-10">
-												<a href="profile.html" title="Mike Litorus"><img src="assets/img/user.jpg" alt="" class="w-40 img-circle"><span class="status online"></span></a>
+												<a href="#" title="Mike Litorus"><img src="assets/img/user.jpg" alt="" class="w-40 img-circle"><span class="status <?php echo $online_status; ?>"></span></a>
 											</div>
 											<div class="user-info pull-left">
-												<a href="profile.html" title="Mike Litorus"><span class="font-bold">Mike Litorus</span> <i class="typing-text">Typing...</i></a>
-												<span class="last-seen">Last seen today at 7:50 AM</span>
+												<a href="#" title="<?php $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
+												<input type="text" name="recipients" id="recipients">
+												<!-- 
+												<span class="last-seen">Last seen today at 7:50 AM</span> -->
 											</div>
-										</div>
-										<ul class="nav navbar-nav pull-right chat-menu">
-											<li>
-												<a href="voice-call.html"><i class="fa fa-phone"></i></a>
-											</li>
-											<li>
-												<a href="video-call.html"><i class="fa fa-video-camera"></i></a>
-											</li>
-											<li class="dropdown">
-												<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
-												<ul class="dropdown-menu">
-													<li><a href="javascript:void(0)">Delete Conversations</a></li>
-													<li><a href="javascript:void(0)">Settings</a></li>
-												</ul>
-											</li>
-										</ul>
+										</div>										
 										<a href="#task_window" class="task-chat profile-rightbar pull-right"><i class="fa fa-user" aria-hidden="true"></i></a>
-										<div class="message-search pull-right">
-											<div class="input-group input-group-sm">
-												<input type="text" class="form-control" placeholder="Search" required="">
-												<span class="input-group-btn">
-													<button class="btn" type="button"><i class="fa fa-search"></i></button>
-												</span>
-											</div>
-										</div>
 									</div>
 								</div>
 								<div class="chat-contents">
 									<div class="chat-content-wrap">
 										<div class="chat-wrap-inner">
 											<div class="chat-box">
-												<div class="chats">
-													<div class="chat chat-right">
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Hello. What can I do for you?</p>
-																	<span class="chat-time">8:30 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat-line">
-														<span class="chat-date">October 8th, 2015</span>
-													</div>
-													<div class="chat chat-left">
-														<div class="chat-avatar">
-															<a href="profile.html" class="avatar">
-																<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-															</a>
-														</div>
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>I'm just looking around.</p>
-																	<p>Will you tell me something about yourself? </p>
-																	<span class="chat-time">8:35 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Are you there? That time!</p>
-																	<span class="chat-time">8:40 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-right">
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Where?</p>
-																	<span class="chat-time">8:35 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>OK, my name is Limingqiang. I like singing, playing basketballand so on.</p>
-																	<span class="chat-time">8:42 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-left">
-														<div class="chat-avatar">
-															<a href="profile.html" class="avatar">
-															<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-															</a>
-														</div>
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>You wait for notice.</p>
-																	<span class="chat-time">8:30 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Consectetuorem ipsum dolor sit?</p>
-																	<span class="chat-time">8:50 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>OK?</p>
-																	<span class="chat-time">8:55 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content img-content">
-																	<div class="chat-img-group clearfix">
-																		<p>Uploaded 3 Images</p>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																	</div>
-																	<span class="chat-time">9:00 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-right">
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>OK!</p>
-																	<span class="chat-time">9:00 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-left">
-														<div class="chat-avatar">
-															<a href="profile.html" class="avatar">
-																<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-															</a>
-														</div>
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Uploaded 3 files</p>
-																	<ul class="attach-list">
-																		<li><i class="fa fa-file"></i> <a href="#">example.avi</a></li>
-																		<li><i class="fa fa-file"></i> <a href="#">activity.psd</a></li>
-																		<li><i class="fa fa-file"></i> <a href="#">example.psd</a></li>
-																	</ul>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Consectetuorem ipsum dolor sit?</p>
-																	<span class="chat-time">8:50 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>OK?</p>
-																	<span class="chat-time">8:55 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-right">
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content img-content">
-																	<div class="chat-img-group clearfix">
-																		<p>Uploaded 6 Images</p>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																		<a class="chat-img-attach" href="#">
-																			<img width="182" height="137" alt="" src="assets/img/placeholder.png">
-																			<div class="chat-placeholder">
-																				<div class="chat-img-name">placeholder.png</div>
-																				<div class="chat-file-desc">842 KB</div>
-																			</div>
-																		</a>
-																	</div>
-																	<span class="chat-time">9:00 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-left">
-														<div class="chat-avatar">
-															<a href="profile.html" class="avatar">
-																<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-															</a>
-														</div>
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<ul class="attach-list">
-																		<li class="pdf-file"><i class="fa fa-file-pdf-o"></i> <a href="#">Document_2016.pdf</a></li>
-																	</ul>
-																	<span class="chat-time">9:00 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>	
-													<div class="chat chat-right">
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<ul class="attach-list">
-																		<li class="pdf-file"><i class="fa fa-file-pdf-o"></i> <a href="#">Document_2016.pdf</a></li>
-																	</ul>
-																	<span class="chat-time">9:00 am</span>
-																</div>
-																<div class="chat-action-btns">
-																	<ul>
-																		<li><a href="#" class="share-msg" title="Share"><i class="fa fa-share-alt"></i></a></li>
-																		<li><a href="#" class="edit-msg" title="Edit"><i class="fa fa-pencil"></i></a></li>
-																		<li><a href="#" class="del-msg" title="Delete"><i class="fa fa-trash-o"></i></a></li>
-																	</ul>
-																</div>
-															</div>
-														</div>
-													</div>
-													<div class="chat chat-left">
-														<div class="chat-avatar">
-															<a href="profile.html" class="avatar">
-																<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-															</a>
-														</div>
-														<div class="chat-body">
-															<div class="chat-bubble">
-																<div class="chat-content">
-																	<p>Typing ...</p>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
+												<div class="chats"></div>
 											</div>
 										</div>
 									</div>
@@ -412,9 +52,9 @@
 										<div class="message-inner">
 											<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
 											<div class="message-area"><div class="input-group">
-												<textarea class="form-control" placeholder="Type message..."></textarea>
+												<textarea class="form-control" placeholder="Type message..." id="input_message"></textarea>
 												<span class="input-group-btn">
-													<button class="btn btn-primary" type="button"><i class="fa fa-send"></i></button>
+													<button class="btn btn-primary" type="button" onclick="message()"><i class="fa fa-send"></i></button>
 												</span>
 												</div>
 											</div>

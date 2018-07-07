@@ -28,8 +28,11 @@ function search_user(){
 	});
 }
 
+
+
 /*Set Current Active User in Chat */
 function set_chat_user(login_id){
+
 	$('li').removeClass('active');
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
@@ -41,6 +44,9 @@ function set_chat_user(login_id){
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
+		$('.chat-main-row').removeClass('hidden');
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		$('#recipients').val(obj.sinch_username);
 
 	});
 

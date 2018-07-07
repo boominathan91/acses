@@ -11,6 +11,7 @@ class Chat extends CI_Controller {
 	public function index()
 	{
 		$data['title'] = 'Chat';		
+		$data['chat'] = $this->chat->get_chat_data();
 		render_page('chat',$data);
 	}
 	public function get_users_by_name(){
