@@ -14,9 +14,16 @@ if(!function_exists('render_page')){
 	/* Rendering Login Page */
 	function render_page($page,$data=null){
 		$CI = &get_instance();
-		$CI->load->view('includes/header',$data);		
-		$CI->load->view($page);
-		$CI->load->view('includes/footer');
+		if($CI->session->userdata('type') == 'admin'){
+			$CI->load->view('admin/includes/header',$data);		
+			$CI->load->view('admin/'.$page);
+			$CI->load->view('admin/includes/footer');	
+		}else{
+			$CI->load->view('user/includes/header',$data);		
+			$CI->load->view('user/'.$page);
+			$CI->load->view('user/includes/footer');	
+		}
+		
 
 	}
 }

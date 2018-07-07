@@ -34,7 +34,7 @@ class Login_model extends CI_Model {
 		return $this->db->get('login_details')->row_array();
 	}
 	public function check_password($user_name,$password){
-		$this->db->select('login_id,user_name,email,type,sinch_username');
+		$this->db->select('login_id,user_name,email,type,sinch_username,first_name,last_name');
 		$this->db->where('password',$password);
 		$this->db->where('user_name',$user_name);
 		$this->db->or_where('email',$_POST['user_name']);

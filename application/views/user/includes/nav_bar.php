@@ -101,7 +101,7 @@
 					</li>	
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle user-link" data-toggle="dropdown" title="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
-							<span class="user-img"><img class="img-circle" src="<?php echo base_url(); ?>assets/img/user.jpg" width="40" alt="Admin">
+							<span class="user-img"><img class="img-circle" src="<?php echo base_url(); ?>assets/img/user.jpg" width="40" alt="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
 							<span class="status online"></span></span>
 							<span><?php echo ucfirst($this->session->userdata('first_name')); ?></span>
 							<i class="caret"></i>
@@ -129,43 +129,45 @@
                 <div class="sidebar-inner slimscroll">
 					<div class="sidebar-menu">
 						<?php $uri = $this->uri->segment(1); ?>
-						<ul>
-							<?php
-							 /*Main Menu starts */
-							  if($uri == 'employees'){ ?>
-
-								<li <?php if($uri == 'employees'){ echo 'class="active"'; } ?> > 
-									<a href="<?php  echo base_url(); ?>employees">Employees</a>
-								</li>
-								<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
-							<?php } /*Main Menu ends*/ 
-							else{ /* Settings Menu starts */ ?>
+						<ul>							
+							<?php if($uri == 'profile'){ ?>	
+								<li> 
+								<a href="<?php echo base_url(); ?>chat">Chat</a>
+							</li>
+							<?php } ?>
+							<?php if($uri == 'chat'){ ?>
+								<!-- Text Chat  -->	
 							<li> 
-								<a href="<?php echo base_url(); ?>employees"><i class="fa fa-home"></i> Back to Home</a>
+								<a href="<?php echo base_url(); ?>profile"><i class="fa fa-home"></i> Back to Home</a>
 							</li>
-							<li class="menu-title">Settings</li>
-							<li <?php if($uri == 'company-settings'){ echo 'class="active"'; } ?> > 
-								<a href="<?php echo base_url(); ?>company-settings">Company Settings</a>
+							<li class="menu-title">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+							<li> 
+								<a href="chat.html">#General</a>
 							</li>
-							<li <?php if($uri == 'localization-settings'){ echo 'class="active"'; } ?>> 
-								<a href="<?php echo base_url(); ?>localization-settings">Localization</a>
+							<li> 
+								<a href="chat.html">#Video Responsive Survey</a>
 							</li>
-							<li <?php if($uri == 'theme-settings'){ echo 'class="active"'; } ?>> 
-								<a href="<?php echo base_url(); ?>theme-settings">Theme Settings</a>
+							<li> 
+								<a href="chat.html">#500rs</a>
 							</li>
-							<li <?php if($uri == 'change-password'){ echo 'class="active"'; } ?>> 
-								<a href="<?php echo base_url(); ?>change-password">Change Password</a>
-							</li>							
-							<li <?php if($uri == 'department-settings'){ echo 'class="active"'; } ?>> 
-								<a href="<?php echo base_url(); ?>department-settings">Departments</a>
-							</li>	
-							<li <?php if($uri == 'designation-settings'){ echo 'class="active"'; } ?>> 
-								<a href="<?php echo base_url(); ?>designation-settings">Designations</a>
-							</li>	
-							<?php 
-									} /* Settings Menu ends */
-
-							?>						
+							<li> 
+								<a href="chat.html">#warehouse</a>
+							</li>
+							<li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+							<li> 
+								<a href="chat.html"><span class="status online"></span> John Doe <span class="badge bg-danger pull-right">1</span></a>
+							</li>
+							<li> 
+								<a href="chat.html"><span class="status offline"></span> Richard Miles <span class="badge bg-danger pull-right">18</span></a>
+							</li>
+							<li> 
+								<a href="chat.html"><span class="status away"></span> John Smith</a>
+							</li>
+							<li class="active"> 
+								<a href="chat.html"><span class="status online"></span> Mike Litorus <span class="badge bg-danger pull-right">108</span></a>
+							</li>
+							<!-- Text Chat  ends -->					
+						<?php } ?>
 						</ul>
 					</div>
                 </div>

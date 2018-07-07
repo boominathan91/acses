@@ -9,7 +9,8 @@ class Chat extends CI_Controller {
 
 	public function index()
 	{
-		echo 'welcome';
+		$data['title'] = 'Chat';		
+        render_page('chat',$data);
 	}
 
 }

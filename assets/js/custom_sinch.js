@@ -1,13 +1,3 @@
-/*Intialize the sinch */
-var sinchClient = new SinchClient({
-	applicationKey: 'f06ae4f2-4980-40aa-89ca-9b98d80d70c4',
-	capabilities: {calling: true, video: true, messaging: true},
-	supportActiveConnection: true,
-	onLogMessage: function(message) {
-		//console.log(message.message);
-	}
-});
-sinchClient.startActiveConnection();
 
 /*Register New User in Sinch */
 var register = function(data){
@@ -36,14 +26,18 @@ var login = function(data){
 		sinchClient.start(sessionObj)
 		.then(function() {
 			localStorage[sessionName] = JSON.stringify(sinchClient.getSession());
+			window.location.href=base_url+"chat";
 		})
 		.fail(handleFail);
 	}
 	else {	
 		sinchClient.start(credential).then(function() {
 			localStorage[sessionName] = JSON.stringify(sinchClient.getSession());
+			window.location.href=base_url+"chat";
 		}).fail(register(credential));
 	}
+
+	
 }
 
 

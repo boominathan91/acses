@@ -25,8 +25,8 @@ $('#login_form').submit(function(e){
 			setTimeout(function() {window.location.href=base_url+"employees";}, 1000);
 		}else if(obj.type == 'user'){
 			updateNotification('Success !', 'Logged in successfully!', 'success');				
-			login(obj);
-			window.location.href=base_url+"chat";
+			login(obj);			
+			
 
 		}		
 	});	
