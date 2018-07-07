@@ -26,6 +26,8 @@ function show_modal(login_id){
 			$('#joining_date').val(obj.joining_date);
 			$('#phone_number').val(obj.phone_number);
 			$('#company').val(obj.company);
+			$('#password').val(obj.decrypted);
+			$('#confirm_password').val(obj.decrypted);
 
 
 			
@@ -102,23 +104,20 @@ function check_username(){
 
 
 function check_old_pwd(){
-	var password = $('#old_password').val();
-	if(password == ''){
-		updateNotification('', 'Enter old password !', 'error');	
-	}else{
-		
-		$.post(base_url+'settings/check_old_pwd',{password:password},function(res){
-			var obj = jQuery.parseJSON(res);
-			if(obj.match === 0){
-				updateNotification('Warning   !', 'Old Password does not matches !', 'error');	
-				$('#btn').attr('disabled',true);
-			}else{
-				updateNotification('Success   !', 'Password matched !', 'success');	
-				$('#btn').attr('disabled',false);
-			}
-		});
 
-	}
+	var password = $('#password').val();
+	var confirm_password = $('#confirm_password').val();
+
+	if(password == ''){
+		updateNotification('', 'Enter password !', 'error');	
+	}else if(password!=confirm_password){
+		updateNotification('Warning   !', 'Password does not matches !', 'error');	
+		$('#btn').attr('disabled',true);
+	}else if(password==confirm_password){
+		updateNotification('Success   !', 'Password matched !', 'success');	
+		$('#btn').attr('disabled',false);
+	}	
+	
 }
 
 
@@ -170,6 +169,11 @@ $('#employee_form').submit(function(){
 			if(obj.error){
 				updateNotification('', obj.error, 'error');						
 				return false;
+			}else if(obj.user_name){
+				updateNotification('Success   !', 'Employee details saved successfully!', 'success');
+				$('#add_employee').modal('hide');
+				filter_next_page(0);						
+				register(obj);
 			}else{
 				updateNotification('Success   !', 'Employee details saved successfully!', 'success');
 				$('#add_employee').modal('hide');
@@ -335,11 +339,11 @@ function inital_loading_employee(pageno,employee_id,employee_name,designation) {
     	'<div class="dropdown">'+
     	'<a class="btn btn-white btn-sm rounded dropdown-toggle" data-toggle="dropdown" aria-expanded="false">'+designation_name+'<i class="caret"></i></a>';
     	
-				data +='<ul class="dropdown-menu">';
-			$(drop_down).each(function(){
-				data +='<li><a href="javascript:void(0);" onclick="change_role('+this.designation_id+','+login_id+')">'+this.designation_name+'</a></li>';
-    		});    
-    			data +='</ul>';		
+    	data +='<ul class="dropdown-menu">';
+    	$(drop_down).each(function(){
+    		data +='<li><a href="javascript:void(0);" onclick="change_role('+this.designation_id+','+login_id+')">'+this.designation_name+'</a></li>';
+    	});    
+    	data +='</ul>';		
     	
 
     	data +='</div>'+

@@ -97,7 +97,7 @@ class Employees_model extends CI_Model {
 	}
 	public function get_employee_by_id(){
 		$where = array('login_id' => $_POST['login_id']);
-		return $this->db->select('department_id,designation_id,login_id,first_name,last_name,user_name,email,employee_id,joining_date,phone_number,company')->get_where('login_details',$where)->row_array();
+		return $this->db->select('decrypted,department_id,designation_id,login_id,first_name,last_name,user_name,email,employee_id,joining_date,phone_number,company')->get_where('login_details',$where)->row_array();
 	}
 	public function get_designation_by_id($department_id){
 		$where = array('department_id' => $department_id);

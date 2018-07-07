@@ -23,8 +23,10 @@ if($uri == 'department-settings' || $uri == 'designation-settings' || $uri =='em
 <?php if($uri == 'employees'){ ?>
 	<!-- Employees  -->
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
-	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.min.js"></script>	
 	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/employees.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/sinch.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/custom_sinch.js"></script>	
 	<script src="<?php echo base_url(); ?>assets/js/select2.min.js"></script>
 	<script type="text/javascript">
 		$(".select2-option").select2();

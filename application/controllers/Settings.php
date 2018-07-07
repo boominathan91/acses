@@ -8,7 +8,10 @@ class Settings extends CI_Controller {
 		if(!$this->session->userdata('login_id')){
 			$this->session->set_flashdata('msg','Please login to continue !');
 			redirect('login');
+		}elseif($this->session->userdata('type')!='admin'){
+			$this->session->set_flashdata('msg','You dont have permission to access that page !');
 		}
+
 		$this->load->model('settings_model','settings');
 	}
 	/*Company Settings */
