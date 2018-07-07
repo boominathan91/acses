@@ -28,6 +28,7 @@ class Login extends CI_Controller {
 		render_login('forgot_password',$data);		
 	}
 	public function logout(){
+		$this->db->update('login_details',array('online_status'=>0),array('login_id'=>$this->session->userdata('login_id')));
 		$data = array('login_id','user_name','email','label_data','type');
 		$this->session->unset_userdata($data);
 		redirect('login');

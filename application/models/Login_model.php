@@ -18,6 +18,7 @@ class Login_model extends CI_Model {
 				$response = array('invalid_password'=>1,'error' => 'Enter valid username or email');	
 			}else{
 				$this->session->set_userdata($result);
+				$this->db->update('login_details',array('online_status'=>1),array('login_id'=>$this->session->userdata('login_id')));
 				$this->get_default_language_data();
 				$this->get_default_company_data();
 				$this->get_default_theme_data();

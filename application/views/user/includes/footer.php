@@ -18,5 +18,10 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 
 <?php } ?>	
 
+<?php if($uri == 'chat' ){ ?>
+	<!-- JS -->
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/chat.js"></script>
+<?php } ?>	
+
 </body>
 </html>

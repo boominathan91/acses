@@ -16,6 +16,52 @@
 CREATE DATABASE IF NOT EXISTS `acses` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `acses`;
 
+-- Dumping structure for table acses.chat_details
+CREATE TABLE IF NOT EXISTS `chat_details` (
+  `chat_id` int(11) NOT NULL AUTO_INCREMENT,
+  `message` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`chat_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses.chat_details: ~0 rows (approximately)
+/*!40000 ALTER TABLE `chat_details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chat_details` ENABLE KEYS */;
+
+-- Dumping structure for table acses.chat_group_details
+CREATE TABLE IF NOT EXISTS `chat_group_details` (
+  `group_id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(255) NOT NULL,
+  `type` enum('text','audio','video') NOT NULL DEFAULT 'text',
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_by` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`group_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses.chat_group_details: ~0 rows (approximately)
+/*!40000 ALTER TABLE `chat_group_details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chat_group_details` ENABLE KEYS */;
+
+-- Dumping structure for table acses.chat_group_members
+CREATE TABLE IF NOT EXISTS `chat_group_members` (
+  `members_id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `login_id` int(11) NOT NULL,
+  `created_by` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`members_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses.chat_group_members: ~0 rows (approximately)
+/*!40000 ALTER TABLE `chat_group_members` DISABLE KEYS */;
+/*!40000 ALTER TABLE `chat_group_members` ENABLE KEYS */;
+
 -- Dumping structure for table acses.city_details
 CREATE TABLE IF NOT EXISTS `city_details` (
   `city_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -47930,6 +47976,26 @@ INSERT IGNORE INTO `designation_details` (`designation_id`, `designation_name`, 
 	(5, 'Andriod', 1, '2018-06-25 10:28:33', '2018-06-25 11:52:14', 1);
 /*!40000 ALTER TABLE `designation_details` ENABLE KEYS */;
 
+-- Dumping structure for table acses.invite_details
+CREATE TABLE IF NOT EXISTS `invite_details` (
+  `invite_id` int(11) NOT NULL AUTO_INCREMENT,
+  `invite_from` int(11) NOT NULL,
+  `invite_to` int(11) NOT NULL,
+  `type` enum('text','audio','video') NOT NULL DEFAULT 'text',
+  `group_id` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`invite_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses.invite_details: ~2 rows (approximately)
+/*!40000 ALTER TABLE `invite_details` DISABLE KEYS */;
+INSERT IGNORE INTO `invite_details` (`invite_id`, `invite_from`, `invite_to`, `type`, `group_id`, `status`, `created_at`, `last_updated`) VALUES
+	(1, 1, 2, 'text', 0, 1, '2018-07-07 12:08:03', '2018-07-07 12:08:03'),
+	(2, 6, 1, 'text', 0, 1, '2018-07-07 12:08:09', '2018-07-07 12:08:09');
+/*!40000 ALTER TABLE `invite_details` ENABLE KEYS */;
+
 -- Dumping structure for table acses.label_details
 CREATE TABLE IF NOT EXISTS `label_details` (
   `label_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -47940,9 +48006,9 @@ CREATE TABLE IF NOT EXISTS `label_details` (
   `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`label_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=60 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.label_details: ~48 rows (approximately)
+-- Dumping data for table acses.label_details: ~49 rows (approximately)
 /*!40000 ALTER TABLE `label_details` DISABLE KEYS */;
 INSERT IGNORE INTO `label_details` (`label_id`, `label_key`, `label_value`, `lang_id`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'management_login', 'Management Login', 1, '2018-06-21 15:02:59', '2018-06-21 15:33:03', 1),
@@ -48003,7 +48069,8 @@ INSERT IGNORE INTO `label_details` (`label_id`, `label_key`, `label_value`, `lan
 	(56, 'last_name', 'Last Name', 1, '2018-06-26 11:58:18', '2018-06-26 11:58:18', 1),
 	(57, 'user_name', 'Username', 1, '2018-06-26 11:58:50', '2018-06-26 11:58:50', 1),
 	(58, 'joining_date', 'Joining Date', 1, '2018-06-26 12:03:26', '2018-06-26 12:03:26', 1),
-	(59, 'save_employee', 'Save Employee', 1, '2018-06-26 12:05:00', '2018-06-26 12:05:00', 1);
+	(59, 'save_employee', 'Save Employee', 1, '2018-06-26 12:05:00', '2018-06-26 12:05:00', 1),
+	(60, 'my_profile', 'My Profile', 1, '2018-07-07 13:02:10', '2018-07-07 13:02:10', 1);
 /*!40000 ALTER TABLE `label_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.lang_details
@@ -48044,11 +48111,18 @@ INSERT IGNORE INTO `localization_details` (`local_id`, `country_id`, `date_forma
 -- Dumping structure for table acses.login_details
 CREATE TABLE IF NOT EXISTS `login_details` (
   `login_id` int(11) NOT NULL AUTO_INCREMENT,
+  `sinch_username` varchar(255) NOT NULL,
   `user_name` varchar(255) NOT NULL,
   `first_name` varchar(255) NOT NULL,
   `last_name` varchar(255) NOT NULL,
   `employee_id` varchar(255) NOT NULL,
   `joining_date` date NOT NULL,
+  `profile_img` varchar(255) NOT NULL,
+  `dob` date NOT NULL,
+  `gender` enum('male','female') NOT NULL DEFAULT 'male',
+  `address` varchar(255) NOT NULL,
+  `state` varchar(255) NOT NULL,
+  `country` varchar(255) NOT NULL,
   `phone_number` varchar(255) NOT NULL,
   `company` varchar(255) NOT NULL,
   `department_id` int(11) NOT NULL,
@@ -48058,37 +48132,27 @@ CREATE TABLE IF NOT EXISTS `login_details` (
   `decrypted` varchar(255) NOT NULL,
   `date_created` datetime DEFAULT CURRENT_TIMESTAMP,
   `last_updated` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `type` enum('user','admin') DEFAULT 'user',
+  `online_status` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`login_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.login_details: ~23 rows (approximately)
+-- Dumping data for table acses.login_details: ~3 rows (approximately)
 /*!40000 ALTER TABLE `login_details` DISABLE KEYS */;
-INSERT IGNORE INTO `login_details` (`login_id`, `user_name`, `first_name`, `last_name`, `employee_id`, `joining_date`, `phone_number`, `company`, `department_id`, `designation_id`, `email`, `password`, `decrypted`, `date_created`, `last_updated`, `status`) VALUES
-	(1, 'admin', 'Admin', 'admin', '', '0000-00-00', '', '', 0, 0, 'admin@admin.com', '0192023a7bbd73250516f069df18b500', '', '2018-06-25 14:39:15', '2018-06-27 10:47:45', 1),
-	(3, 'eboominathan', 'Boomi', 'Nathan', '1', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 5, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:43:06', 1),
-	(18, 'eboominathan', 'Boomi', 'Nathan', '2', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:07', 1),
-	(19, 'eboominathan', 'Boomi', 'Nathan', '3', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:08', 1),
-	(20, 'eboominathan', 'Boomi', 'Nathan', '4', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:09', 1),
-	(21, 'eboominathan', 'Boomi', 'Nathan', '5', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:12', 1),
-	(22, 'eboominathan', 'Boomi', 'Nathan', '6', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:14', 1),
-	(23, 'eboominathan', 'Boomi', 'Nathan', '7', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:15', 1),
-	(24, 'eboominathan', 'Boomi', 'Nathan', '8', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:17', 1),
-	(25, 'eboominathan', 'Boomi', 'Nathan', '9', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:18', 1),
-	(26, 'eboominathan', 'Boomi', 'Nathan', '10', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:13:20', 1),
-	(27, 'eboominathan', 'Boomi', 'Nathan', '11', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:42', 1),
-	(28, 'eboominathan', 'Boomi', 'Nathan', '12', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:44', 1),
-	(29, 'eboominathan', 'Boomi', 'Nathan', '13', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:48', 1),
-	(30, 'eboominathan', 'Boomi', 'Nathan', '14', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:52', 1),
-	(31, 'eboominathan', 'Boomi', 'Nathan', '15', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:55', 1),
-	(32, 'eboominathan', 'Boomi', 'Nathan', '16', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:14:58', 1),
-	(33, 'eboominathan', 'Boomi', 'Nathan', '17', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:15:01', 1),
-	(34, 'eboominathan', 'Boomi', 'Nathan', '18', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'admin@admin.coms', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:43:51', 1),
-	(35, 'eboominathan', 'Boomi', 'Nathan', '19', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:15:07', 1),
-	(36, 'eboominathan', 'Boomi', 'Nathan', '20', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 1, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:15:09', 1),
-	(37, 'eboominathan', 'Boomi', 'Nathan', '21', '2018-06-26', '9843014641', 'Dreamguys Technologies', 1, 5, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-27 18:42:26', 1),
-	(38, 'eboominathan', 'Boomi', 'Nathan', '22', '2018-06-26', '9843014641', 'Dreamguys Technologies', 2, 3, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-29 12:59:07', 1),
-	(39, 'eboominathan', 'Siva', 'Mani', '23', '2018-06-26', '9843014641', 'Dreamguys Technologies', 2, 3, 'test@test.com', 'f6fdffe48c908deb0f4c3bd36c032e72', 'adminadmin', '2018-06-26 15:23:16', '2018-06-28 10:54:34', 1);
+INSERT IGNORE INTO `login_details` (`login_id`, `sinch_username`, `user_name`, `first_name`, `last_name`, `employee_id`, `joining_date`, `profile_img`, `dob`, `gender`, `address`, `state`, `country`, `phone_number`, `company`, `department_id`, `designation_id`, `email`, `password`, `decrypted`, `date_created`, `last_updated`, `type`, `online_status`, `status`) VALUES
+	(1, '', 'admin', 'Admin', 'admin', '', '0000-00-00', '', '0000-00-00', 'male', '', '', '', '', '', 0, 0, 'admin@admin.com', '0192023a7bbd73250516f069df18b500', '', '2018-06-25 14:39:15', '2018-07-07 16:01:32', 'admin', 0, 1),
+	(43, 'adminnmaid10', 'test', 'admin', 'admin', '1', '2018-07-07', '', '0000-00-00', 'male', '', '', '', '1', 'Dreamguys Technologies', 1, 5, 'admin@user.com', '0192023a7bbd73250516f069df18b500', 'admin123', '2018-07-07 11:11:05', '2018-07-07 16:09:16', 'user', 0, 1),
+	(44, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(45, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(46, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(47, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(48, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(49, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(50, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(51, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(52, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1),
+	(53, 'testestt2', 'testing', 'test', 'test', 'test', '2018-07-07', 'user-03.jpg', '0000-00-00', 'male', '', '', '', 'tset', 'Dreamguys Technologies', 1, 5, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-07 11:15:40', '2018-07-07 16:08:51', 'user', 1, 1);
 /*!40000 ALTER TABLE `login_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.state_details
@@ -52239,7 +52303,7 @@ CREATE TABLE IF NOT EXISTS `theme_details` (
 -- Dumping data for table acses.theme_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `theme_details` DISABLE KEYS */;
 INSERT IGNORE INTO `theme_details` (`theme_id`, `website_name`, `light_logo`, `dark_logo`, `favicon`, `date_created`, `last_updated`, `status`) VALUES
-	(1, 'Acses Technologies', 'logo.png', 'logo3.png', 'favicon.png', '2018-06-22 18:31:11', '2018-06-28 10:44:49', 1);
+	(1, 'Acses Technologies', 'logo.png', 'logo3.png', 'favicon.png', '2018-06-22 18:31:11', '2018-07-07 12:20:05', 1);
 /*!40000 ALTER TABLE `theme_details` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

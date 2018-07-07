@@ -626,55 +626,14 @@
 							</div>
 							<div class="modal-body">
 								<div class="input-group m-b-30">
-									<input placeholder="Search to start a chat" class="form-control search-input input-lg" id="btn-input" type="text">
+									<input placeholder="Search to start a chat" class="form-control search-input input-lg" id="search_user" type="text">
 									<span class="input-group-btn">
-										<button class="btn btn-primary btn-lg">Search</button>
+										<button class="btn btn-primary btn-lg" onclick="search_user()">Search</button>
 									</span>
 								</div>
 								<div>
 									<h5>Recent Conversations</h5>
-									<ul class="media-list media-list-linked chat-user-list">
-										<li class="media">
-											<a href="#" class="media-link">
-												<div class="media-left"><span class="avatar">J</span></div>
-												<div class="media-body media-middle text-nowrap">
-													<div class="user-name">Jeffery Lalor</div>
-													<span class="designation">Team Leader</span>
-												</div>
-												<div class="media-right media-middle text-nowrap">
-													<div class="online-date">1 day ago</div>
-												</div>
-											</a>
-										</li>
-										<li class="media">
-											<a href="#" class="media-link">
-												<div class="media-left"><span class="avatar">B</span></div>
-												<div class="media-body media-middle text-nowrap">
-													<div class="user-name">Bernardo Galaviz</div>
-													<span class="designation">Web Developer</span>
-												</div>
-												<div class="media-right media-middle text-nowrap">
-													<div class="online-date">3 days ago</div>
-												</div>
-											</a>
-										</li>
-										<li class="media">
-											<a href="#" class="media-link">
-												<div class="media-left">
-													<span class="avatar">
-														<img src="assets/img/user.jpg" alt="John Doe">
-													</span>
-												</div>
-												<div class="media-body media-middle text-nowrap">
-													<div class="user-name">John Doe</div>
-													<span class="designation">Web Designer</span>
-												</div>
-												<div class="media-right media-middle text-nowrap">
-													<div class="online-date">7 months ago</div>
-												</div>
-											</a>
-										</li>
-									</ul>
+									<div id="user_list"></div>									
 								</div>
 							</div>
 						</div>

@@ -1,4 +1,4 @@
- <?php   
+F <?php   
 
     $light_logo = $this->session->userdata('light_logo');
     if(!empty($light_logo)){
@@ -154,11 +154,11 @@
 								<a href="chat.html">#warehouse</a>
 							</li>
 							<li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
-							<li> 
-								<a href="chat.html"><span class="status online"></span> John Doe <span class="badge bg-danger pull-right">1</span></a>
-							</li>
-							<li> 
-								<a href="chat.html"><span class="status offline"></span> Richard Miles <span class="badge bg-danger pull-right">18</span></a>
+							<div id="session_chat_user"></div>
+							
+
+							<li id="testestt2"> 
+								<a href="chat.html"><span class="status offline"></span> Test Test <span class="badge bg-danger pull-right">18</span></a>
 							</li>
 							<li> 
 								<a href="chat.html"><span class="status away"></span> John Smith</a>
