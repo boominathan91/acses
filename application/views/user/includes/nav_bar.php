@@ -154,7 +154,38 @@ $website_name = $this->session->userdata('website_name');
 										<a href="chat.html">#warehouse</a>
 									</li>
 									<li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
-									<div id="session_chat_user"></div>						
+									<!-- Session selected user  -->
+									<div id="session_chat_user"></div>	
+									<!-- Newly Messaged user  -->
+									<div id="new_message_user"></div>
+
+
+									<div id="other_users">
+										<?php
+
+										if(!empty($chat_users)){											
+											foreach($chat_users as $u){
+												$online_status = ($u['online_status'] == 1)?'online':'offline';
+												$login_id = $this->session->userdata('login_id');
+												$where = array('sender_id' => $u['login_id'],'receiver_id' =>$login_id,'read_status' =>0);
+												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = ($count!=0)?$count:'';
+												if(!empty($this->session->userdata('session_chat_id'))){
+													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
+												}else{
+													$class = '';	
+												}
+												
+
+											echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)">
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
+												</li>';
+											}
+											
+										}
+										 ?>
+																				
+									</div>					
 
 									<!-- Text Chat  ends -->					
 								<?php } ?>

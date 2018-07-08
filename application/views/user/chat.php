@@ -1,22 +1,35 @@
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
 	
+
 	if(!empty($chat)){
 		$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
-		$class = 'hidden';
-		$online_status = $chat['online_status'];
+		$class = '';
+		$online_status = ($chat['online_status'] == 1)?'online':'offline';
+		$receiver_profile_img = (!empty($chat['profile_img']))?base_url().'uploads/'.$chat['profile_img']:'assets/img/user.jpg';
+		
 	}else{
 		$name = '';
 		$class = 'hidden';
-		$online_status = 'offline';
+		$online_status = '';
+		$receiver_profile_img ='';
 	} 
 
-	?>
 
 
+
+	if(!empty($profile['profile_img'])){
+		$profile_img = $profile['profile_img'];
+    	$file_to_check = FCPATH . '/uploads/' . $profile_img;
+    	if (file_exists($file_to_check)) {
+        $profile_img = base_url() . 'uploads/'.$profile_img;
+    	}
+    }		
+		$profile_img = (!empty($profile_img))?$profile_img : base_url().'assets/img/user.jpg';
+?>
 	<!-- From USER  -->
 
-	<input type="hidden" name="sender_id" id="sender_id" value="<?php echo $this->session->userdata('sinch_username'); ?>">
+	
 	 <div class="page-wrapper">
 				<div class="chat-main-row <?php echo $class; ?>">
 					<div class="chat-main-wrapper">
@@ -26,11 +39,12 @@
 									<div class="navbar">
 										<div class="user-details">
 											<div class="pull-left user-img m-r-10">
-												<a href="#" title="Mike Litorus"><img src="assets/img/user.jpg" alt="" class="w-40 img-circle"><span class="status <?php echo $online_status; ?>"></span></a>
+												<a href="#" title="<?php echo $name; ?>">
+													<img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status <?php echo $online_status; ?> title_status"></span></a>
 											</div>
 											<div class="user-info pull-left">
 												<a href="#" title="<?php $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
-												<input type="text" name="recipients" id="recipients">
+												
 												<!-- 
 												<span class="last-seen">Last seen today at 7:50 AM</span> -->
 											</div>
@@ -42,7 +56,10 @@
 									<div class="chat-content-wrap">
 										<div class="chat-wrap-inner">
 											<div class="chat-box">
-												<div class="chats"></div>
+												<div class="chats">
+
+													<div id="ajax"></div>
+												</div>
 											</div>
 										</div>
 									</div>
@@ -51,10 +68,26 @@
 									<div class="message-bar">
 										<div class="message-inner">
 											<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
-											<div class="message-area"><div class="input-group">
+											<div class="message-area">
+												<div class="input-group">
+
 												<textarea class="form-control" placeholder="Type message..." id="input_message"></textarea>
-												<span class="input-group-btn">
-													<button class="btn btn-primary" type="button" onclick="message()"><i class="fa fa-send"></i></button>
+			<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
+			 <!-- sender sinch username  -->
+			<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername">
+			<!--  receiver sinch username  -->
+			<input type="hidden" name="receiver_id" id="receiver_id" >
+			<!--  receiver id  -->
+
+			 <input type="hidden" name="time" id="time" > 
+			 <!-- Current Time  --> 
+			<input type="hidden" name="img" id="sender_img" value="<?php echo $profile_img; ?>">
+			<!-- Sender Image  -->
+         	<input type="hidden" name="img" id="receiver_image" value="<?php echo $receiver_profile_img; ?>">
+         	<!-- Receiver Image  -->
+
+										<span class="input-group-btn">
+													<button class="btn btn-primary chat-send-btn" type="button" ><i class="fa fa-send"></i></button>
 												</span>
 												</div>
 											</div>

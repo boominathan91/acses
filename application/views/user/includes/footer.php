@@ -5,7 +5,7 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/select2.min.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/app.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/notify.js"></script>
-<script src="<?php echo base_url(); ?>assets/js/sinch.min.js"></script>
+
 <script type="text/javascript">
 	var base_url = '<?php echo base_url(); ?>';	
 </script>
@@ -22,8 +22,9 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 
 <?php if($uri == 'chat' ){ ?>
 	<!-- JS -->
-	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/chat.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/sinch.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/custom_sinch.js"></script>
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/chat.js"></script>
 
 <?php } ?>	
 

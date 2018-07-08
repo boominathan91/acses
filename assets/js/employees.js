@@ -169,12 +169,15 @@ $('#employee_form').submit(function(){
 			if(obj.error){
 				updateNotification('', obj.error, 'error');						
 				return false;
-			}else if(obj.user_name){
+			}else if(obj.sinch_username){
+				$('#employee_form')[0].reset();
 				updateNotification('Success   !', 'Employee details saved successfully!', 'success');
 				$('#add_employee').modal('hide');
-				filter_next_page(0);						
 				register(obj);
+				filter_next_page(0);						
+				
 			}else{
+				$('#employee_form')[0].reset();
 				updateNotification('Success   !', 'Employee details saved successfully!', 'success');
 				$('#add_employee').modal('hide');
 				filter_next_page(0);						
