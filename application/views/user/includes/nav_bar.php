@@ -162,8 +162,9 @@ $website_name = $this->session->userdata('website_name');
 
 									<div id="other_users">
 										<?php
+//echo '<pre>';print_r($chat_users);exit;	
+										if(!empty($chat_users)){
 
-										if(!empty($chat_users)){											
 											foreach($chat_users as $u){
 												$online_status = ($u['online_status'] == 1)?'online':'offline';
 												$login_id = $this->session->userdata('login_id');

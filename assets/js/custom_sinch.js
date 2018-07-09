@@ -5,7 +5,7 @@ var sinchClient = new SinchClient({
 	capabilities: {messaging: true,calling: true, video: true},
 	supportActiveConnection: true,
 	onLogMessage: function(message) {
-		//console.log(message.message);
+		console.log(message.message);
 	}
 });
 sinchClient.startActiveConnection();
@@ -63,7 +63,9 @@ if(sessionObj.userId) {
 
 /*Text Message*/
 function message(txt){	
+
 	var receiver_sinchusername = $('#receiver_sinchusername').val();
+	console.log(receiver_sinchusername);
 	// Create a new Message
 	var message = messageClient.newMessage(receiver_sinchusername,txt);
 	// Send it
@@ -159,8 +161,9 @@ function receive_message(message){
 		}else{
 			var online_status = 'offline';			
 		}
+		$('#'+datas.sinch_username).remove();
    		var receiver_name = datas.first_name+' '+datas.last_name; 
-   		var content = '<li class="active" id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
+   		var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
    		'<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
    		'</li>';    		
    		$('#new_message_user').prepend(content);

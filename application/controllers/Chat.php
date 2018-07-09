@@ -93,6 +93,9 @@ class Chat extends CI_Controller {
 		->order_by('chat_id','desc')
 		->get_where('chat_details',array('sender_id'=>$data['login_id']))
 		->row_array();
+
+		$this->db->update('chat_details',array('read_status'=>1),array('chat_id'=>$msg['msg_data']['chat_id']));		
+
 		$msg['reciever_data'] = $data;
 		echo json_encode($msg);
 	}

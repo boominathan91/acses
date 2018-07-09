@@ -30,7 +30,7 @@ class Chat_model extends CI_Model {
 		if(!empty($this->session->userdata('session_chat_id'))){
 			$session_chat_id = $this->session->userdata('session_chat_id');
 			$where = array('login_id' => $session_chat_id);
-			$result =  $this->db->select('first_name,last_name,online_status,sinch_username,profile_img')
+			$result =  $this->db->select('login_id,first_name,last_name,online_status,sinch_username,profile_img')
 			->get_where('login_details',$where)
 			->row_array();
 		}else{

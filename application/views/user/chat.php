@@ -1,18 +1,20 @@
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
-	
-
 	if(!empty($chat)){
 		$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
 		$class = '';
 		$online_status = ($chat['online_status'] == 1)?'online':'offline';
 		$receiver_profile_img = (!empty($chat['profile_img']))?base_url().'uploads/'.$chat['profile_img']:'assets/img/user.jpg';
+		$receiver_id = $chat['login_id'];
+		$receiver_sinchusername = $chat['sinch_username'];
 		
 	}else{
 		$name = '';
 		$class = 'hidden';
 		$online_status = '';
 		$receiver_profile_img ='';
+		$receiver_id = '';
+		$receiver_sinchusername = '';
 	} 
 
 
@@ -64,19 +66,20 @@
 										</div>
 									</div>
 								</div>
+								<form method="post" id="chat_form">
 								<div class="chat-footer">
 									<div class="message-bar">
 										<div class="message-inner">
 											<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
 											<div class="message-area">
 												<div class="input-group">
-
-												<textarea class="form-control" placeholder="Type message..." id="input_message"></textarea>
+								
+			<input class="form-control" placeholder="Type message..." id="input_message" type="text">
 			<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 			 <!-- sender sinch username  -->
-			<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername">
+			<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
 			<!--  receiver sinch username  -->
-			<input type="hidden" name="receiver_id" id="receiver_id" >
+			<input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
 			<!--  receiver id  -->
 
 			 <input type="hidden" name="time" id="time" > 
@@ -87,13 +90,15 @@
          	<!-- Receiver Image  -->
 
 										<span class="input-group-btn">
-													<button class="btn btn-primary chat-send-btn" type="button" ><i class="fa fa-send"></i></button>
+													<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>
 												</span>
+										
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
+									</form>
 							</div>
 						</div>
 						<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view" id="task_window">
@@ -343,3 +348,5 @@
 					</div>
 				</div>
             </div>
+
+            <?php $this->load->view('notifications');  ?>

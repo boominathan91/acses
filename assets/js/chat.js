@@ -32,8 +32,10 @@ function search_user(){
 function set_nav_bar_chat_user(login_id,element){
 
 	$('li').removeClass('active').removeClass('hidden');
-	var sinch_username = $(element).attr('id');
-	$('#'+sinch_username).addClass('hidden');
+	$(element).addClass('active');
+	$(element).next('span').next('span').empty();
+	//var sinch_username = $(element).attr('id');
+	//$('#'+sinch_username).addClass('hidden');
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
 		
@@ -52,10 +54,10 @@ function set_nav_bar_chat_user(login_id,element){
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
 			
-		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_chat_user('+obj.login_id+')">'+
-		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
-		'</li>';
-		$('#session_chat_user').html(data);
+		// var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_chat_user('+obj.login_id+')">'+
+		// '<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
+		// '</li>';
+		//$('#session_chat_user').html(data);
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
@@ -75,6 +77,7 @@ function set_nav_bar_chat_user(login_id,element){
 function set_chat_user(login_id){
 
 	$('li').removeClass('active');
+
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
 		if(obj.online_status == 1){
@@ -87,12 +90,12 @@ function set_chat_user(login_id){
 		}else{
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
-
-		var data = '<li class="active" id="'+obj.sinch_username+'">'+
+		$('#'+obj.sinch_username).remove();
+		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)">'+
 		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
 		'</li>';
-		$('#'+obj.sinch_username).remove();
-		$('#session_chat_user').html(data);
+		
+		$('#session_chat_user').prepend(data);
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
@@ -109,13 +112,17 @@ function set_chat_user(login_id){
 
 /*Append message onclick send button */
 
-$('.chat-send-btn').click(function(){
+$('#chat_form').submit(function(){
 	// $('.no_message').html('');
 	var time = $('#time').val();
 	var img = $('#img').val();
 	var receiver_id = $('#receiver_id').val();
 
 	var input_message = $.trim($('#input_message').val());
+	if(input_message == ''){
+		updateNotification('','Please enter message to send!','error');
+		return false;
+	}
 	if(input_message!=''){
 		var content ='<div class="chat chat-right">'+
 		'<div class="chat-body">'+

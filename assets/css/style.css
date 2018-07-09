@@ -914,7 +914,7 @@ transform-origin: left top;transition: 240ms;left: 12px;top: -8px;z-index: 1;col
 .task-info-line {overflow-wrap: break-word;}
 .task-user {color: #95a1a9;font-weight: 500;}
 .task-information .task-time {display: inline-block;padding-left: 10px;}
-.message-area .input-group .form-control:focus {height: 150px;transition: all 0.5s ease 0s;}
+/*.message-area .input-group .form-control:focus {height: 150px;transition: all 0.5s ease 0s;}*/
 .task-btn-right {display: none !important;}
 .task:hover .task-btn-right {display: table-cell !important;}
 .task-action-btn.task-check {text-align: left !important;width: 40px;}
