@@ -15,8 +15,8 @@ class Chat extends CI_Controller {
 
 	public function index()
 	{	
-
 		$data['title'] = 'Chat';		
+		$data['page'] = $this->chat->get_page_no();
 		$data['chat'] = $this->chat->get_chat_data();
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
@@ -41,8 +41,203 @@ class Chat extends CI_Controller {
 		}		
 		echo json_encode($users_record);
 	}
+	public function get_old_messages(){
+
+		if($_POST['total']<0){
+		return false;
+		}else{
+			$total = $_POST['total'];
+			$total = $total * 5;
+		}
+
+		$latest_chats= $this->chat->get_latest_chat($total);  
+
+	
+		$html='';
+		if(!empty($latest_chats)){
+
+			foreach($latest_chats as $l){
+				$sender_name = $l['sender_name'];
+				$sender_profile_img = (!empty($l['sender_profile_image']))?base_url().'uploads/'.$l['sender_profile_image'] : base_url().'assets/img/user.jpg';
+				$msg = $l['message'];
+				$type = $l['type'];
+				$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
+				$time = date('h:i A',strtotime($l['created_at']));
+				$up_file_name =$l['file_name'];
+
+				if($l['sender_id'] == $this->login_id){
+					$class_name = 'chat-right';
+					$img_avatar='';
+				}else{
+					$img_avatar = '<div class="chat-avatar">
+					<a href="#" class="avatar">
+					<img alt="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+					</a>
+					</div>';
+					$class_name = 'chat-left';
+				}
+				if($msg == 'file' && $type == 'image'){
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content img-content">
+					<div class="chat-img-group clearfix">
+					<a class="chat-img-attach" href="'.$file_name.'" target="_blank">
+					<img width="182" height="137" alt="" src="'.$file_name.'">
+					<div class="chat-placeholder">
+					<div class="chat-img-name">'.$up_file_name.'</div>
+					</div>
+					</a>
+					</div>
+					<span class="chat-time">'.$time.'</span>
+					</div>               
+					</div>
+					</div>
+					</div>';
+
+				}else if($msg == 'file' && $type == 'others'){
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content "><ul class="attach-list">
+					<li><i class="fa fa-file"></i><a href="'.$file_name.'">'.$up_file_name.'</a></li>
+					</ul>
+					<span class="chat-time">'.$time.'</span>       
+					</div>
+					</div>
+					</div>
+					</div>';
+
+				}else{
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content">
+					<p>'.$msg.'</p>         
+					<span class="chat-time">'.$time.'</span>
+					</div>
+					</div>
+					</div>
+					</div>';
+				}														
+			}
+		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+		}
+
+		echo $html;
+		
+
+	}
 	public function set_chat_user(){
+
 		$this->session->set_userdata(array('session_chat_id'=>$_POST['login_id']));
+		$latest_chats= $this->chat->get_latest_chat($total=null);  
+		$total_chat= $this->chat->get_total_chat_count(); 
+
+		if($total_chat>5){
+			$total_chat = $total_chat - 5;
+			$page = $total_chat / 5;
+			$page = ceil($page);
+			$page--;
+		}
+
+
+		if(count($latest_chats)>4){
+
+			$html ='<div class="load-more-btn text-center" total="'.$page.'">
+			<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
+			</div><div id="ajax_old"></div>';      
+		}else{
+			$html ='';
+		}
+
+
+		if(!empty($latest_chats)){
+
+			foreach($latest_chats as $l){
+				$sender_name = $l['sender_name'];
+				$sender_profile_img = (!empty($l['sender_profile_image']))?base_url().'uploads/'.$l['sender_profile_image'] : base_url().'assets/img/user.jpg';
+				$msg = $l['message'];
+				$type = $l['type'];
+				$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
+				$time = date('h:i A',strtotime($l['created_at']));
+				$up_file_name =$l['file_name'];
+
+				if($l['sender_id'] == $this->login_id){
+					$class_name = 'chat-right';
+					$img_avatar='';
+				}else{
+					$img_avatar = '<div class="chat-avatar">
+					<a href="#" class="avatar">
+					<img alt="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+					</a>
+					</div>';
+					$class_name = 'chat-left';
+				}
+				if($msg == 'file' && $type == 'image'){
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content img-content">
+					<div class="chat-img-group clearfix">
+					<a class="chat-img-attach" href="'.$file_name.'" target="_blank">
+					<img width="182" height="137" alt="" src="'.$file_name.'">
+					<div class="chat-placeholder">
+					<div class="chat-img-name">'.$up_file_name.'</div>
+					</div>
+					</a>
+					</div>
+					<span class="chat-time">'.$time.'</span>
+					</div>               
+					</div>
+					</div>
+					</div>';
+
+				}else if($msg == 'file' && $type == 'others'){
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content "><ul class="attach-list">
+					<li><i class="fa fa-file"></i><a href="'.$file_name.'">'.$up_file_name.'</a></li>
+					</ul>
+					<span class="chat-time">'.$time.'</span>       
+					</div>
+					</div>
+					</div>
+					</div>';
+
+				}else{
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content">
+					<p>'.$msg.'</p>         
+					<span class="chat-time">'.$time.'</span>
+					</div>
+					</div>
+					</div>
+					</div>';
+				}														
+			}
+
+		}
+
+		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+
+		if($total_chat == 0){
+		$html .='<div class="no_message">No Record Found</div>';
+		}
+
+
+
+
+		
 
 		$this->db->update('chat_details',array('read_status'=>1),array('receiver_id' => $this->login_id,'sender_id' =>$_POST['login_id']));
 		$data = $this->db
@@ -60,6 +255,7 @@ class Chat extends CI_Controller {
 		}else{
 			$data['profile_img'] = base_url().'uploads/'.$data['profile_img'];
 		}
+		$data['messages'] = $html;
 		echo json_encode($data);
 	}
 
@@ -81,6 +277,22 @@ class Chat extends CI_Controller {
 		echo json_encode($users);
 
 	}
+	public function delete_conversation()
+{
+
+
+ $selected_user = $_POST['sender_id'];
+ 
+
+ $data = $this->chat->deletable_chats();
+ if(!empty($data)){
+  foreach ($data as $d) {
+   $this->db->delete('chat_deleted_details',array('chat_id'=>$d['chat_id'],'can_view'=>$this->login_id)); 
+ }  
+}
+    // echo $this->db->last_query();
+echo '1';
+}
 
 
 	Public function get_message_details()
@@ -173,141 +385,141 @@ class Chat extends CI_Controller {
 
 
 	public function get_messages()
-{
+	{
 
-	$selected_user = $_POST['selected_user_id'];
-	$latest_chat= $this->chat->get_latest_chat($selected_user,$session_id);  
-    $total_chat= $this->chat->get_total_chat_count($selected_user,$session_id);  
-  
-  echo '<pre>'; 
-  print_r($latest_chat); 
-  exit;
+		$selected_user = $_POST['selected_user_id'];
+		$latest_chat= $this->chat->get_latest_chat($selected_user,$session_id);  
+		$total_chat= $this->chat->get_total_chat_count($selected_user,$session_id);  
+
+		echo '<pre>'; 
+		print_r($latest_chat); 
+		exit;
 
 
-  if($total_chat>5){
-    $total_chat = $total_chat - 5;
-    $page = $total_chat / 5;
-    $page = ceil($page);
-    $page--;
-  }
+		if($total_chat>5){
+			$total_chat = $total_chat - 5;
+			$page = $total_chat / 5;
+			$page = ceil($page);
+			$page--;
+		}
 
 
 
   // echo $this->db->last_query();
   // exit;
 
-  if(count($latest_chat)>4){
+		if(count($latest_chat)>4){
 
-    $html ='<div class="load-more-btn text-center" total="'.$page.'">
-    <button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
-    </div><div id="ajax_old"></div>';      
-  }else{
-    $html ='';
-  }
-
-  
-
-  if(!empty($latest_chat)){
-    foreach($latest_chat as $key => $currentuser) : 
-
-
-     $class_name =($currentuser['sender_id'] != $session_id) ? 'chat-left' : '';
-     $user_image = ($currentuser['senderImage']!= '') ? base_url().'assets/images/'.$currentuser['senderImage']: base_url().'assets/images/default-avatar.png';
-
-
-     if($currentuser['senderImage']!=''){
-      $img =  base_url().'assets/images/'.$currentuser['senderImage'];
-    }elseif($currentuser['socialImage']!=''){
-      $img = $currentuser['socialImage'];
-    }else{
-      $img = base_url().'assets/images/default-avatar.png';
-    }
-
-
-    $time_zone = $this->session->userdata('time_zone');
-    $from_timezone = $currentuser['time_zone'];
-    $date_time = $currentuser['chatdate'];
-    $date_time  = $this->converToTz($date_time,$time_zone,$from_timezone);
-    $time = date('h:i a',strtotime($date_time));
-
-
-    if($currentuser['type'] == 'image'){
-
-      $html .='<div class="chat '.$class_name.'">
-      <div class="chat-avatar">
-      <a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
-      <img  src="'.$img.'" class="img-responsive img-circle">
-      </a>
-      </div>
-      <div class="chat-body">
-      <div class="chat-content">
-      <p><img alt="" src="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" class="img-responsive"></p>
-      <p>'.$currentuser['file_name'].'</p>
-      <a href="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" target="_blank" download>Download</a>
-      <span class="chat-time">'.$time.'</span>
-      </div>
-      </div>
-      </div>';
-
-    }else if($currentuser['type'] == 'others'){
-
-      $html .='<div class="chat '.$class_name.'">
-      <div class="chat-avatar">
-      <a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
-      <img  src="'.$img.'" class="img-responsive img-circle">
-      </a>
-      </div>
-      <div class="chat-body">
-      <div class="chat-content">
-      <p><img alt="" src="'.base_url().'assets/images/download.png" class="img-responsive"></p>
-      <p>'.$currentuser['file_name'].'</p>
-      <a href="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" target="_blank" download class="chat-time">Download</a>
-      <span class="chat-time">'.$time.'</span>
-      </div>
-      </div>
-      </div>';
-
-
-    }
-    else if($currentuser['msg']=='ENABLE_STREAM' || $currentuser['msg']=='DISABLE_STREAM'){
-
-
-    }else{
-      $html .='<div class="chat '.$class_name.'">
-      <div class="chat-avatar">
-      <a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
-      <img  src="'.$img.'" class="img-responsive img-circle">
-      </a>
-      </div>
-      <div class="chat-body">
-      <div class="chat-content">
-      <p>
-      '.$currentuser['msg'].'
-      </p>
-      <span class="chat-time">'.$time.'</span>
-      </div>
-      </div>
-      </div>';
-
-    }
+			$html ='<div class="load-more-btn text-center" total="'.$page.'">
+			<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
+			</div><div id="ajax_old"></div>';      
+		}else{
+			$html ='';
+		}
 
 
 
-
-  endforeach;
-  
-
-}
-$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
-
-if($total_chat == 0){
-  $html .='<div class="no_message">No Record Found</div>';
-}
+		if(!empty($latest_chat)){
+			foreach($latest_chat as $key => $currentuser) : 
 
 
-echo $html;
+				$class_name =($currentuser['sender_id'] != $session_id) ? 'chat-left' : '';
+				$user_image = ($currentuser['senderImage']!= '') ? base_url().'assets/images/'.$currentuser['senderImage']: base_url().'assets/images/default-avatar.png';
 
-}
+
+				if($currentuser['senderImage']!=''){
+					$img =  base_url().'assets/images/'.$currentuser['senderImage'];
+				}elseif($currentuser['socialImage']!=''){
+					$img = $currentuser['socialImage'];
+				}else{
+					$img = base_url().'assets/images/default-avatar.png';
+				}
+
+
+				$time_zone = $this->session->userdata('time_zone');
+				$from_timezone = $currentuser['time_zone'];
+				$date_time = $currentuser['chatdate'];
+				$date_time  = $this->converToTz($date_time,$time_zone,$from_timezone);
+				$time = date('h:i a',strtotime($date_time));
+
+
+				if($currentuser['type'] == 'image'){
+
+					$html .='<div class="chat '.$class_name.'">
+					<div class="chat-avatar">
+					<a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
+					<img  src="'.$img.'" class="img-responsive img-circle">
+					</a>
+					</div>
+					<div class="chat-body">
+					<div class="chat-content">
+					<p><img alt="" src="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" class="img-responsive"></p>
+					<p>'.$currentuser['file_name'].'</p>
+					<a href="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" target="_blank" download>Download</a>
+					<span class="chat-time">'.$time.'</span>
+					</div>
+					</div>
+					</div>';
+
+				}else if($currentuser['type'] == 'others'){
+
+					$html .='<div class="chat '.$class_name.'">
+					<div class="chat-avatar">
+					<a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
+					<img  src="'.$img.'" class="img-responsive img-circle">
+					</a>
+					</div>
+					<div class="chat-body">
+					<div class="chat-content">
+					<p><img alt="" src="'.base_url().'assets/images/download.png" class="img-responsive"></p>
+					<p>'.$currentuser['file_name'].'</p>
+					<a href="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" target="_blank" download class="chat-time">Download</a>
+					<span class="chat-time">'.$time.'</span>
+					</div>
+					</div>
+					</div>';
+
+
+				}
+				else if($currentuser['msg']=='ENABLE_STREAM' || $currentuser['msg']=='DISABLE_STREAM'){
+
+
+				}else{
+					$html .='<div class="chat '.$class_name.'">
+					<div class="chat-avatar">
+					<a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
+					<img  src="'.$img.'" class="img-responsive img-circle">
+					</a>
+					</div>
+					<div class="chat-body">
+					<div class="chat-content">
+					<p>
+					'.$currentuser['msg'].'
+					</p>
+					<span class="chat-time">'.$time.'</span>
+					</div>
+					</div>
+					</div>';
+
+				}
+
+
+
+
+			endforeach;
+
+
+		}
+		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+
+		if($total_chat == 0){
+			$html .='<div class="no_message">No Record Found</div>';
+		}
+
+
+		echo $html;
+
+	}
 
 
 

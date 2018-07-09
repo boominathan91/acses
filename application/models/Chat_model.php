@@ -57,21 +57,48 @@ class Chat_model extends CI_Model {
 		return $result;
 	}
 
+	public function get_page_no(){
+		$page = 0;
+		$total_chat= $this->get_total_chat_count(); 
+		if($total_chat>5){
+			$total_chat = $total_chat - 5;
+			$page = $total_chat / 5;
+			$page = ceil($page);
+			$page--;
+		}
+		return $page;
+	}
+
+	Public function deletable_chats()
+	{
+		$selected_user = $_POST['sender_id'];
+		$query = $this->db->query("SELECT msg.chat_id from chat_details msg  			
+			left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
+			where cd.can_view = $this->login_id AND ((msg.receiver_id = $selected_user AND msg.sender_id = $this->login_id) or  (msg.receiver_id = $this->login_id AND msg.sender_id =  $selected_user))");
+		$result = $query->result_array();
+		return $result;   
+	}
 
 
-	public function get_latest_chat(){
+
+	public function get_latest_chat($total=null){
 
 		$result = array();
 		if(!empty($this->session->userdata('session_chat_id'))){
 			$session_chat_id = $this->session->userdata('session_chat_id');
 
 			$per_page = 5;   
-			$total =  $this->get_total_chat_count();
-			if($total>5){
-				$total = $total-5;    
-			}else{
-				$total = 0;
-			}  
+			if(empty($total)){
+
+				$total =  $this->get_total_chat_count();
+				if($total>5){
+					$total = $total-5;    
+				}else{
+					$total = 0;
+				}
+
+			}
+
 			$this->update_counts();
 
 			$sql= "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,msg.time_zone,msg.created_at FROM chat_details msg  
@@ -85,15 +112,18 @@ class Chat_model extends CI_Model {
 
 	}
 	Public function get_total_chat_count()
-	{
-		$session_chat_id = $this->session->userdata('session_chat_id');
+	{	
+		$result = 0;
+		if(!empty($this->session->userdata('session_chat_id'))){
+			$session_chat_id = $this->session->userdata('session_chat_id');
+			$sql = "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,time_zone FROM chat_details msg  
+			LEFT  join login_details sender on msg.sender_id = sender.login_id
+			left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
+			where cd.can_view =  $this->login_id AND ((msg.receiver_id = $session_chat_id  AND msg.sender_id =  $this->login_id) OR (msg.receiver_id = $this->login_id AND msg.sender_id =  $session_chat_id))   ORDER BY msg.chat_id ASC ";
+			$result =  $this->db->query($sql)->num_rows(); 
+		}
+		return $result;
 
-		$sql = "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,time_zone FROM chat_details msg  
-		LEFT  join login_details sender on msg.sender_id = sender.login_id
-		left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
-		where cd.can_view =  $this->login_id AND ((msg.receiver_id = $session_chat_id  AND msg.sender_id =  $this->login_id) OR (msg.receiver_id = $this->login_id AND msg.sender_id =  $session_chat_id))   ORDER BY msg.chat_id ASC ";
-
-		return  $this->db->query($sql)->num_rows(); 
 
 
 	}

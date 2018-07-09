@@ -34,8 +34,7 @@ function set_nav_bar_chat_user(login_id,element){
 	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
-	//var sinch_username = $(element).attr('id');
-	//$('#'+sinch_username).addClass('hidden');
+	$('.chats').html('');
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
 		
@@ -54,10 +53,6 @@ function set_nav_bar_chat_user(login_id,element){
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
 
-		// var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_chat_user('+obj.login_id+')">'+
-		// '<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
-		// '</li>';
-		//$('#session_chat_user').html(data);
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
@@ -67,6 +62,27 @@ function set_nav_bar_chat_user(login_id,element){
 		$('#receiver_id').val(obj.login_id);
 		$('#receiver_image').val(receiver_image);
 		$('.receiver_title_image').attr('src',receiver_image);
+		$('.dob').text(obj.dob);
+		$('.receiver_email').text(obj.email);
+		$('.phone_number').text(obj.phone_number);
+		$('.chats').html(obj.messages);
+
+
+		$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = $(this).attr('total');
+			if(total>0 || total == 0 ){                        
+				load_more(total);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
+
+		});
+
+
+
 
 	});
 
@@ -77,9 +93,10 @@ function set_nav_bar_chat_user(login_id,element){
 function set_chat_user(login_id){
 
 	$('li').removeClass('active');
+	$('.chats').html('');
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
-		var obj = jQuery.parseJSON(res);
+		var obj = jQuery.parseJSON(res);		
 		if(obj.online_status == 1){
 			var online_status = 'online';
 		}else{
@@ -106,19 +123,64 @@ function set_chat_user(login_id){
 		$('#receiver_id').val(obj.login_id);
 		$('#receiver_image').val(receiver_image);
 		$('.receiver_title_image').attr('src',receiver_image);
-		$('.receiver_title_image').attr('src',receiver_image);
-		$('.dob').val(obj.dob);
-		$('.receiver_email').val(obj.receiver_email);
-		$('.phone_number').val(obj.phone_number);
+		$('.dob').text(obj.dob);
+		$('.receiver_email').text(obj.email);
+		$('.phone_number').text(obj.phone_number);
+		$('.chats').html(obj.messages);
+
+
+		$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = $(this).attr('total');
+			if(total>0 || total == 0 ){                        
+				load_more(total);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
+
+		});
+
+
+
 
 	});
 
 }
 
+
+
+function delete_conversation()
+{
+
+	if(confirm('Are you sure to delete this conversation?')){
+		var sender_id = $('#receiver_id').val();
+        $.post(base_url+'chat/delete_conversation',{sender_id:sender_id},function(response){
+         if(response == 1){
+             $('.chats').html('<div class="no_message">No Record Found</div><div id="ajax"></div><input type="hidden"  id="hidden_id">');
+         }
+     });
+	}
+}
+
+$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = $(this).attr('total');
+			if(total>0 || total == 0 ){                        
+				load_more(total);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
+
+		});
+
 /*Append message onclick send button */
 
 $('#chat_form').submit(function(){
-	// $('.no_message').html('');
+	$('.no_message').html('');
 	var time = $('#time').val();
 	var img = $('#img').val();
 	var receiver_id = $('#receiver_id').val();
@@ -232,6 +294,21 @@ $('#user_file').change(function(e) {
 
         });
 
+
+
+function load_more(total){      
+
+	var receiver_id = $('#receiver_id').val();                  
+
+	$.post(base_url+'chat/get_old_messages',{total:total},function(res){  
+		if(res){        
+			$('.load-more-btn').html('<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>');               
+			$('#ajax_old').prepend(res);
+		}else{
+			$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+		}
+	}); 
+}
 
 
 
