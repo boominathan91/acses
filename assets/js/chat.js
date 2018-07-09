@@ -49,11 +49,11 @@ function set_nav_bar_chat_user(login_id,element){
 			$('.title_status').addClass('offline');
 		}
 		if(obj.profile_img != ''){
-				var receiver_image = obj.profile_img;
+			var receiver_image = obj.profile_img;
 		}else{
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
-			
+
 		// var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_chat_user('+obj.login_id+')">'+
 		// '<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
 		// '</li>';
@@ -86,7 +86,7 @@ function set_chat_user(login_id){
 			var online_status = 'offline';
 		}
 		if(obj.profile_img != ''){
-				var receiver_image = obj.profile_img;
+			var receiver_image = obj.profile_img;
 		}else{
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
@@ -101,10 +101,15 @@ function set_chat_user(login_id){
 		$('#search_user').val('');
 		$('.chat-main-row').removeClass('hidden');
 		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		$('.department').text(obj.department_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
 		$('#receiver_image').val(receiver_image);
 		$('.receiver_title_image').attr('src',receiver_image);
+		$('.receiver_title_image').attr('src',receiver_image);
+		$('.dob').val(obj.dob);
+		$('.receiver_email').val(obj.receiver_email);
+		$('.phone_number').val(obj.phone_number);
 
 	});
 
@@ -124,7 +129,7 @@ $('#chat_form').submit(function(){
 		return false;
 	}
 	if(input_message!=''){
-		var content ='<div class="chat chat-right">'+
+		var content ='<div class="chat chat-right slimscrollleft">'+
 		'<div class="chat-body">'+
 		'<div class="chat-bubble">'+
 		'<div class="chat-content">'+
@@ -146,7 +151,97 @@ $('#chat_form').submit(function(){
 	return false;
 });
 
+$('.attach-icon').click(function(){
+	$('#user_file').click();
+});
 
+
+$('#user_file').change(function(e) {   
+	e.preventDefault();   
+   var oFile = document.getElementById("user_file").files[0]; // <input type="file" id="fileUpload" accept=".jpg,.png,.gif,.jpeg"/>
+            if (oFile.size > 25097152){ // 25 mb for bytes.
+            	updateNotification('Warning!','File size must under 25MB!','error');
+            	return false;
+            }
+            var formData = new FormData($('#chat_form')[0]);
+            $.ajax({
+            	url: base_url+'chat/upload_files',
+            	type: 'POST',
+            	data: formData,    
+            	beforeSend :function(){
+            		$('.progress').removeClass('hidden');
+            		$('.progress').css('display','block');
+            	},    
+            	success: function(res) { 
+            		$('.progress').addClass('hidden');               
+            		var obj = jQuery.parseJSON(res);
+            		if(obj.error){
+            			updateNotification('Warning!',obj.error,'error');            			
+            			$('#user_file').val('');
+            			return false;
+            		}      
+            		var to_username = $('#receiver_sinchusername').val();
+            		var img = $('#img').val();
+            		var time = $('#time').val();
+            		var up_file_name =obj.file_name;
+
+            		if(obj.type == 'image'){
+            			var file_src = '<div class="chat-img-group clearfix">'+
+            			'<a class="chat-img-attach" href="'+base_url+'/'+obj.img+'" target="_blank">'+
+            			'<img width="182" height="137" alt="" src="'+base_url+'/'+obj.img+'">'+
+            			'<div class="chat-placeholder">'+
+            			'<div class="chat-img-name">'+up_file_name+'</div>'+
+            			'</div>'+
+            			'</a>'+
+            			'</div>';
+            			
+            			var img_content = 'img-content';
+
+            		}else{
+            			var file_src = '<ul class="attach-list">'+
+            			'<li><i class="fa fa-file"></i><a href="'+base_url+'/'+obj.img+'">'+up_file_name+'</a></li>'+
+            			'</ul>';    	
+            			var img_content = '';
+            		}           		
+
+            		var content ='<div class="chat chat-right">'+
+            		'<div class="chat-body">'+
+            		'<div class="chat-bubble">'+
+            		'<div class="chat-content '+img_content+'">'+file_src+
+            		'<span class="chat-time">'+time+'</span>'+
+            		'</div>'+            		
+            		'</div>'+
+            		'</div>'+
+            		'</div>'+
+            		'</div>';            		
+            		$('#ajax').append(content); 
+            		$('#user_file').val('');
+            		$(".slimscrollleft.chats").mCustomScrollbar("update");
+            		$(".slimscrollleft.chats").mCustomScrollbar("scrollTo", "bottom"); 
+            		message('file');
+            	},
+            	error: function(error){
+            		updateNotification('Warning!','Please try again','error'); 
+            	},        
+            	cache: false,
+            	contentType: false,
+            	processData: false
+
+            }); 
+            return false; 
+
+        });
+
+
+
+
+(function($){
+	$(window).on("load",function(){
+		$(".chat-right,.chat-box.slimscrollleft,.chat-left").mCustomScrollbar({
+			theme:"minimal"
+		});			
+	});
+})(jQuery);
 
 
 /*setting Current time */

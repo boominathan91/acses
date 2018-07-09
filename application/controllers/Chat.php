@@ -14,10 +14,11 @@ class Chat extends CI_Controller {
 	}
 
 	public function index()
-	{
+	{	
+
 		$data['title'] = 'Chat';		
 		$data['chat'] = $this->chat->get_chat_data();
-		$data['recent_chats'] = $this->chat->get_recent_chats();
+		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
 		render_page('chat',$data);
@@ -45,13 +46,14 @@ class Chat extends CI_Controller {
 
 		$this->db->update('chat_details',array('read_status'=>1),array('receiver_id' => $this->login_id,'sender_id' =>$_POST['login_id']));
 		$data = $this->db
-		->select('first_name,last_name,login_id,online_status,sinch_username,profile_img')
-		->get_where('login_details',array('login_id'=>$_POST['login_id']))
+		->select('l.phone_number,l.email,l.dob,l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username,l.profile_img,d.department_name')
+		->join('department_details d','d.department_id = l.department_id')
+		->get_where('login_details l',array('l.login_id'=>$_POST['login_id']))
 		->row_array();
 
 		$data['first_name'] = ucfirst($data['first_name']);
 		$data['last_name'] =ucfirst($data['last_name']);
-		$data['sinch_username'] =$data['sinch_username'];
+		$data['dob'] =(!empty($data['dob']) && $data['dob']!='0000-00-00')?date('d-m-Y',strtotime($data['dob'])):'N/A';
 		
 		if(empty($data['profile_img'])){
 			$data['profile_img'] = base_url().'assets/img/user.jpg';
@@ -116,6 +118,198 @@ class Chat extends CI_Controller {
 
 		echo json_encode($data);
 	}
+
+	public function upload_files()
+	{
+
+		ob_flush();		
+
+		$path = "uploads/".$this->login_id;
+		if(!is_dir($path)){
+			mkdir($path);
+		}
+
+		$target_file =$path . basename($_FILES["userfile"]["name"]);
+		$file_type = pathinfo($target_file,PATHINFO_EXTENSION);
+
+		if($file_type != "jpg" && $file_type != "png" && $file_type != "jpeg" && $file_type != "gif" ){
+			$type = 'others';
+		}else{
+			$type = 'image';
+		}
+
+
+		$config['upload_path']   = './'.$path;
+		$config['allowed_types'] = '*';		
+		$this->load->library('upload',$config);
+
+		if($this->upload->do_upload('userfile')){	
+			$file_name=$this->upload->data('file_name');		
+			$data = array(
+				'receiver_id' =>$_POST['receiver_id'],
+				'sender_id' => $this->login_id,
+				'message' =>'file',
+				'file_name'=>$file_name,		
+				'chatdate' => date('Y-m-d H:i:s'),
+				'type' =>$type,
+				'read_status' =>0,
+				'time_zone' =>$this->session->userdata('time_zone'),
+				'file_path' => $path				
+			);			
+
+			$result = $this->db->insert('chat_details',$data);
+			$chat_id = $this->db->insert_id();
+			$users = array($data['receiver_id'],$data['sender_id']);
+			for ($i=0; $i <2 ; $i++) { 
+				$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
+				$this->db->insert('chat_deleted_details',$datas);
+			}
+
+			echo  json_encode(array('img'=>$path.'/'.$file_name,'type'=>$type,'file_name' => $file_name));
+		}else{
+			echo  json_encode(array('error'=>$this->upload->display_errors()));
+		}
+	}
+
+
+	public function get_messages()
+{
+
+	$selected_user = $_POST['selected_user_id'];
+	$latest_chat= $this->chat->get_latest_chat($selected_user,$session_id);  
+    $total_chat= $this->chat->get_total_chat_count($selected_user,$session_id);  
+  
+  echo '<pre>'; 
+  print_r($latest_chat); 
+  exit;
+
+
+  if($total_chat>5){
+    $total_chat = $total_chat - 5;
+    $page = $total_chat / 5;
+    $page = ceil($page);
+    $page--;
+  }
+
+
+
+  // echo $this->db->last_query();
+  // exit;
+
+  if(count($latest_chat)>4){
+
+    $html ='<div class="load-more-btn text-center" total="'.$page.'">
+    <button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
+    </div><div id="ajax_old"></div>';      
+  }else{
+    $html ='';
+  }
+
+  
+
+  if(!empty($latest_chat)){
+    foreach($latest_chat as $key => $currentuser) : 
+
+
+     $class_name =($currentuser['sender_id'] != $session_id) ? 'chat-left' : '';
+     $user_image = ($currentuser['senderImage']!= '') ? base_url().'assets/images/'.$currentuser['senderImage']: base_url().'assets/images/default-avatar.png';
+
+
+     if($currentuser['senderImage']!=''){
+      $img =  base_url().'assets/images/'.$currentuser['senderImage'];
+    }elseif($currentuser['socialImage']!=''){
+      $img = $currentuser['socialImage'];
+    }else{
+      $img = base_url().'assets/images/default-avatar.png';
+    }
+
+
+    $time_zone = $this->session->userdata('time_zone');
+    $from_timezone = $currentuser['time_zone'];
+    $date_time = $currentuser['chatdate'];
+    $date_time  = $this->converToTz($date_time,$time_zone,$from_timezone);
+    $time = date('h:i a',strtotime($date_time));
+
+
+    if($currentuser['type'] == 'image'){
+
+      $html .='<div class="chat '.$class_name.'">
+      <div class="chat-avatar">
+      <a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
+      <img  src="'.$img.'" class="img-responsive img-circle">
+      </a>
+      </div>
+      <div class="chat-body">
+      <div class="chat-content">
+      <p><img alt="" src="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" class="img-responsive"></p>
+      <p>'.$currentuser['file_name'].'</p>
+      <a href="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" target="_blank" download>Download</a>
+      <span class="chat-time">'.$time.'</span>
+      </div>
+      </div>
+      </div>';
+
+    }else if($currentuser['type'] == 'others'){
+
+      $html .='<div class="chat '.$class_name.'">
+      <div class="chat-avatar">
+      <a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
+      <img  src="'.$img.'" class="img-responsive img-circle">
+      </a>
+      </div>
+      <div class="chat-body">
+      <div class="chat-content">
+      <p><img alt="" src="'.base_url().'assets/images/download.png" class="img-responsive"></p>
+      <p>'.$currentuser['file_name'].'</p>
+      <a href="'.base_url().$currentuser['file_path'].'/'.$currentuser['file_name'].'" target="_blank" download class="chat-time">Download</a>
+      <span class="chat-time">'.$time.'</span>
+      </div>
+      </div>
+      </div>';
+
+
+    }
+    else if($currentuser['msg']=='ENABLE_STREAM' || $currentuser['msg']=='DISABLE_STREAM'){
+
+
+    }else{
+      $html .='<div class="chat '.$class_name.'">
+      <div class="chat-avatar">
+      <a title="" data-placement="right" href="#" data-toggle="tooltip" class="avatar" data-original-title="June Lane">
+      <img  src="'.$img.'" class="img-responsive img-circle">
+      </a>
+      </div>
+      <div class="chat-body">
+      <div class="chat-content">
+      <p>
+      '.$currentuser['msg'].'
+      </p>
+      <span class="chat-time">'.$time.'</span>
+      </div>
+      </div>
+      </div>';
+
+    }
+
+
+
+
+  endforeach;
+  
+
+}
+$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+
+if($total_chat == 0){
+  $html .='<div class="no_message">No Record Found</div>';
+}
+
+
+echo $html;
+
+}
+
+
 
 
 

@@ -21,10 +21,16 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 <?php } ?>	
 
 <?php if($uri == 'chat' ){ ?>
+
+	<!-- CSS  -->
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.mCustomScrollbar.min.css" type="text/css">
 	<!-- JS -->
+	<script type="text/javascript" src="<?php echo base_url() ?>assets/js/jquery.form.min.js"></script>
+	<script src='<?php echo base_url()."assets/" ?>js/jquery.mCustomScrollbar.concat.min.js'></script>
 	<script src="<?php echo base_url(); ?>assets/js/sinch.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/custom_sinch.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/chat.js"></script>
+
 
 <?php } ?>	
 

@@ -104,7 +104,7 @@ function receive_message(message){
          //     $('#muted_image_me').hide();               
          //     return false;
          // }
-     }else if(message.direction==false){
+      }else if(message.direction==false){
 
    //    if( message.textBody =='ENABLE_STREAM'){
    //      $('#other0').hide();
@@ -124,29 +124,70 @@ function receive_message(message){
    	$.post(base_url+'chat/get_message_details',{receiver_sinchusername:message.senderId},function(res){ 
    		var obj = jQuery.parseJSON(res);
    		var receiver_name = obj.reciever_data.first_name+' '+obj.reciever_data.last_name;
-   		var msg = obj.msg_data.msg;
+   		var msg = obj.msg_data.message;
    		var type = obj.msg_data.type;
    		var file_name = base_url+obj.msg_data.file_path+'/'+obj.msg_data.file_name;
    		var time = message.timestamp.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
+       var up_file_name =obj.msg_data.file_name;
+       if(msg == 'file' && type == 'image'){
 
-   		var content = '<div class="chat chat-left">'+
-   		'<div class="chat-avatar">'+
-   		'<a href="#" class="avatar">'+
-   		'<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
-   		'</a>'+
-   		'</div>'+
-   		'<div class="chat-body">'+
-   		'<div class="chat-bubble">'+
-   		'<div class="chat-content">'+
-   		'<p>'+message.textBody+'</p>'+				
-   		'<span class="chat-time">'+time+'</span>'+
-   		'</div>'+
-   		'</div>'+
-   		'</div>'+
-   		'</div>';
+          var content ='<div class="chat chat-right">'+
+          '<div class="chat-body">'+
+          '<div class="chat-bubble">'+
+          '<div class="chat-content img-content">'+
+          '<div class="chat-img-group clearfix">'+
+          '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
+          '<img width="182" height="137" alt="" src="'+file_name+'">'+
+          '<div class="chat-placeholder">'+
+          '<div class="chat-img-name">'+up_file_name+'</div>'+
+          '</div>'+
+          '</a>'+
+          '</div>'+
+          '<span class="chat-time">'+time+'</span>'+
+          '</div>'+                  
+          '</div>'+
+          '</div>'+
+          '</div>'+
+          '</div>';
 
-   		$('#ajax').append(content);
-   	});
+       }else if(msg == 'file' && type == 'others'){
+
+          var content ='<div class="chat chat-right">'+
+          '<div class="chat-body">'+
+          '<div class="chat-bubble">'+
+          '<div class="chat-content "><ul class="attach-list">'+
+          '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
+          '</ul>'+
+          '<span class="chat-time">'+time+'</span>'+
+          '</div>'+                  
+          '</div>'+
+          '</div>'+
+          '</div>'+
+          '</div>';
+       }else{
+
+         var content = '<div class="chat chat-left slimscrollleft">'+
+         '<div class="chat-avatar">'+
+         '<a href="#" class="avatar">'+
+         '<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+         '</a>'+
+         '</div>'+
+         '<div class="chat-body">'+
+         '<div class="chat-bubble">'+
+         '<div class="chat-content">'+
+         '<p>'+message.textBody+'</p>'+            
+         '<span class="chat-time">'+time+'</span>'+
+         '</div>'+
+         '</div>'+
+         '</div>'+
+         '</div>';
+
+      }
+
+
+
+      $('#ajax').append(content);
+   });
    }else{  /*Message From other user */
 
    	$('#'+message.senderId).addClass('hidden');
@@ -156,18 +197,18 @@ function receive_message(message){
    		var count = datas.count;
 
    		if( datas.online_status == 1){
-			var online_status = 'online';
-		
-		}else{
-			var online_status = 'offline';			
-		}
-		$('#'+datas.sinch_username).remove();
-   		var receiver_name = datas.first_name+' '+datas.last_name; 
-   		var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
-   		'<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
-   		'</li>';    		
-   		$('#new_message_user').prepend(content);
-   	});
+            var online_status = 'online';
+
+         }else{
+            var online_status = 'offline';			
+         }
+         $('#'+datas.sinch_username).remove();
+         var receiver_name = datas.first_name+' '+datas.last_name; 
+         var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
+         '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
+         '</li>';    		
+         $('#new_message_user').prepend(content);
+      });
 
 
    }
