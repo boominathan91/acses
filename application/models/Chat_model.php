@@ -7,6 +7,30 @@ class Chat_model extends CI_Model {
 		parent::__construct();
 		$this->login_id = $this->session->userdata('login_id');
 	}
+	public function get_text_group(){
+			$sql = "SELECT g.group_id,g.group_name,l.sinch_username FROM chat_group_details g 
+			JOIN chat_group_members m ON g.group_id = m.group_id 
+			JOIN login_details l ON l.login_id = m.login_id
+			WHERE m.login_id =$this->login_id AND g.type = 'text' ";
+		$data['groups'] =  $this->db->query($sql)->result_array();			
+		$data['group_members'] = $this->get_group_members($data['groups']);
+		return $data;
+
+	}
+	public function get_group_members($data){
+
+			if(!empty($data)){
+				foreach($data as $d){
+					$group_ids[]=$d['group_id'];					
+				}	
+				$this->db->select('l.sinch_username,l.login_id,l.profile_img');
+				$this->db->where_in('cg.group_id',$group_ids);
+				$this->db->join('login_details l','l.login_id = cg.login_id');
+				return $this->db->get('chat_group_members cg')->result_array();	
+			}
+			
+	}
+
 
 	public function get_users_by_name(){		
 		$query = "SELECT `l`.`login_id`, `l`.`sinch_username`, `l`.`first_name`, `l`.`last_name`, `d`.`department_name`
@@ -22,7 +46,7 @@ class Chat_model extends CI_Model {
 
 	public function get_chated_users(){
 
-		$query = "SELECT l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username FROM chat_details c JOIN login_details l ON l.login_id = c.sender_id WHERE (c.receiver_id = '$this->login_id' OR c.sender_id = '$this->login_id') AND l.login_id !='$this->login_id' GROUP BY sender_id LIMIT 5";			
+		$query = "SELECT l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username FROM chat_details c JOIN login_details l ON l.login_id = c.sender_id WHERE (c.receiver_id = '$this->login_id' OR c.sender_id = '$this->login_id') AND l.login_id !='$this->login_id' GROUP BY c.sender_id LIMIT 5";			
 		return $this->db->query($query)->result_array();
 
 	}

@@ -141,18 +141,12 @@ $website_name = $this->session->userdata('website_name');
 										<a href="<?php echo base_url(); ?>profile"><i class="fa fa-home"></i> Back to Home</a>
 									</li>
 									<li class="menu-title">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
-									<li> 
-										<a href="chat.html">#General</a>
-									</li>
-									<li> 
-										<a href="chat.html">#Video Responsive Survey</a>
-									</li>
-									<li> 
-										<a href="chat.html">#500rs</a>
-									</li>
-									<li> 
-										<a href="chat.html">#warehouse</a>
-									</li>
+									<?php if(!empty($text_group)){ 
+												foreach($text_group['groups'] as $t){
+													echo '<li><a href="javascript:void(0)">#'.ucfirst($t['group_name']).'</a></li>';
+												}
+										 } ?>
+									
 									<li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
 									<!-- Session selected user  -->
 									<div id="session_chat_user"></div>	

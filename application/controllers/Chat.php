@@ -16,11 +16,13 @@ class Chat extends CI_Controller {
 	public function index()
 	{	
 		$data['title'] = 'Chat';		
+		$data['text_group'] = $this->chat->get_text_group();
 		$data['page'] = $this->chat->get_page_no();
 		$data['chat'] = $this->chat->get_chat_data();
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
+		// echo '<pre>'; print_r($data); exit;
 		render_page('chat',$data);
 	}
 	public function get_users_by_name(){
