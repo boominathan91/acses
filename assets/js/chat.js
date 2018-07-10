@@ -116,7 +116,7 @@ function set_chat_user(login_id){
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
-		$('.chat-main-row').removeClass('hidden');
+		$('.chat-main-row,#task_window').removeClass('hidden');
 		$('.to_name').text(obj.first_name+' '+obj.last_name);
 		$('.department').text(obj.department_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);

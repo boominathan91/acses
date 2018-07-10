@@ -1,5 +1,22 @@
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	if(!empty($chat)){
 		$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
 		$class = '';
@@ -27,7 +44,7 @@
 
 
 
-
+/*From User  Image*/
 	if(!empty($profile['profile_img'])){
 		$profile_img = $profile['profile_img'];
 		$file_to_check = FCPATH . '/uploads/' . $profile_img;
@@ -36,8 +53,10 @@
 		}
 	}		
 	$profile_img = (!empty($profile_img))?$profile_img : base_url().'assets/img/user.jpg';
+
+	/*From User  Image*/
 	?>
-	<!-- From USER  -->
+	
 
 
 	<div class="page-wrapper">
@@ -297,77 +316,7 @@
 					</div>
 				</div>
 			</div>
-			<div id="drag_files" class="modal custom-modal fade center-modal" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content">
-						<div class="modal-header">
-							<h3 class="modal-title">Drag and drop files upload</h3>
-						</div>
-						<div class="modal-body p-t-0">
-							<form id="js-upload-form">
-								<div class="upload-drop-zone" id="drop-zone">
-									<i class="fa fa-cloud-upload fa-2x"></i> <span class="upload-text">Just drag and drop files here</span>
-								</div>
-								<h4>Uploading</h4>
-								<ul class="upload-list">
-									<li class="file-list">
-										<div class="upload-wrap">
-											<div class="file-name">
-												<i class="fa fa-photo"></i>
-												photo.png
-											</div>
-											<div class="file-size">1.07 gb</div>
-											<button type="button" class="file-close">
-												<i class="fa fa-close"></i>
-											</button>
-										</div>
-										<div class="progress progress-xs progress-striped">
-											<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-										</div>
-										<div class="upload-process">37% done</div>
-									</li>
-									<li class="file-list">
-										<div class="upload-wrap">
-											<div class="file-name">
-												<i class="fa fa-file"></i>
-												task.doc
-											</div>
-											<div class="file-size">5.8 kb</div>
-											<button type="button" class="file-close">
-												<i class="fa fa-close"></i>
-											</button>
-										</div>
-										<div class="progress progress-xs progress-striped">
-											<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-										</div>
-										<div class="upload-process">37% done</div>
-									</li>
-									<li class="file-list">
-										<div class="upload-wrap">
-											<div class="file-name">
-												<i class="fa fa-photo"></i>
-												dashboard.png
-											</div>
-											<div class="file-size">2.1 mb</div>
-											<button type="button" class="file-close">
-												<i class="fa fa-close"></i>
-											</button>
-										</div>
-										<div class="progress progress-xs progress-striped">
-											<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-										</div>
-										<div class="upload-process">Completed</div>
-									</li>
-								</ul>
-							</form>
-							<div class="m-t-30 text-center">
-								<button class="btn btn-primary btn-lg">Add to upload</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			
 			<div id="add_group" class="modal custom-modal fade center-modal" role="dialog">
 				<div class="modal-dialog">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -377,17 +326,17 @@
 						</div>
 						<div class="modal-body">
 							<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
-							<form>
+							<form id="text_group_form" method="post">
 								<div class="form-group">
 									<label>Group Name <span class="text-danger">*</span></label>
-									<input class="form-control" required="" type="text">
+									<input class="form-control"  type="text" name="group_name" id="group_name">
 								</div>
 								<div class="form-group">
-									<label>Send invites to: <span class="text-muted-light">(optional)</span></label>
-									<input class="form-control" required="" type="text">
+									<label>Send invites to: <span class="text-muted-light"></span></label>
+									<input class="form-control"  type="text" name="members" id="members">
 								</div>
 								<div class="m-t-50 text-center">
-									<button class="btn btn-primary btn-lg">Create Group</button>
+									<button class="btn btn-primary btn-lg" type="submit" >Create Group</button>
 								</div>
 							</form>
 						</div>

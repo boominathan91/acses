@@ -183,9 +183,7 @@ function receive_message(message){
          '</div>';
 
       }
-
-
-
+      $('.no_message').html('');
       $('#ajax').append(content);
    });
    }else{  /*Message From other user */

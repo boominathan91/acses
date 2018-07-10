@@ -25,6 +25,51 @@ class Chat extends CI_Controller {
 		// echo '<pre>'; print_r($data); exit;
 		render_page('chat',$data);
 	}
+	public function get_group_datas(){
+		$data = 
+	}
+	public function create_group(){
+
+		$this->session->set_userdata(array('session_chat_id'=>''));
+		$data = array('group_name' => $_POST['group_name'],'type' => $_POST['type']);
+		$count = $this->db->get_where('chat_group_details',$data)->num_rows();
+		if($count!=0){
+			$result = array('error'=>'Group name already taken!');		
+			
+		}else{
+
+			$this->db->insert('chat_group_details',$data);
+			$group_id = $this->db->insert_id();
+			$this->session->set_userdata(array('session_group_id'=>$group_id));
+
+			$member = explode(',',$_POST['members']);
+			for ($i=0; $i <count($member) ; $i++) { 
+				$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
+				$sinch_usernames[]=$user['sinch_username'];
+				$datas = array(
+					'group_id' => $group_id,
+					'login_id' => $user['login_id']
+				);
+				$this->db->insert('chat_group_members',$datas);	
+			}
+			$sinch_usernames = implode(',',$sinch_usernames);
+			$datas = array(
+					'group_id' => $group_id,
+					'login_id' => $this->login_id
+				);
+				$this->db->insert('chat_group_members',$datas);	
+			$result = array(
+				'success'=>'Group created successfully!',
+				'group_name' => ucfirst($_POST['group_name']),
+				'group_id'=>$group_id,
+				'sinch_username' => $sinch_usernames
+		);
+			
+		}	
+		echo json_encode($result);
+
+	}
+
 	public function get_users_by_name(){
 		$users_record = array();
 		$data = $this->chat->get_users_by_name();
@@ -46,7 +91,7 @@ class Chat extends CI_Controller {
 	public function get_old_messages(){
 
 		if($_POST['total']<0){
-		return false;
+			return false;
 		}else{
 			$total = $_POST['total'];
 			$total = $total * 5;
@@ -54,7 +99,7 @@ class Chat extends CI_Controller {
 
 		$latest_chats= $this->chat->get_latest_chat($total);  
 
-	
+
 		$html='';
 		if(!empty($latest_chats)){
 
@@ -126,7 +171,7 @@ class Chat extends CI_Controller {
 					</div>';
 				}														
 			}
-		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+			$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
 		}
 
 		echo $html;
@@ -233,7 +278,7 @@ class Chat extends CI_Controller {
 		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
 
 		if($total_chat == 0){
-		$html .='<div class="no_message">No Record Found</div>';
+			$html .='<div class="no_message">No Record Found</div>';
 		}
 
 
@@ -242,6 +287,7 @@ class Chat extends CI_Controller {
 		
 
 		$this->db->update('chat_details',array('read_status'=>1),array('receiver_id' => $this->login_id,'sender_id' =>$_POST['login_id']));
+		
 		$data = $this->db
 		->select('l.phone_number,l.email,l.dob,l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username,l.profile_img,d.department_name')
 		->join('department_details d','d.department_id = l.department_id')
@@ -280,21 +326,21 @@ class Chat extends CI_Controller {
 
 	}
 	public function delete_conversation()
-{
+	{
 
 
- $selected_user = $_POST['sender_id'];
- 
+		$selected_user = $_POST['sender_id'];
 
- $data = $this->chat->deletable_chats();
- if(!empty($data)){
-  foreach ($data as $d) {
-   $this->db->delete('chat_deleted_details',array('chat_id'=>$d['chat_id'],'can_view'=>$this->login_id)); 
- }  
-}
+
+		$data = $this->chat->deletable_chats();
+		if(!empty($data)){
+			foreach ($data as $d) {
+				$this->db->delete('chat_deleted_details',array('chat_id'=>$d['chat_id'],'can_view'=>$this->login_id)); 
+			}  
+		}
     // echo $this->db->last_query();
-echo '1';
-}
+		echo '1';
+	}
 
 
 	Public function get_message_details()

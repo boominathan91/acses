@@ -17,6 +17,17 @@ class Chat_model extends CI_Model {
 		return $data;
 
 	}
+	public function get_group_datas(){
+			$sql = "SELECT g.group_id,g.group_name,l.sinch_username FROM chat_group_details g 
+			JOIN chat_group_members m ON g.group_id = m.group_id 
+			JOIN login_details l ON l.login_id = m.login_id
+			WHERE m.login_id !=$this->login_id AND g.type = 'text' AND g.group_id = $_POST[group_id] ";
+		$data['groups'] =  $this->db->query($sql)->result_array();			
+		$data['group_members'] = $this->get_group_members($data['groups']);
+		return $data;
+
+	}
+
 	public function get_group_members($data){
 
 			if(!empty($data)){
