@@ -200,9 +200,9 @@
 													<input type="file" name="userfile" id="user_file" class="hidden">
 													<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 													<!-- sender sinch username  -->
-													<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
+													<input type="text" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
 													<!--  receiver sinch username  -->
-													<input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
+													<input type="text" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
 													<!--  receiver id  -->
 
 													<input type="hidden" name="time" id="time" > 
@@ -211,6 +211,9 @@
 													<!-- Sender Image  -->
 													<input type="hidden" name="img" id="receiver_image" value="<?php echo $receiver_profile_img; ?>">
 													<!-- Receiver Image  -->
+
+													<input type="text" name="type" id="type" value="text">
+													<input type="text" name="group_id" id="group_id">
 
 													<span class="input-group-btn">
 														<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>

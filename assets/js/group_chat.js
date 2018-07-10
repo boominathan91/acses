@@ -17,7 +17,7 @@ $('#text_group_form').submit(function(){
 			}else{
 				$('#text_group_form')[0].reset();
 				updateNotification('Success  !',obj.success,'success');		
-				$('#session_group_user').html();
+				
 				$('li').removeClass('active');
 				$('.chats').html('');
 				$('#task_window').addClass('hidden');
@@ -40,13 +40,38 @@ $('#text_group_form').submit(function(){
 
 
 function set_nav_bar_group_user(group_id,element){
-	
+	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
 
 	$.post(base_url+'chat/get_group_datas',{group_id:group_id},function(res){
 		if(res){
 			var obj = jQuery.parseJSON(res);
-			$('.to_name').text(obj.group_name);
+			if(obj.group){
+				var group = obj.group;
+				$('.to_name').text(group.group_name);
+				$('#task_window').addClass('hidden');
+				var receivers = [];
+				var receiver_id = [];
+				if(obj.group_members){
+					$(obj.group_members).each(function(){
+						receivers.push(this.sinch_username);
+						receiver_id.push(this.login_id);
+					});
+				}
+				$('#receiver_sinchusername').val(receivers);
+				$('#receiver_id').val(receiver_id);
+				$('#type').val('group');
+				
+
+			}
+
+
+
+
+
+			
+
+			
 		}
 	})
 		

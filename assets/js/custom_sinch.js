@@ -64,8 +64,19 @@ if(sessionObj.userId) {
 /*Text Message*/
 function message(txt){	
 
-	var receiver_sinchusername = $('#receiver_sinchusername').val();
-	console.log(receiver_sinchusername);
+  var type = $('#type').val();
+  if(type == 'text'){
+    var receiver_sinchusername = $('#receiver_sinchusername').val();
+  }else if(type == 'group'){
+    var receiver_sinchusername = $('#receiver_sinchusername').val();
+    var receiver_sinchusername = receiver_sinchusername.split(",");
+    var receiver_sinchusername = receiver_sinchusername;
+  }
+
+
+
+	 // console.log(receiver_sinchusername);
+  //  return false;
 	// Create a new Message
 	var message = messageClient.newMessage(receiver_sinchusername,txt);
 	// Send it
@@ -89,10 +100,12 @@ messageClient.addEventListener(myListenerObj);
 
 
 function receive_message(message){
-//	console.log(message);
+	console.log(message);
 
-	     var receiver_sinchusername = $('#receiver_sinchusername').val();  // sender username     
+       var receiver_sinchusername = $('#receiver_sinchusername').val();  // receiver username     
+	     var sender_sinchusername = $('#sender_sinchusername').val();  // sender username     
         var receiver_img = $('#receiver_image').val();     // receiver image 
+        var type = $('#type').val();     // receiver image 
 
         if(message.direction==true){
 
@@ -104,7 +117,7 @@ function receive_message(message){
          //     $('#muted_image_me').hide();               
          //     return false;
          // }
-      }else if(message.direction==false){
+       }else if(message.direction==false){
 
    //    if( message.textBody =='ENABLE_STREAM'){
    //      $('#other0').hide();
@@ -120,7 +133,13 @@ function receive_message(message){
 
 
    /*Message From highlighting User */
-   if(receiver_sinchusername == message.recipientIds[0] || receiver_sinchusername == message.recipientIds[1]){
+
+
+   var receiver = message.recipientIds;
+
+   /*If selected receiver and incoming recivers are equal */
+   if(sender_sinchusername != message.senderId &&  contains.call(receiver, receiver_sinchusername)){
+
    	$.post(base_url+'chat/get_message_details',{receiver_sinchusername:message.senderId},function(res){ 
    		var obj = jQuery.parseJSON(res);
    		var receiver_name = obj.reciever_data.first_name+' '+obj.reciever_data.last_name;
@@ -129,95 +148,237 @@ function receive_message(message){
    		var file_name = base_url+obj.msg_data.file_path+'/'+obj.msg_data.file_name;
    		var time = message.timestamp.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
        var up_file_name =obj.msg_data.file_name;
-       if(msg == 'file' && type == 'image'){
 
-          var content ='<div class="chat chat-right">'+
-          '<div class="chat-body">'+
-          '<div class="chat-bubble">'+
-          '<div class="chat-content img-content">'+
-          '<div class="chat-img-group clearfix">'+
-          '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
-          '<img width="182" height="137" alt="" src="'+file_name+'">'+
-          '<div class="chat-placeholder">'+
-          '<div class="chat-img-name">'+up_file_name+'</div>'+
-          '</div>'+
-          '</a>'+
-          '</div>'+
-          '<span class="chat-time">'+time+'</span>'+
-          '</div>'+                  
-          '</div>'+
-          '</div>'+
-          '</div>'+
-          '</div>';
 
-       }else if(msg == 'file' && type == 'others'){
+       if(obj.msg_data.message_type == 'group'){ /* Group chat */
+        var group_id = $('#group_id').val();
 
-          var content ='<div class="chat chat-right">'+
-          '<div class="chat-body">'+
-          '<div class="chat-bubble">'+
-          '<div class="chat-content "><ul class="attach-list">'+
-          '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
-          '</ul>'+
-          '<span class="chat-time">'+time+'</span>'+
-          '</div>'+                  
-          '</div>'+
-          '</div>'+
-          '</div>'+
-          '</div>';
+
+        if(obj.msg_data.group_id == group_id){
+          if(msg == 'file' && type == 'image'){
+
+            var content ='<div class="chat chat-right">'+
+            '<div class="chat-body">'+
+            '<div class="chat-bubble">'+
+            '<div class="chat-content img-content">'+
+            '<div class="chat-img-group clearfix">'+
+            '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
+            '<img width="182" height="137" alt="" src="'+file_name+'">'+
+            '<div class="chat-placeholder">'+
+            '<div class="chat-img-name">'+up_file_name+'</div>'+
+            '</div>'+
+            '</a>'+
+            '</div>'+
+            '<span class="chat-time">'+time+'</span>'+
+            '</div>'+                  
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+          }else if(msg == 'file' && type == 'others'){
+
+            var content ='<div class="chat chat-right">'+
+            '<div class="chat-body">'+
+            '<div class="chat-bubble">'+
+            '<div class="chat-content "><ul class="attach-list">'+
+            '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
+            '</ul>'+
+            '<span class="chat-time">'+time+'</span>'+
+            '</div>'+                  
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>';
+          }else{
+
+           var content = '<div class="chat chat-left slimscrollleft">'+
+           '<div class="chat-avatar">'+
+           '<a href="#" class="avatar">'+
+           '<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+           '</a>'+
+           '</div>'+
+           '<div class="chat-body">'+
+           '<div class="chat-bubble">'+
+           '<div class="chat-content">'+
+           '<p>'+message.textBody+'</p>'+            
+           '<span class="chat-time">'+time+'</span>'+
+           '</div>'+
+           '</div>'+
+           '</div>'+
+           '</div>';
+
+         }
+         $('.no_message').html('');
+         $('#ajax').append(content);
        }else{
 
-         var content = '<div class="chat chat-left slimscrollleft">'+
-         '<div class="chat-avatar">'+
-         '<a href="#" class="avatar">'+
-         '<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
-         '</a>'+
-         '</div>'+
-         '<div class="chat-body">'+
-         '<div class="chat-bubble">'+
-         '<div class="chat-content">'+
-         '<p>'+message.textBody+'</p>'+            
-         '<span class="chat-time">'+time+'</span>'+
-         '</div>'+
-         '</div>'+
-         '</div>'+
-         '</div>';
+
+        $('#'+obj.group_message.group_name).remove();         
+        var data = '<li  id="'+obj.group_message.group_name+'" onclick="set_nav_bar_group_user('+obj.group_message.group_id+',this)">'+
+        '<a href="#">#'+obj.group_message.group_name+ '<span class="badge bg-danger pull-right">'+obj.count+'</span></a>'+
+        '</li>';
+        $('#new_group_user').prepend(data);
 
       }
-      $('.no_message').html('');
-      $('#ajax').append(content);
-   });
-   }else{  /*Message From other user */
 
-   	$('#'+message.senderId).addClass('hidden');
-   	$.post(base_url+'chat/get_user_details',{receiver_sinchusername:message.senderId},function(res){ 
-   		// console.log(res);
-   		var datas = jQuery.parseJSON(res);
-   		var count = datas.count;
 
-   		if( datas.online_status == 1){
-            var online_status = 'online';
 
-         }else{
-            var online_status = 'offline';			
-         }
-         $('#'+datas.sinch_username).remove();
-         var receiver_name = datas.first_name+' '+datas.last_name; 
-         var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
-         '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
-         '</li>';    		
-         $('#new_message_user').prepend(content);
-      });
+
+    }else{
+
+
+      if(msg == 'file' && type == 'image'){
+
+        var content ='<div class="chat chat-right">'+
+        '<div class="chat-body">'+
+        '<div class="chat-bubble">'+
+        '<div class="chat-content img-content">'+
+        '<div class="chat-img-group clearfix">'+
+        '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
+        '<img width="182" height="137" alt="" src="'+file_name+'">'+
+        '<div class="chat-placeholder">'+
+        '<div class="chat-img-name">'+up_file_name+'</div>'+
+        '</div>'+
+        '</a>'+
+        '</div>'+
+        '<span class="chat-time">'+time+'</span>'+
+        '</div>'+                  
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '</div>';
+
+      }else if(msg == 'file' && type == 'others'){
+
+        var content ='<div class="chat chat-right">'+
+        '<div class="chat-body">'+
+        '<div class="chat-bubble">'+
+        '<div class="chat-content "><ul class="attach-list">'+
+        '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
+        '</ul>'+
+        '<span class="chat-time">'+time+'</span>'+
+        '</div>'+                  
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '</div>';
+      }else{
+
+       var content = '<div class="chat chat-left slimscrollleft">'+
+       '<div class="chat-avatar">'+
+       '<a href="#" class="avatar">'+
+       '<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+       '</a>'+
+       '</div>'+
+       '<div class="chat-body">'+
+       '<div class="chat-bubble">'+
+       '<div class="chat-content">'+
+       '<p>'+message.textBody+'</p>'+            
+       '<span class="chat-time">'+time+'</span>'+
+       '</div>'+
+       '</div>'+
+       '</div>'+
+       '</div>';
+
+     }
+     $('.no_message').html('');
+     $('#ajax').append(content);
+
 
 
    }
 
 
+
+ });
+}else{  /*Message From other user */
+
+  if(message.recipientIds.length >2){
+    var message_type = 'group';
+  } else{
+    var message_type = 'text';
+  }
+
+    // $('#'+message.senderId).addClass('hidden');
+    $.post(base_url+'chat/get_user_details',{receiver_sinchusername:message.senderId,message_type:message_type},function(res){ 
+     var datas = jQuery.parseJSON(res);      
+     var count = datas.count;
+
+     if(message_type == 'group'){
+      if(datas.message){
+        $(datas.message).each(function(){
+          $('#'+this.group_name).remove();         
+          var data = '<li  id="'+this.group_name+'" onclick="set_nav_bar_group_user('+this.group_id+',this)">'+
+          '<a href="#">#'+this.group_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
+          '</li>';
+          $('#new_group_user').prepend(data);
+
+        });
+      }   
+
+
+
+    }else{
+
+      if( datas.online_status == 1){
+        var online_status = 'online';
+      }else{
+        var online_status = 'offline';      
+      }
+      $('#'+datas.sinch_username).remove();
+      var receiver_name = datas.first_name+' '+datas.last_name; 
+      var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
+      '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
+      '</li>';       
+      $('#new_message_user').prepend(content);
+
+    }
+
+
+  });
+
+
+  }
+
+
 }
 }
 
-var handleFail = function (error){
-	console.log(error);
-}
+
+var contains = function(needle) {
+    // Per spec, the way to identify NaN is that it is not equal to itself
+    var findNaN = needle !== needle;
+    var indexOf;
+
+    if(!findNaN && typeof Array.prototype.indexOf === 'function') {
+      indexOf = Array.prototype.indexOf;
+    } else {
+      indexOf = function(needle) {
+        var i = -1, index = -1;
+
+        for(i = 0; i < this.length; i++) {
+          var item = this[i];
+
+          if((findNaN && item !== item) || item === needle) {
+            index = i;
+            break;
+          }
+        }
+
+        return index;
+      };
+    }
+
+    return indexOf.call(this, needle) > -1;
+  };
+
+
+
+
+  var handleFail = function (error){
+   console.log(error);
+ }
 
 
 
