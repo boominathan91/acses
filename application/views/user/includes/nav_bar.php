@@ -168,7 +168,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-													echo '<li '.$class.' id="'.$t['group_name'].'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+													echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 												}
 										 } ?>
 										</div>

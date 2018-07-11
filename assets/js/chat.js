@@ -35,6 +35,8 @@ function set_nav_bar_chat_user(login_id,element){
 	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
+	var id = $(element).attr('id');
+	 $('#'+id).closest('bg-danger').empty();
 	$('.chats').html('');
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
@@ -73,11 +75,14 @@ function set_nav_bar_chat_user(login_id,element){
 
 		$('.load-more-btn').click(function(){
 			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-			var total = $(this).attr('total');
-			if(total>0 || total == 0 ){                        
-				load_more(total,0);   
+			var total = parseInt($(this).attr('total'));
+			if(total>0){                        
+				load_more(total);   
 				var total = total - 1;
 				$(this).attr('total',total); 
+				if(total == 0){
+					$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+				}
 			}else{
 				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
 			}
@@ -139,7 +144,7 @@ function set_chat_user(login_id){
 			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
 			var total = $(this).attr('total');
 			if(total>0 || total == 0 ){                        
-				load_more(total,0);   
+				load_more(total);   
 				var total = total - 1;
 				$(this).attr('total',total); 
 			}else{
@@ -171,11 +176,10 @@ function delete_conversation()
 }
 
 $('.load-more-btn').click(function(){
-	var group_id = $('#group_id').val();
 			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
 			var total = $(this).attr('total');
 			if(total>0 || total == 0 ){                        
-				load_more(total,group_id);   
+				load_more(total);   
 				var total = total - 1;
 				$(this).attr('total',total); 
 			}else{
@@ -211,6 +215,7 @@ $('#chat_form').submit(function(){
 		$('#ajax').append(content);     
 		$('#input_message').val('');  
 		var message_type = $('#type').val();
+
 		var group_id = $('#group_id').val();
 		message(input_message);
 		$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
@@ -305,11 +310,16 @@ $('#user_file').change(function(e) {
 
 
 
-function load_more(total,group_id){      
+function load_more(total){   
+
+	if(total==0){
+		$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+		return false;
+	}   
 
 	var receiver_id = $('#receiver_id').val();                  
 
-	$.post(base_url+'chat/get_old_messages',{total:total,group_id:group_id},function(res){  
+	$.post(base_url+'chat/get_old_messages',{total:total},function(res){  
 		if(res){        
 			$('.load-more-btn').html('<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>');               
 			$('#ajax_old').prepend(res);

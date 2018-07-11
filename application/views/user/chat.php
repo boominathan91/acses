@@ -27,6 +27,7 @@
 		$phone_number = '';
 		$mesage_type='';
 		$group_id = 0;
+		 $task_class = ''; 
 
 
 	if(!empty($this->session->userdata('session_chat_id'))){
@@ -41,6 +42,7 @@
 		$department_name = $chat['department_name'];
 		$dob = $data['dob'] =(!empty($data['dob']) && $data['dob']!='0000-00-00')?date('d-m-Y',strtotime($data['dob'])):'N/A';
 		$mesage_type = 'text';
+		$task_class = ''; 
 
 	}else if(!empty($this->session->userdata('session_group_id'))){
 		
@@ -60,6 +62,7 @@
 		$dob = '';
 		$mesage_type="group";
 		$group_id = $chat[0]['group_id'];
+		$task_class = 'hidden'; 
 
 	}
 
@@ -97,7 +100,7 @@
 											<!-- <span class="last-seen"><?php echo ucfirst($online_status); ?></span> -->
 										</div>
 									</div>		
-									<ul class="nav navbar-nav pull-right chat-menu">											
+									<ul class="nav navbar-nav pull-right chat-menu <?php echo $task_class; ?>">											
 											<li class="dropdown">
 												<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
 												<ul class="dropdown-menu">
@@ -221,9 +224,9 @@
 													<input type="file" name="userfile" id="user_file" class="hidden">
 													<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 													<!-- sender sinch username  -->
-													<input type="text" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
+													<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
 													<!--  receiver sinch username  -->
-													<input type="text" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
+													<input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
 													<!--  receiver id  -->
 
 													<input type="hidden" name="time" id="time" > 
@@ -233,8 +236,8 @@
 													<input type="hidden" name="img" id="receiver_image" value="<?php echo $receiver_profile_img; ?>">
 													<!-- Receiver Image  -->
 
-													<input type="text" name="type" id="type" value="<?php echo $mesage_type ?>" >
-													<input type="text" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
+													<input type="hidden" name="message_type" id="type" value="<?php echo $mesage_type ?>" >
+													<input type="hidden" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
 
 													<span class="input-group-btn">
 														<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>
@@ -248,7 +251,7 @@
 							</form>
 						</div>
 					</div>
-					<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view" id="task_window">
+					<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view <?php echo $task_class; ?>" id="task_window" >
 						<div class="display-table profile-right-inner">
 							<div class="table-row">
 								<div class="table-body">
@@ -277,7 +280,7 @@
 												</li>
 											</ul>
 										</div>
-										<div class="tabbable">
+										<!-- <div class="tabbable">
 											<ul class="nav nav-tabs nav-tabs-solid nav-justified m-b-0">
 												<li class="active"><a href="#all_files" data-toggle="tab">All Files</a></li>
 												<li><a href="#my_files" data-toggle="tab">My Files</a></li>
@@ -332,7 +335,7 @@
 													</ul>
 												</div>
 											</div>
-										</div>
+										</div> -->
 									</div>
 								</div>
 							</div>

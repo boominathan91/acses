@@ -105,7 +105,7 @@ function receive_message(message){
        var receiver_sinchusername = $('#receiver_sinchusername').val();  // receiver username     
 	     var sender_sinchusername = $('#sender_sinchusername').val();  // sender username     
         var receiver_img = $('#receiver_image').val();     // receiver image 
-        var type = $('#type').val();     // receiver image 
+        var message_type = $('#type').val();     // message type 
 
         if(message.direction==true){
 
@@ -138,7 +138,7 @@ function receive_message(message){
    var receiver = message.recipientIds;
 
    /*If selected receiver and incoming recivers are equal */
-   if(sender_sinchusername != message.senderId &&  contains.call(receiver, receiver_sinchusername)){
+   if(sender_sinchusername != message.senderId &&  contains.call(receiver, receiver_sinchusername)){ /* Chat  with Receiver name same in hidden box  */
 
    	$.post(base_url+'chat/get_message_details',{receiver_sinchusername:message.senderId},function(res){ 
    		var obj = jQuery.parseJSON(res);
@@ -150,12 +150,13 @@ function receive_message(message){
        var up_file_name =obj.msg_data.file_name;
 
 
-       if(obj.msg_data.message_type == 'group'){ /* Group chat */
+       if(obj.msg_data.message_type == 'group'){  /* Group chat  with Receiver name same in hidden box  */
         var group_id = $('#group_id').val();
 
 
-        if(obj.msg_data.group_id == group_id){
-          if(msg == 'file' && type == 'image'){
+        if(obj.msg_data.group_id == group_id){ /*Hidden group id and receiving group id are same */
+
+          if(msg == 'file' && type == 'image'){ /*Message is a image file */
 
             var content ='<div class="chat chat-right">'+
             '<div class="chat-body">'+
@@ -176,7 +177,7 @@ function receive_message(message){
             '</div>'+
             '</div>';
 
-          }else if(msg == 'file' && type == 'others'){
+          }else if(msg == 'file' && type == 'others'){ /*Message is other file */
 
             var content ='<div class="chat chat-right">'+
             '<div class="chat-body">'+
@@ -190,7 +191,7 @@ function receive_message(message){
             '</div>'+
             '</div>'+
             '</div>';
-          }else{
+          }else{ /* Text message */
 
            var content = '<div class="chat chat-left slimscrollleft">'+
            '<div class="chat-avatar">'+
@@ -211,12 +212,12 @@ function receive_message(message){
          }
          $('.no_message').html('');
          $('#ajax').append(content);
-       }else{
+       }else{ /*Hidden group and receiving msg group are different*/
 
 
-        $('#'+obj.group_message.group_name).remove();         
-        var data = '<li  id="'+obj.group_message.group_name+'" onclick="set_nav_bar_group_user('+obj.group_message.group_id+',this)">'+
-        '<a href="#">#'+obj.group_message.group_name+ '<span class="badge bg-danger pull-right">'+obj.count+'</span></a>'+
+        $('#'+obj.msg_data.group_name).remove();         
+        var data = '<li  id="'+obj.msg_data.group_name+'" onclick="set_nav_bar_group_user('+obj.msg_data.group_id+',this)">'+
+        '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right">1</span></a>'+
         '</li>';
         $('#new_group_user').prepend(data);
 
@@ -225,7 +226,7 @@ function receive_message(message){
 
 
 
-    }else{
+    }else{ // One to One text chat with receiver name same in hidden box 
 
 
       if(msg == 'file' && type == 'image'){
@@ -306,7 +307,82 @@ function receive_message(message){
      var count = datas.count;
 
      if(message_type == 'group'){
-      if(datas.message){
+
+      var group_id = $('#group_id').val();
+      if(datas.message.group_id == group_id){
+
+
+
+        // var receiver_name = obj.reciever_data.first_name+' '+obj.reciever_data.last_name;
+      var msg = datas.message.message;
+      var type = datas.message.type;
+      var file_name = base_url+datas.message.file_path+'/'+datas.message.file_name;
+      var time = message.timestamp.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
+       var up_file_name =datas.message.file_name;
+
+
+
+          
+          if(msg == 'file' && type == 'image'){
+
+            var content ='<div class="chat chat-right">'+
+            '<div class="chat-body">'+
+            '<div class="chat-bubble">'+
+            '<div class="chat-content img-content">'+
+            '<div class="chat-img-group clearfix">'+
+            '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
+            '<img width="182" height="137" alt="" src="'+file_name+'">'+
+            '<div class="chat-placeholder">'+
+            '<div class="chat-img-name">'+up_file_name+'</div>'+
+            '</div>'+
+            '</a>'+
+            '</div>'+
+            '<span class="chat-time">'+time+'</span>'+
+            '</div>'+                  
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>';
+
+          }else if(msg == 'file' && type == 'others'){
+
+            var content ='<div class="chat chat-right">'+
+            '<div class="chat-body">'+
+            '<div class="chat-bubble">'+
+            '<div class="chat-content "><ul class="attach-list">'+
+            '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
+            '</ul>'+
+            '<span class="chat-time">'+time+'</span>'+
+            '</div>'+                  
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>';
+          }else{
+              var receiver_img = datas.profile_img;
+           var content = '<div class="chat chat-left slimscrollleft">'+
+           '<div class="chat-avatar">'+
+           '<a href="#" class="avatar">'+
+           '<img src="'+receiver_img+'" class="img-responsive img-circle">'+
+           '</a>'+
+           '</div>'+
+           '<div class="chat-body">'+
+           '<div class="chat-bubble">'+
+           '<div class="chat-content">'+
+           '<p>'+msg+'</p>'+            
+           '<span class="chat-time">'+time+'</span>'+
+           '</div>'+
+           '</div>'+
+           '</div>'+
+           '</div>';
+
+         }
+         $('.no_message').html('');
+         $('#ajax').append(content);
+
+      }else{ // Different group 
+
+         if(datas.message){
         $(datas.message).each(function(){
           $('#'+this.group_name).remove();         
           var data = '<li  id="'+this.group_name+'" onclick="set_nav_bar_group_user('+this.group_id+',this)">'+
@@ -317,6 +393,9 @@ function receive_message(message){
         });
       }   
 
+
+      }
+     
 
 
     }else{
