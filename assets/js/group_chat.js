@@ -75,6 +75,27 @@ function set_nav_bar_group_user(group_id,element){
 				$('#receiver_sinchusername').val(receivers);
 				$('#receiver_id').val(receiver_id);
 				$('#type').val('group');
+				$('.no_message').html('');
+				$('.chats').html(obj.messages);
+
+				$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = $(this).attr('total');
+			if(total>0 || total == 0 ){                        
+				load_more(total,group.group_id);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
+
+		});
+
+
+
+
+
+
 				
 
 			}		

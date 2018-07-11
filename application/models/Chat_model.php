@@ -17,15 +17,69 @@ class Chat_model extends CI_Model {
 		return $data;
 
 	}
-	public function get_group_datas(){
+	public function get_group_datas($group_id){
 				
-			$query = "SELECT * FROM chat_group_details g WHERE g.group_id = $_POST[group_id]";
+			$query = "SELECT * FROM chat_group_details g WHERE g.group_id = $group_id";
 		    $data['group'] =  $this->db->query($query)->row_array();	
 		    $data['group']['group_name'] = ucfirst($data['group']['group_name']);
-		    $data['group_members']	= $this->get_group_members_list($_POST['group_id']);
+		    $data['group_members']	= $this->get_group_members_list($group_id);
+		
 
 			return $data;
 	}
+
+
+	public function get_group_messages($total=null,$group_id){
+
+		$result = array();
+		if(!empty($this->session->userdata('session_group_id'))){
+			$session_group_id = $this->session->userdata('session_group_id');
+
+			$per_page = 5;   
+			//$total = 10;   
+			if(empty($total)){
+
+				$total =  $this->get_total_chat_group_count($group_id);
+				if($total>5){
+					$total = $total-5;    
+				}else{
+					$total = 0;
+				}
+
+			}
+
+			//$this->update_group_counts($group_id);
+
+			$sql= "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,msg.time_zone,msg.created_at FROM chat_details msg  
+			LEFT  join login_details sender on msg.sender_id = sender.login_id
+			left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
+			where cd.can_view =  $this->login_id AND msg.group_id = $group_id AND msg.message_type = 'group'  ORDER BY msg.chat_id ASC LIMIT $total,$per_page";
+			$query = $this->db->query($sql);
+			$result = $query->result_array();
+		}
+		return $result;
+
+	}
+	//public function update_group_counts()
+
+	public function get_total_chat_group_count($group_id){
+
+
+		$result = 0;
+		if(!empty($this->session->userdata('session_group_id'))){
+			$session_group_id = $this->session->userdata('session_group_id');
+
+			$sql= "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,msg.time_zone,msg.created_at FROM chat_details msg  
+			LEFT  join login_details sender on msg.sender_id = sender.login_id
+			left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
+			where cd.can_view =  $this->login_id AND msg.group_id = $group_id AND msg.message_type = 'group'";
+			$query = $this->db->query($sql);
+			$result = $query->num_rows();
+		}
+		return $result;
+	}
+
+
 
 	public function get_group_members_list($group_id){
 
@@ -90,7 +144,7 @@ class Chat_model extends CI_Model {
 			$sql = "SELECT g.group_id,g.group_name,l.sinch_username,l.login_id FROM chat_group_details g 
 			JOIN chat_group_members m ON g.group_id = m.group_id 
 			JOIN login_details l ON l.login_id = m.login_id
-			WHERE m.group_id =$session_group_id AND g.type = 'text' ";
+			WHERE m.group_id =$session_group_id AND g.type = 'text' AND l.login_id !=$this->login_id";
 
 			$result =  $this->db
 			->query($sql)

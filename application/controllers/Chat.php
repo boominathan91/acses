@@ -26,9 +26,113 @@ class Chat extends CI_Controller {
 		render_page('chat',$data);
 	}
 	public function get_group_datas(){
-		$this->session->set_userdata(array('session_chat_id'=>''));
-		$data = $this->chat->get_group_datas();
-		$this->session->set_userdata(array('session_group_id'=>$data['group']['group_id']));
+		$group_id = $_POST['group_id'];
+		$this->session->set_userdata(array('session_chat_id'=>''));		
+		$data = $this->chat->get_group_datas($group_id);
+		$total_chat= $this->chat->get_total_chat_group_count($group_id); 
+
+
+		$this->session->set_userdata(array('session_group_id'=>$group_id));
+		$latest_chats = $this->chat->get_group_messages($total=null,$group_id); 
+
+		$page=0;
+		if($total_chat>5){
+			$total_chat = $total_chat - 5;
+			$page = $total_chat / 5;
+			$page = ceil($page);
+			$page--;
+		}
+
+		if(count($latest_chats)>4){
+
+			$html ='<div class="load-more-btn text-center" total="'.$page.'">
+			<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
+			</div><div id="ajax_old"></div>';      
+		}else{
+			$html ='';
+		}
+
+
+			if(!empty($latest_chats)){
+
+			foreach($latest_chats as $l){
+				$sender_name = $l['sender_name'];
+				$sender_profile_img = (!empty($l['sender_profile_image']))?base_url().'uploads/'.$l['sender_profile_image'] : base_url().'assets/img/user.jpg';
+				$msg = $l['message'];
+				$type = $l['type'];
+				$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
+				$time = date('h:i A',strtotime($l['created_at']));
+				$up_file_name =$l['file_name'];
+
+				if($l['sender_id'] == $this->login_id){
+					$class_name = 'chat-right';
+					$img_avatar='';
+				}else{
+					$img_avatar = '<div class="chat-avatar">
+					<a href="#" class="avatar">
+					<img alt="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+					</a>
+					</div>';
+					$class_name = 'chat-left';
+				}
+				if($msg == 'file' && $type == 'image'){
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content img-content">
+					<div class="chat-img-group clearfix">
+					<a class="chat-img-attach" href="'.$file_name.'" target="_blank">
+					<img width="182" height="137" alt="" src="'.$file_name.'">
+					<div class="chat-placeholder">
+					<div class="chat-img-name">'.$up_file_name.'</div>
+					</div>
+					</a>
+					</div>
+					<span class="chat-time">'.$time.'</span>
+					</div>               
+					</div>
+					</div>
+					</div>';
+
+				}else if($msg == 'file' && $type == 'others'){
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content "><ul class="attach-list">
+					<li><i class="fa fa-file"></i><a href="'.$file_name.'">'.$up_file_name.'</a></li>
+					</ul>
+					<span class="chat-time">'.$time.'</span>       
+					</div>
+					</div>
+					</div>
+					</div>';
+
+				}else{
+
+					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					<div class="chat-body">
+					<div class="chat-bubble">
+					<div class="chat-content">
+					<p>'.$msg.'</p>         
+					<span class="chat-time">'.$time.'</span>
+					</div>
+					</div>
+					</div>
+					</div>';
+				}														
+			}
+
+		}
+
+		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+
+		if($total_chat == 0){
+			$html .='<div class="no_message">No Record Found</div>';
+		}
+		$data['messages'] = $html;
+
 
 		echo json_encode($data);
 	}
@@ -189,6 +293,7 @@ class Chat extends CI_Controller {
 		$latest_chats= $this->chat->get_latest_chat($total=null);  
 		$total_chat= $this->chat->get_total_chat_count(); 
 
+		$page=0;
 		if($total_chat>5){
 			$total_chat = $total_chat - 5;
 			$page = $total_chat / 5;

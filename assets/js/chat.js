@@ -57,7 +57,7 @@ function set_nav_bar_chat_user(login_id,element){
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
-		$('.chat-main-row').removeClass('hidden');
+		$('.chat-main-row,#task_window').removeClass('hidden');
 		$('.to_name').text(obj.first_name+' '+obj.last_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
@@ -75,7 +75,7 @@ function set_nav_bar_chat_user(login_id,element){
 			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
 			var total = $(this).attr('total');
 			if(total>0 || total == 0 ){                        
-				load_more(total);   
+				load_more(total,0);   
 				var total = total - 1;
 				$(this).attr('total',total); 
 			}else{
@@ -139,7 +139,7 @@ function set_chat_user(login_id){
 			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
 			var total = $(this).attr('total');
 			if(total>0 || total == 0 ){                        
-				load_more(total);   
+				load_more(total,0);   
 				var total = total - 1;
 				$(this).attr('total',total); 
 			}else{
@@ -171,10 +171,11 @@ function delete_conversation()
 }
 
 $('.load-more-btn').click(function(){
+	var group_id = $('#group_id').val();
 			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
 			var total = $(this).attr('total');
 			if(total>0 || total == 0 ){                        
-				load_more(total);   
+				load_more(total,group_id);   
 				var total = total - 1;
 				$(this).attr('total',total); 
 			}else{
@@ -304,11 +305,11 @@ $('#user_file').change(function(e) {
 
 
 
-function load_more(total){      
+function load_more(total,group_id){      
 
 	var receiver_id = $('#receiver_id').val();                  
 
-	$.post(base_url+'chat/get_old_messages',{total:total},function(res){  
+	$.post(base_url+'chat/get_old_messages',{total:total,group_id:group_id},function(res){  
 		if(res){        
 			$('.load-more-btn').html('<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>');               
 			$('#ajax_old').prepend(res);

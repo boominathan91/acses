@@ -25,7 +25,8 @@
 		$dob ='';
 		$receiver_email = '';
 		$phone_number = '';
-		$type='';
+		$mesage_type='';
+		$group_id = 0;
 
 
 	if(!empty($this->session->userdata('session_chat_id'))){
@@ -39,8 +40,7 @@
 		$receiver_sinchusername = $chat['sinch_username'];
 		$department_name = $chat['department_name'];
 		$dob = $data['dob'] =(!empty($data['dob']) && $data['dob']!='0000-00-00')?date('d-m-Y',strtotime($data['dob'])):'N/A';
-		$type = 'text';
-		$group_id = '';
+		$mesage_type = 'text';
 
 	}else if(!empty($this->session->userdata('session_group_id'))){
 		
@@ -58,7 +58,7 @@
 		$phone_number ='';		
 		$department_name = '';
 		$dob = '';
-		$type="group";
+		$mesage_type="group";
 		$group_id = $chat[0]['group_id'];
 
 	}
@@ -233,7 +233,7 @@
 													<input type="hidden" name="img" id="receiver_image" value="<?php echo $receiver_profile_img; ?>">
 													<!-- Receiver Image  -->
 
-													<input type="text" name="type" id="type" value="<?php echo $type ?>" >
+													<input type="text" name="type" id="type" value="<?php echo $mesage_type ?>" >
 													<input type="text" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
 
 													<span class="input-group-btn">
