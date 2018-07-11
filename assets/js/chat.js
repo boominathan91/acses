@@ -28,6 +28,7 @@ function search_user(){
 	});
 }
 
+
 /*Set Current Active User in Chat */
 function set_nav_bar_chat_user(login_id,element){
 
@@ -66,6 +67,8 @@ function set_nav_bar_chat_user(login_id,element){
 		$('.receiver_email').text(obj.email);
 		$('.phone_number').text(obj.phone_number);
 		$('.chats').html(obj.messages);
+		$('#type').val('text');
+		$('#group_id').val('');
 
 
 		$('.load-more-btn').click(function(){
@@ -127,6 +130,9 @@ function set_chat_user(login_id){
 		$('.receiver_email').text(obj.email);
 		$('.phone_number').text(obj.phone_number);
 		$('.chats').html(obj.messages);
+		$('#type').val('text');
+		$('#group_id').val('');
+
 
 
 		$('.load-more-btn').click(function(){
@@ -203,8 +209,10 @@ $('#chat_form').submit(function(){
 		'</div>';
 		$('#ajax').append(content);     
 		$('#input_message').val('');  
+		var message_type = $('#type').val();
+		var group_id = $('#group_id').val();
 		message(input_message);
-		$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id},function(res){
+		$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
 
 		});                 
 		

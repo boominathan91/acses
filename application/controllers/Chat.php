@@ -26,7 +26,11 @@ class Chat extends CI_Controller {
 		render_page('chat',$data);
 	}
 	public function get_group_datas(){
-		$data = 
+		$this->session->set_userdata(array('session_chat_id'=>''));
+		$data = $this->chat->get_group_datas();
+		$this->session->set_userdata(array('session_group_id'=>$data['group']['group_id']));
+
+		echo json_encode($data);
 	}
 	public function create_group(){
 
@@ -54,16 +58,16 @@ class Chat extends CI_Controller {
 			}
 			$sinch_usernames = implode(',',$sinch_usernames);
 			$datas = array(
-					'group_id' => $group_id,
-					'login_id' => $this->login_id
-				);
-				$this->db->insert('chat_group_members',$datas);	
+				'group_id' => $group_id,
+				'login_id' => $this->login_id
+			);
+			$this->db->insert('chat_group_members',$datas);	
 			$result = array(
 				'success'=>'Group created successfully!',
 				'group_name' => ucfirst($_POST['group_name']),
 				'group_id'=>$group_id,
 				'sinch_username' => $sinch_usernames
-		);
+			);
 			
 		}	
 		echo json_encode($result);
@@ -180,6 +184,7 @@ class Chat extends CI_Controller {
 	}
 	public function set_chat_user(){
 
+		$this->session->set_userdata(array('session_group_id'=>''));
 		$this->session->set_userdata(array('session_chat_id'=>$_POST['login_id']));
 		$latest_chats= $this->chat->get_latest_chat($total=null);  
 		$total_chat= $this->chat->get_total_chat_count(); 
@@ -309,18 +314,46 @@ class Chat extends CI_Controller {
 
 	Public function insert_chat()
 	{	
-		$login_id = 
-		$data['receiver_id'] =$_POST['receiver_id'];
-		$data['sender_id'] = $this->session->userdata('login_id');
-		$data['time_zone'] = $this->session->userdata('time_zone');
-		$data['chatdate'] = date('Y-m-d H:i:s');
-		$data['message'] = $_POST['message'];
-		$result = $this->db->insert('chat_details',$data);
-		$chat_id = $this->db->insert_id();
-		$users = array($data['receiver_id'],$data['sender_id']);
-		for ($i=0; $i <2 ; $i++) { 
-			$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
-			$this->db->insert('chat_deleted_details',$datas);
+		if( $_POST['message_type'] == 'group'){
+
+			$receiver_id =explode(',',$_POST['receiver_id']);
+			for ($j=0; $j < count($receiver_id); $j++) { 
+				$data['receiver_id'] = $receiver_id[$j];	
+
+				$data['sender_id'] = $this->login_id;
+				$data['time_zone'] = $this->session->userdata('time_zone');
+				$data['chatdate'] = date('Y-m-d H:i:s');
+				$data['message'] = $_POST['message'];
+				$data['message_type'] = $_POST['message_type'];
+				$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
+
+				$result = $this->db->insert('chat_details',$data);
+				$chat_id = $this->db->insert_id();
+				$users = array($data['receiver_id'],$data['sender_id']);
+				for ($i=0; $i <2 ; $i++) { 
+					$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
+					$this->db->insert('chat_deleted_details',$datas);
+				}
+
+			}
+
+		}else{
+
+			$data['receiver_id'] =$_POST['receiver_id'];
+			$data['sender_id'] = $this->login_id;
+			$data['time_zone'] = $this->session->userdata('time_zone');
+			$data['chatdate'] = date('Y-m-d H:i:s');
+			$data['message'] = $_POST['message'];
+			$data['message_type'] = $_POST['message_type'];
+			$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
+
+			$result = $this->db->insert('chat_details',$data);
+			$chat_id = $this->db->insert_id();
+			$users = array($data['receiver_id'],$data['sender_id']);
+			for ($i=0; $i <2 ; $i++) { 
+				$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
+				$this->db->insert('chat_deleted_details',$datas);
+			}
 		}
 		echo json_encode($users);
 
@@ -356,7 +389,22 @@ class Chat extends CI_Controller {
 		->get_where('chat_details',array('sender_id'=>$data['login_id']))
 		->row_array();
 
-		$this->db->update('chat_details',array('read_status'=>1),array('chat_id'=>$msg['msg_data']['chat_id']));		
+
+		$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' =>'group');
+		$msg['count'] = $this->db
+		->get_where('chat_details',$where)
+		->num_rows();
+
+		$where = array('c.sender_id'=>$data['login_id'] ,'c.receiver_id' =>$this->login_id,'c.read_status'=>0,'c.message_type' =>'group');
+		$msg['group_message'] = $this->db
+		->join('chat_group_details cg','cg.group_id = c.group_id')
+		->get_where('chat_details c',$where)
+		->row_array();
+
+
+
+
+		$this->db->update('chat_details',array('read_status'=>1,'message_type'=>'text'),array('chat_id'=>$msg['msg_data']['chat_id']));		
 
 		$msg['reciever_data'] = $data;
 		echo json_encode($msg);
@@ -371,10 +419,46 @@ class Chat extends CI_Controller {
 		$data['first_name'] = ucfirst($data['first_name']); 
 		$data['last_name'] = ucfirst($data['last_name']); 
 
-		$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0);
+
+
+		$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' => $_POST['message_type']);
 		$data['count'] = $this->db
 		->get_where('chat_details',$where)
 		->num_rows();
+
+
+		if($_POST['message_type'] == 'group'){
+
+			$where = array(
+				'sender_id'=>$data['login_id'],
+				'receiver_id' =>$this->login_id,
+				'read_status'=>0,
+				'message_type' => $_POST['message_type']
+			);
+		$data['message'] = $this->db
+		->order_by('chat_id','desc')
+		->join('chat_group_details cg','c.group_id = cg.group_id ')
+		->get_where('chat_details c',$where)
+		->row_array();
+		$data['message']['group_name'] = ucfirst($data['message']['group_name']);
+
+
+
+		}else{
+
+			$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' => $_POST['message_type']);
+		$data['message'] = $this->db
+		->order_by('chat_id','desc')
+		->get_where('chat_details',$where)
+		->row_array();
+
+
+		}
+
+		
+
+
+		// $data['msg'] = $this->db->get_where('chat_details',array('chat_id',$_POST['']))->row_array();
 
 		echo json_encode($data);
 	}

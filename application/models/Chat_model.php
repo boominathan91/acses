@@ -18,14 +18,27 @@ class Chat_model extends CI_Model {
 
 	}
 	public function get_group_datas(){
-			$sql = "SELECT g.group_id,g.group_name,l.sinch_username FROM chat_group_details g 
-			JOIN chat_group_members m ON g.group_id = m.group_id 
-			JOIN login_details l ON l.login_id = m.login_id
-			WHERE m.login_id !=$this->login_id AND g.type = 'text' AND g.group_id = $_POST[group_id] ";
-		$data['groups'] =  $this->db->query($sql)->result_array();			
-		$data['group_members'] = $this->get_group_members($data['groups']);
-		return $data;
+				
+			$query = "SELECT * FROM chat_group_details g WHERE g.group_id = $_POST[group_id]";
+		    $data['group'] =  $this->db->query($query)->row_array();	
+		    $data['group']['group_name'] = ucfirst($data['group']['group_name']);
+		    $data['group_members']	= $this->get_group_members_list($_POST['group_id']);
 
+			return $data;
+	}
+
+	public function get_group_members_list($group_id){
+
+		$result = array();
+			if(!empty($group_id)){				
+				$this->db->select('l.sinch_username,l.login_id');
+				$this->db->where('cg.group_id',$group_id);
+				$this->db->where('cg.login_id !=',$this->login_id);
+				$this->db->join('login_details l','l.login_id = cg.login_id');
+				$result =  $this->db->get('chat_group_members cg')->result_array();	
+			}
+			return $result;
+			
 	}
 
 	public function get_group_members($data){
@@ -34,7 +47,7 @@ class Chat_model extends CI_Model {
 				foreach($data as $d){
 					$group_ids[]=$d['group_id'];					
 				}	
-				$this->db->select('l.sinch_username,l.login_id,l.profile_img');
+				$this->db->select('l.sinch_username,l.login_id,l.profile_img,l.first_name,l.last_name');
 				$this->db->where_in('cg.group_id',$group_ids);
 				$this->db->join('login_details l','l.login_id = cg.login_id');
 				return $this->db->get('chat_group_members cg')->result_array();	
@@ -71,8 +84,20 @@ class Chat_model extends CI_Model {
 			->get_where('login_details l',$where)
 			->row_array();
 
+		}elseif(!empty($this->session->userdata('session_group_id'))){
+			
+			$session_group_id = $this->session->userdata('session_group_id');
+			$sql = "SELECT g.group_id,g.group_name,l.sinch_username,l.login_id FROM chat_group_details g 
+			JOIN chat_group_members m ON g.group_id = m.group_id 
+			JOIN login_details l ON l.login_id = m.login_id
+			WHERE m.group_id =$session_group_id AND g.type = 'text' ";
+
+			$result =  $this->db
+			->query($sql)
+			->result_array();
+
 		}else{
-			$result=array();
+			$result = array();
 		}
 		return $result;
 
@@ -139,7 +164,7 @@ class Chat_model extends CI_Model {
 			$sql= "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,msg.time_zone,msg.created_at FROM chat_details msg  
 			LEFT  join login_details sender on msg.sender_id = sender.login_id
 			left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
-			where cd.can_view =  $this->login_id AND ((msg.receiver_id = $session_chat_id AND msg.sender_id =  $this->login_id) OR (msg.receiver_id = $this->login_id AND msg.sender_id =  $session_chat_id))   ORDER BY msg.chat_id ASC LIMIT $total,$per_page";
+			where cd.can_view =  $this->login_id AND ((msg.receiver_id = $session_chat_id AND msg.sender_id =  $this->login_id) OR (msg.receiver_id = $this->login_id AND msg.sender_id =  $session_chat_id)) AND msg.message_type = 'text'   ORDER BY msg.chat_id ASC LIMIT $total,$per_page";
 			$query = $this->db->query($sql);
 			$result = $query->result_array();
 		}
@@ -154,7 +179,7 @@ class Chat_model extends CI_Model {
 			$sql = "SELECT DISTINCT CONCAT(sender.first_name,' ',sender.last_name) as sender_name, sender.profile_img as sender_profile_image, msg.sender_id,msg.message, msg.chatdate,msg.chat_id,msg.type,msg.file_name,msg.file_path,time_zone FROM chat_details msg  
 			LEFT  join login_details sender on msg.sender_id = sender.login_id
 			left join chat_deleted_details cd on cd.chat_id  = msg.chat_id
-			where cd.can_view =  $this->login_id AND ((msg.receiver_id = $session_chat_id  AND msg.sender_id =  $this->login_id) OR (msg.receiver_id = $this->login_id AND msg.sender_id =  $session_chat_id))   ORDER BY msg.chat_id ASC ";
+			where cd.can_view =  $this->login_id AND ((msg.receiver_id = $session_chat_id  AND msg.sender_id =  $this->login_id) OR (msg.receiver_id = $this->login_id AND msg.sender_id =  $session_chat_id)) AND msg.message_type = 'text'    ORDER BY msg.chat_id ASC ";
 			$result =  $this->db->query($sql)->num_rows(); 
 		}
 		return $result;
@@ -176,7 +201,7 @@ class Chat_model extends CI_Model {
 
 		if(!empty($result)){
 			foreach ($result as $d) {            
-				$this->db->update('chat_details',array('read_status'=>1),array('chat_id'=>$d['chat_id']));
+				$this->db->update('chat_details',array('read_status'=>1,'message_type'=>'text'),array('chat_id'=>$d['chat_id']));
 			}
 
 		}else{

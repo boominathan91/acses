@@ -15,21 +15,6 @@
 
 
 
-
-
-	if(!empty($chat)){
-		$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
-		$class = '';
-		$online_status = ($chat['online_status'] == 1)?'online':'offline';
-		$receiver_profile_img = (!empty($chat['profile_img']))?base_url().'uploads/'.$chat['profile_img']:'assets/img/user.jpg';
-		$receiver_id = $chat['login_id'];
-		$receiver_email = $chat['email'];
-		$phone_number = $chat['phone_number'];
-		$receiver_sinchusername = $chat['sinch_username'];
-		$department_name = $chat['department_name'];
-		$dob = $data['dob'] =(!empty($data['dob']) && $data['dob']!='0000-00-00')?date('d-m-Y',strtotime($data['dob'])):'N/A';
-
-	}else{
 		$name = '';
 		$class = 'hidden';
 		$online_status = '';
@@ -40,7 +25,43 @@
 		$dob ='';
 		$receiver_email = '';
 		$phone_number = '';
-	} 
+		$type='';
+
+
+	if(!empty($this->session->userdata('session_chat_id'))){
+		$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
+		$class = '';
+		$online_status = ($chat['online_status'] == 1)?'online':'offline';
+		$receiver_profile_img = (!empty($chat['profile_img']))?base_url().'uploads/'.$chat['profile_img']:base_url().'assets/img/user.jpg';
+		$receiver_id = $chat['login_id'];
+		$receiver_email = $chat['email'];
+		$phone_number = $chat['phone_number'];
+		$receiver_sinchusername = $chat['sinch_username'];
+		$department_name = $chat['department_name'];
+		$dob = $data['dob'] =(!empty($data['dob']) && $data['dob']!='0000-00-00')?date('d-m-Y',strtotime($data['dob'])):'N/A';
+		$type = 'text';
+		$group_id = '';
+
+	}else if(!empty($this->session->userdata('session_group_id'))){
+		
+		$name = ucfirst($chat[0]['group_name']);
+		$class = '';
+		$online_status = 'online';
+		$receiver_profile_img = base_url().'assets/img/user.jpg';
+		foreach($chat as $c){
+			$receiver_id[]=$c['login_id'];
+			$sinch_username[]=$c['sinch_username'];
+		}
+		$receiver_id = implode(',',$receiver_id);
+		$receiver_sinchusername = implode(',',$sinch_username);
+		$receiver_email = '';
+		$phone_number ='';		
+		$department_name = '';
+		$dob = '';
+		$type="group";
+		$group_id = $chat[0]['group_id'];
+
+	}
 
 
 
@@ -200,9 +221,9 @@
 													<input type="file" name="userfile" id="user_file" class="hidden">
 													<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 													<!-- sender sinch username  -->
-													<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
+													<input type="text" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
 													<!--  receiver sinch username  -->
-													<input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
+													<input type="text" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
 													<!--  receiver id  -->
 
 													<input type="hidden" name="time" id="time" > 
@@ -211,6 +232,9 @@
 													<!-- Sender Image  -->
 													<input type="hidden" name="img" id="receiver_image" value="<?php echo $receiver_profile_img; ?>">
 													<!-- Receiver Image  -->
+
+													<input type="text" name="type" id="type" value="<?php echo $type ?>" >
+													<input type="text" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
 
 													<span class="input-group-btn">
 														<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>

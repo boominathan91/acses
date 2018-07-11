@@ -151,7 +151,24 @@ $website_name = $this->session->userdata('website_name');
 
 									<?php if(!empty($text_group)){ 
 												foreach($text_group['groups'] as $t){
-													echo '<li id="'.$t['group_name'].'"><a href="javascript:void(0)" onclick="set_nav_bar_group_user('.$t['group_id'].',this)">#'.ucfirst($t['group_name']).'</a></li>';
+												
+
+													$login_id = $this->session->userdata('login_id');
+												$where = array(
+														'group_id' => $t['group_id']
+														,'receiver_id' =>$login_id,
+														'read_status' =>0
+													);
+												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = ($count!=0)?$count:'';
+												if(!empty($this->session->userdata('session_group_id'))){
+													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+												}else{
+													$class = '';	
+												}
+
+
+													echo '<li '.$class.' id="'.$t['group_name'].'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 												}
 										 } ?>
 										</div>
