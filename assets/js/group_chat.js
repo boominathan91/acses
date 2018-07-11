@@ -39,7 +39,21 @@ $('#text_group_form').submit(function(){
 });	
 
 
+
+
+
+
+
+
 function set_nav_bar_group_user(group_id,element){
+
+
+	$('li').removeClass('active').removeClass('hidden');
+	$(element).addClass('active');
+	$(element).next('span').next('span').empty();
+	$('.chats').html('');
+
+
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
 
@@ -63,18 +77,11 @@ function set_nav_bar_group_user(group_id,element){
 				$('#type').val('group');
 				
 
-			}
-
-
-
-
-
-			
+			}		
 
 			
 		}
-	})
-		
+	});
 
 
 }

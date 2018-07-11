@@ -84,8 +84,20 @@ class Chat_model extends CI_Model {
 			->get_where('login_details l',$where)
 			->row_array();
 
+		}elseif(!empty($this->session->userdata('session_group_id'))){
+			
+			$session_group_id = $this->session->userdata('session_group_id');
+			$sql = "SELECT g.group_id,g.group_name,l.sinch_username,l.login_id FROM chat_group_details g 
+			JOIN chat_group_members m ON g.group_id = m.group_id 
+			JOIN login_details l ON l.login_id = m.login_id
+			WHERE m.group_id =$session_group_id AND g.type = 'text' ";
+
+			$result =  $this->db
+			->query($sql)
+			->result_array();
+
 		}else{
-			$result=array();
+			$result = array();
 		}
 		return $result;
 

@@ -28,6 +28,7 @@ function search_user(){
 	});
 }
 
+
 /*Set Current Active User in Chat */
 function set_nav_bar_chat_user(login_id,element){
 

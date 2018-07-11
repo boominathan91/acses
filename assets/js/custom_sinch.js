@@ -100,7 +100,7 @@ messageClient.addEventListener(myListenerObj);
 
 
 function receive_message(message){
-	console.log(message);
+//	console.log(message);
 
        var receiver_sinchusername = $('#receiver_sinchusername').val();  // receiver username     
 	     var sender_sinchusername = $('#sender_sinchusername').val();  // sender username     

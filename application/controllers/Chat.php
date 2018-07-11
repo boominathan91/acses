@@ -26,7 +26,10 @@ class Chat extends CI_Controller {
 		render_page('chat',$data);
 	}
 	public function get_group_datas(){
+		$this->session->set_userdata(array('session_chat_id'=>''));
 		$data = $this->chat->get_group_datas();
+		$this->session->set_userdata(array('session_group_id'=>$data['group']['group_id']));
+
 		echo json_encode($data);
 	}
 	public function create_group(){
@@ -181,6 +184,7 @@ class Chat extends CI_Controller {
 	}
 	public function set_chat_user(){
 
+		$this->session->set_userdata(array('session_group_id'=>''));
 		$this->session->set_userdata(array('session_chat_id'=>$_POST['login_id']));
 		$latest_chats= $this->chat->get_latest_chat($total=null);  
 		$total_chat= $this->chat->get_total_chat_count(); 
@@ -436,6 +440,8 @@ class Chat extends CI_Controller {
 		->join('chat_group_details cg','c.group_id = cg.group_id ')
 		->get_where('chat_details c',$where)
 		->row_array();
+		$data['message']['group_name'] = ucfirst($data['message']['group_name']);
+
 
 
 		}else{
