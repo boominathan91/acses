@@ -67,8 +67,8 @@
 	?>
 	
 
-
-	<div class="page-wrapper">
+	<!-- Text Chat Page Content  -->
+	<div class="page-wrapper <?php echo $text_chat_class; ?>" id="text_chat_panel">
 		<div class="chat-main-row <?php echo $class; ?>">
 			<div class="chat-main-wrapper">
 				<div class="col-xs-9 message-view task-view">
@@ -273,8 +273,21 @@
 					</div>
 				</div>
 			</div>
+			</div>
+			<!-- Text Chat Page Content ends  -->
+
+			<!-- Audio Call Page Content starts -->
+
+
+
+			
+			<!-- Audio Call Page Content ends  -->
+
+
+
+
 			<!-- POPUPS  -->
 			<?php $this->load->view('user/popups'); ?>
-		</div>
+		
 
 		<?php $this->load->view('notifications');  ?>

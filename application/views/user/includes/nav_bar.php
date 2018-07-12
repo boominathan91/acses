@@ -127,38 +127,7 @@ $website_name = $this->session->userdata('website_name');
 					<div class="sidebar-inner slimscroll">
 						<div class="sidebar-menu">
 							
-							<?php
-							$uri = $this->uri->segment(1);
-							$page = $this->session->userdata('page');
-							$profile_class = "hidden";
-							$text_chat_class = "hidden";
-							$audio_class = "hidden";
-							$video_class = "hidden";
-							if(!empty($page)){							 	
-								switch($page){
-									case 'profile':
-									$profile_class = '';
-									break;
-									case 'text_chat':
-									$text_chat_class = '';
-									break;
-									case 'audio':
-									$audio_class = '';
-									break;
-									case 'video':
-									$video_class = '';
-									break;
-									default:
-									$profile_class = '';
-									break;
-
-								}
-							}else{
-								$profile_class = "";
-							}
-
-
-							?>
+							<?php $uri = $this->uri->segment(1);	?>
 
 							<ul class="profile <?php echo $profile_class; ?>">		
 								<li id="profile"><a href="javascript:void(0)" page="profile">Profile</a></li>			

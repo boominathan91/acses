@@ -14,6 +14,35 @@ class Chat extends CI_Controller {
 	}
 	public function index()
 	{	
+		
+			$page = $this->session->userdata('page');
+			$data['profile_class'] = "hidden";
+			$data['text_chat_class'] = "hidden";
+			$data['audio_class'] = "hidden";
+			$data['video_class'] = "hidden";
+			if(!empty($page)){							 	
+			switch($page){
+			case 'profile':
+			$data['profile_class'] = '';
+			break;
+			case 'text_chat':
+			$data['text_chat_class'] = '';
+			break;
+			case 'audio':
+			$data['audio_class'] = '';
+			break;
+			case 'video':
+			$data['video_class'] = '';
+			break;
+			default:
+			$data['profile_class'] = '';
+			break;
+
+			}
+			}else{
+			$data['profile_class']  = "";
+			}
+
 		$data['title'] = 'Chat';		
 		$data['text_group'] = $this->chat->get_text_group();
 		$data['page'] = $this->chat->get_page_no();

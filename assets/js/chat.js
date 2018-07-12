@@ -30,64 +30,10 @@ function search_user(){
 
 
 /*Set Current Active User in Chat */
-function set_nav_bar_chat_user(login_id,element){
+function set_nav_bar_audio_user(login_id,element){
 
+                          // $('.chats').html(content);
 
-	<div class="chat-contents">
-                                <div class="chat-content-wrap">
-                                    <div class="voice-call-avatar">
-                                        <img src="assets/img/user-03.jpg" alt="" class="call-avatar">
-                                        <span class="username">John Doe</span>
-                                        <span class="call-timing-count">00:59</span>
-                                    </div>
-                                    <div class="call-users">
-                                        <ul>
-                                            <li>
-                                                <a href="#">
-                                                    <img src="assets/img/user-04.jpg" class="img-responsive" alt="">
-                                                    <span class="call-mute"><i class="fa fa-microphone-slash" aria-hidden="true"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <img src="assets/img/user-05.jpg" class="img-responsive" alt="">
-                                                    <span class="call-mute"><i class="fa fa-microphone-slash" aria-hidden="true"></i></span>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a href="#">
-                                                    <img src="assets/img/user-06.jpg" class="img-responsive" alt="">
-                                                    <span class="call-mute"><i class="fa fa-microphone-slash" aria-hidden="true"></i></span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="chat-footer">
-                                <div class="call-icons">
-                                    <ul class="call-items">
-                                        <li class="call-item">
-                                            <a href="#" title="Enable Video" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-video-camera camera" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                        <li class="call-item">
-                                            <a href="#" title="Mute" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-microphone microphone" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                        <li class="call-item">
-                                            <a href="#" title="Add User" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                    <div class="end-call">
-                                        <a href="javascript:void(0);">End Call</a>
-                                    </div>
-                                </div>
-                            </div>
 }
 
 /*Set Current */
