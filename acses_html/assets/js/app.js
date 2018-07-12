@@ -270,12 +270,12 @@ $(document).ready(function() {
 		});
 	}
 	
-	// Incoming call popup
+	// // Incoming call popup
 	
-    if ($('#incoming_call').length > 0) {
-		$(window).on('load',function(){
-			$('#incoming_call').modal('show');
-			$("body").addClass("call-modal");
-		});
-    }
+ //    if ($('#incoming_call').length > 0) {
+	// 	$(window).on('load',function(){
+	// 		$('#incoming_call').modal('show');
+	// 		$("body").addClass("call-modal");
+	// 	});
+ //    }
 });

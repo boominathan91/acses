@@ -4,11 +4,12 @@ var sinchClient = new SinchClient({
 	applicationKey: 'f06ae4f2-4980-40aa-89ca-9b98d80d70c4',
 	capabilities: {messaging: true,calling: true, video: true},
 	supportActiveConnection: true,
+  startActiveConnection: true,
 	onLogMessage: function(message) {
-		console.log(message.message);
+//		console.log(message.message);
 	}
 });
-sinchClient.startActiveConnection();
+//sinchClient.startActiveConnection();
 // Get the messageClient
 var messageClient = sinchClient.getMessageClient();
 

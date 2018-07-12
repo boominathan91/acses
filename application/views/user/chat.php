@@ -1,20 +1,5 @@
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 		$name = '';
 		$class = 'hidden';
 		$online_status = '';
@@ -27,7 +12,7 @@
 		$phone_number = '';
 		$mesage_type='';
 		$group_id = 0;
-		 $task_class = ''; 
+		$task_class = ''; 
 
 
 	if(!empty($this->session->userdata('session_chat_id'))){
@@ -100,6 +85,7 @@
 											<!-- <span class="last-seen"><?php echo ucfirst($online_status); ?></span> -->
 										</div>
 									</div>		
+									<button data-target="#incoming_call" data-toggle="modal">Call</button>
 									<ul class="nav navbar-nav pull-right chat-menu <?php echo $task_class; ?>">											
 											<li class="dropdown">
 												<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
@@ -279,63 +265,7 @@
 													<span class="pull-right text-muted phone_number"><?php echo $phone_number; ?></span>
 												</li>
 											</ul>
-										</div>
-										<!-- <div class="tabbable">
-											<ul class="nav nav-tabs nav-tabs-solid nav-justified m-b-0">
-												<li class="active"><a href="#all_files" data-toggle="tab">All Files</a></li>
-												<li><a href="#my_files" data-toggle="tab">My Files</a></li>
-											</ul>
-											<div class="tab-content">
-												<div class="tab-pane active" id="all_files">
-													<ul class="files-list">
-														<li>
-															<div class="files-cont">
-																<div class="file-type">
-																	<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-																</div>
-																<div class="files-info">
-																	<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-																	<span class="file-author"><a href="#">Loren Gatlin</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-																</div>
-																<ul class="files-action">
-																	<li class="dropdown">
-																		<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-																		<ul class="dropdown-menu">
-																			<li><a href="javascript:void(0)">Download</a></li>
-																			<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
-																		</ul>
-																	</li>
-																</ul>
-															</div>
-														</li>
-													</ul>
-												</div>
-												<div class="tab-pane" id="my_files">
-													<ul class="files-list">
-														<li>
-															<div class="files-cont">
-																<div class="file-type">
-																	<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-																</div>
-																<div class="files-info">
-																	<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-																	<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-																</div>
-																<ul class="files-action">
-																	<li class="dropdown">
-																		<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-																		<ul class="dropdown-menu">
-																			<li><a href="javascript:void(0)">Download</a></li>
-																			<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
-																		</ul>
-																	</li>
-																</ul>
-															</div>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div> -->
+										</div>										
 									</div>
 								</div>
 							</div>
@@ -343,85 +273,8 @@
 					</div>
 				</div>
 			</div>
-			
-			<div id="add_group" class="modal custom-modal fade center-modal" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content">
-						<div class="modal-header">
-							<h3 class="modal-title">Create a group</h3>
-						</div>
-						<div class="modal-body">
-							<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
-							<form id="text_group_form" method="post">
-								<div class="form-group">
-									<label>Group Name <span class="text-danger">*</span></label>
-									<input class="form-control"  type="text" name="group_name" id="group_name">
-								</div>
-								<div class="form-group">
-									<label>Send invites to: <span class="text-muted-light"></span></label>
-									<input class="form-control"  type="text" name="members" id="members">
-								</div>
-								<div class="m-t-50 text-center">
-									<button class="btn btn-primary btn-lg" type="submit" >Create Group</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="add_chat_user" class="modal custom-modal fade center-modal" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content">
-						<div class="modal-header">
-							<h3 class="modal-title">Direct Chat</h3>
-						</div>
-						<div class="modal-body">
-							<div class="input-group m-b-30">
-								<input placeholder="Search to start a chat" class="form-control search-input input-lg" id="search_user" type="text">
-								<span class="input-group-btn">
-									<button class="btn btn-primary btn-lg" onclick="search_user()">Search</button>
-								</span>
-							</div>
-							<div>
-								<h5>Recent Conversations</h5>
-								<div id="user_list"></div>									
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div id="share_files" class="modal custom-modal fade center-modal" role="dialog">
-				<div class="modal-dialog">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<div class="modal-content">
-						<div class="modal-header">
-							<h3 class="modal-title">Share File</h3>
-						</div>
-						<div class="modal-body">
-							<div class="files-share-list">
-								<div class="files-cont">
-									<div class="file-type">
-										<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-									</div>
-									<div class="files-info">
-										<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-										<span class="file-author"><a href="#">Bernardo Galaviz</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-									</div>
-								</div>
-							</div>
-							<div class="form-group">
-								<label>Share With</label>
-								<input class="form-control" type="text">
-							</div>
-							<div class="m-t-50 text-center">
-								<button class="btn btn-primary btn-lg">Share</button>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
+			<!-- POPUPS  -->
+			<?php $this->load->view('user/popups'); ?>
 		</div>
 
 		<?php $this->load->view('notifications');  ?>

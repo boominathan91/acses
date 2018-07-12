@@ -33,6 +33,8 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 
 <!-- Group chat  -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/group_chat.js"></script>
+<!-- Nav Bar chat  -->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/nav_bar.js"></script>
 
 
 <?php } ?>	

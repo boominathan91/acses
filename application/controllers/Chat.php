@@ -12,7 +12,6 @@ class Chat extends CI_Controller {
 		$this->load->model('chat_model','chat');
 		$this->login_id = $this->session->userdata('login_id');
 	}
-
 	public function index()
 	{	
 		$data['title'] = 'Chat';		
@@ -22,23 +21,27 @@ class Chat extends CI_Controller {
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
-		// echo '<pre>'; print_r($data); exit;
 		render_page('chat',$data);
+	}
+	public function set_nav_bar(){
+		$page = array();
+		if(!empty($_POST['page'])){
+			$page = array('page'=>$_POST['page']);
+			$this->session->set_userdata($page);
+		}
+		echo json_encode($page);
 	}
 	public function get_group_datas(){
 		$group_id = $_POST['group_id'];
 		$this->session->set_userdata(array('session_chat_id'=>''));		
 		$data = $this->chat->get_group_datas($group_id);
-		 $total_chat= $this->chat->get_total_chat_group_count($group_id); 
+		$total_chat= $this->chat->get_total_chat_group_count($group_id); 
 
 
 
 		$this->session->set_userdata(array('session_group_id'=>$group_id));
-		$latest_chats = $this->chat->get_group_messages($total=null,$group_id); 
-
- 		//echo $this->db->last_query();
-// exit;
-			$page=0;
+		$latest_chats = $this->chat->get_group_messages($total=null,$group_id);  		
+		$page=0;
 		if($total_chat>5){
 			$total_chat = $total_chat - 5;
 			$page = $total_chat / 5;
@@ -56,7 +59,7 @@ class Chat extends CI_Controller {
 		}
 
 
-			if(!empty($latest_chats)){
+		if(!empty($latest_chats)){
 
 			foreach($latest_chats as $l){
 				$sender_name = $l['sender_name'];
@@ -429,18 +432,18 @@ class Chat extends CI_Controller {
 			$receiver_id =explode(',',$_POST['receiver_id']);
 			
 				//$data['receiver_id'] = $receiver_id[$j];	
-				$data['receiver_id'] = 0;
-				$data['sender_id'] = $this->login_id;
-				$data['time_zone'] = $this->session->userdata('time_zone');
-				$data['chatdate'] = date('Y-m-d H:i:s');
-				$data['message'] = $_POST['message'];
-				$data['message_type'] = 'group';
-				$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
+			$data['receiver_id'] = 0;
+			$data['sender_id'] = $this->login_id;
+			$data['time_zone'] = $this->session->userdata('time_zone');
+			$data['chatdate'] = date('Y-m-d H:i:s');
+			$data['message'] = $_POST['message'];
+			$data['message_type'] = 'group';
+			$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
 
-				$result = $this->db->insert('chat_details',$data);
-				$chat_id = $this->db->insert_id();
-				$users = array($data['receiver_id'],$data['sender_id']);
-		
+			$result = $this->db->insert('chat_details',$data);
+			$chat_id = $this->db->insert_id();
+			$users = array($data['receiver_id'],$data['sender_id']);
+
 
 			
 
@@ -494,12 +497,12 @@ class Chat extends CI_Controller {
 		/*Message*/
 		$msg['msg_data'] = $this->db
 		->select('c.chat_id,c.group_id,c.message_type,c.message,c.receiver_id,c.sender_id,c.chatdate,c.file_path,c.file_name,
-				c.read_status,
-				c.time_zone,
-				c.type,
-				c.status,
-				g.group_name'
-				)
+			c.read_status,
+			c.time_zone,
+			c.type,
+			c.status,
+			g.group_name'
+		)
 		->order_by('c.chat_id','desc')
 		->join('chat_group_details g','g.group_id = c.group_id')
 		->get_where('chat_details c',array('c.sender_id'=>$data['login_id']))
@@ -531,7 +534,7 @@ class Chat extends CI_Controller {
 		->row_array();
 
 		$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img']:base_url().'assets/img/user.jpg';
-	
+
 		$data['first_name'] = ucfirst($data['first_name']); 
 		$data['last_name'] = ucfirst($data['last_name']); 	
 
@@ -544,25 +547,25 @@ class Chat extends CI_Controller {
 				'read_status'=>0,
 				'message_type' => $_POST['message_type']
 			);
-		$data['count'] = $this->db
-		->get_where('chat_details',$where)
-		->num_rows();
+			$data['count'] = $this->db
+			->get_where('chat_details',$where)
+			->num_rows();
 
 
 
 			$where = array(
 				'c.sender_id'=>$data['login_id'],
-				 'receiver_id' =>0,
+				'receiver_id' =>0,
 				'c.read_status'=>0,
 				'c.message_type' => $_POST['message_type']
 			);
-		$data['message'] = $this->db
-		->order_by('chat_id','desc')
-		->join('chat_group_details cg','c.group_id = cg.group_id ')
-		->get_where('chat_details c',$where)
-		->row_array();
+			$data['message'] = $this->db
+			->order_by('chat_id','desc')
+			->join('chat_group_details cg','c.group_id = cg.group_id ')
+			->get_where('chat_details c',$where)
+			->row_array();
 
-		$data['message']['group_name'] = ucfirst($data['message']['group_name']);
+			$data['message']['group_name'] = ucfirst($data['message']['group_name']);
 
 
 
@@ -570,17 +573,17 @@ class Chat extends CI_Controller {
 
 
 			$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' => $_POST['message_type']);
-		$data['count'] = $this->db
-		->get_where('chat_details',$where)
-		->num_rows();
+			$data['count'] = $this->db
+			->get_where('chat_details',$where)
+			->num_rows();
 
 
 
 			$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' => $_POST['message_type']);
-		$data['message'] = $this->db
-		->order_by('chat_id','desc')
-		->get_where('chat_details',$where)
-		->row_array();
+			$data['message'] = $this->db
+			->order_by('chat_id','desc')
+			->get_where('chat_details',$where)
+			->row_array();
 
 
 		}
@@ -625,43 +628,43 @@ class Chat extends CI_Controller {
 			if($_POST['message_type'] == 'text'){
 
 				$data = array(
-				'receiver_id' =>$_POST['receiver_id'],
-				'sender_id' => $this->login_id,
-				'message' =>'file',
-				'file_name'=>$file_name,		
-				'chatdate' => date('Y-m-d H:i:s'),
-				'type' =>$type,
-				'read_status' =>0,
-				'time_zone' =>$this->session->userdata('time_zone'),
-				'file_path' => $path				
-			);			
+					'receiver_id' =>$_POST['receiver_id'],
+					'sender_id' => $this->login_id,
+					'message' =>'file',
+					'file_name'=>$file_name,		
+					'chatdate' => date('Y-m-d H:i:s'),
+					'type' =>$type,
+					'read_status' =>0,
+					'time_zone' =>$this->session->userdata('time_zone'),
+					'file_path' => $path				
+				);			
 
-			$result = $this->db->insert('chat_details',$data);
-			$chat_id = $this->db->insert_id();
-			$users = array($data['receiver_id'],$data['sender_id']);
-			for ($i=0; $i <2 ; $i++) { 
-				$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
-				$this->db->insert('chat_deleted_details',$datas);
-			}
+				$result = $this->db->insert('chat_details',$data);
+				$chat_id = $this->db->insert_id();
+				$users = array($data['receiver_id'],$data['sender_id']);
+				for ($i=0; $i <2 ; $i++) { 
+					$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
+					$this->db->insert('chat_deleted_details',$datas);
+				}
 
 			}else{
 
 				$data = array(
-				'group_id' =>$_POST['group_id'],
-				'receiver_id' =>0,
-				'sender_id' => $this->login_id,
-				'message' =>'file',
-				'file_name'=>$file_name,		
-				'chatdate' => date('Y-m-d H:i:s'),
-				'type' =>$type,
-				'message_type'=>'group',
-				'read_status' =>0,
-				'time_zone' =>$this->session->userdata('time_zone'),
-				'file_path' => $path				
-			);			
+					'group_id' =>$_POST['group_id'],
+					'receiver_id' =>0,
+					'sender_id' => $this->login_id,
+					'message' =>'file',
+					'file_name'=>$file_name,		
+					'chatdate' => date('Y-m-d H:i:s'),
+					'type' =>$type,
+					'message_type'=>'group',
+					'read_status' =>0,
+					'time_zone' =>$this->session->userdata('time_zone'),
+					'file_path' => $path				
+				);			
 
-			$result = $this->db->insert('chat_details',$data);
-			
+				$result = $this->db->insert('chat_details',$data);
+
 
 
 			}

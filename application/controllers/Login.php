@@ -29,7 +29,7 @@ class Login extends CI_Controller {
 	}
 	public function logout(){
 		$this->db->update('login_details',array('online_status'=>0),array('login_id'=>$this->session->userdata('login_id')));
-		$data = array('login_id','user_name','email','label_data','type');
+		$data = array('login_id','user_name','email','label_data','type','session_chat_id','session_group_id','page');
 		$this->session->unset_userdata($data);
 		redirect('login');
 	}

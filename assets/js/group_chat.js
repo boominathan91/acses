@@ -55,7 +55,7 @@ function set_nav_bar_group_user(group_id,element){
 	 $('#'+id).closest('bg-danger').empty();
 
 	$('.chats').html('');
-
+	$('.chat-main-row').removeClass('hidden');
 
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
