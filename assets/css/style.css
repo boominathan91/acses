@@ -1162,6 +1162,7 @@ table.table-inbox tbody tr.checked {background-color: #ffffcc;}
 .call-icons .call-items .call-item {display: inline-block;text-align: center;margin-right: 5px;}
 .call-icons .call-items .call-item:last-child {margin-right: 0;}
 .call-icons .call-items .call-item a {color: #777;border:1px solid #ddd;width:50px;height:50px;line-height:50px;border-radius:50px;display:inline-block;font-size: 20px;}
+li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f06060; width: 50px; height: 50px; line-height: 50px; border-radius: 50px;display: inline-block;font-size: 20px; }
 .call-icons .call-items .call-item a i {width: 18px;height: 18px;}
 .user-video {bottom: 0;left: 0;overflow: auto;position: absolute;right: 0;top: 0;z-index:10;}
 .user-video img {width: auto;max-width: 100%;height: auto;max-height: 100%;display: block;margin: 0 auto;}
@@ -1172,6 +1173,7 @@ table.table-inbox tbody tr.checked {background-color: #ffffcc;}
 .my-video ul li img {border:3px solid #fff;border-radius:6px;}
 .end-call {position: absolute;top: 7px;right: 0;}
 .end-call a {color: #fff;border-radius: 50px;display: inline-block;background-color: #f06060;padding: 8px 25px;text-transform: uppercase;}
+.start-call{color: #fff;border-radius: 50px;display: inline-block;background-color: #4ab657;padding: 8px 25px;text-transform: uppercase;}
 .call-users {position:absolute; z-index:99;bottom:20px;right:20px;}
 .call-users ul {margin: 0;padding: 0;list-style: none;}
 .call-users ul li {float: left;width: 80px;margin-left: 10px;}

@@ -2,12 +2,12 @@ var global_username = '';
 /*Intialize the sinch */
 var sinchClient = new SinchClient({
 	applicationKey: 'f06ae4f2-4980-40aa-89ca-9b98d80d70c4',
-	capabilities: {messaging: true,calling: true, video: true},
+	capabilities: {messaging: true,calling: true},
 	supportActiveConnection: true,
   startActiveConnection: true,
-	onLogMessage: function(message) {
-//		console.log(message.message);
-	}
+  onLogMessage: function(message) {
+		console.log(message.message);
+}
 });
 //sinchClient.startActiveConnection();
 // Get the messageClient
@@ -315,75 +315,75 @@ function receive_message(message){
 
 
         // var receiver_name = obj.reciever_data.first_name+' '+obj.reciever_data.last_name;
-      var msg = datas.message.message;
-      var type = datas.message.type;
-      var file_name = base_url+datas.message.file_path+'/'+datas.message.file_name;
-      var time = message.timestamp.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
-       var up_file_name =datas.message.file_name;
+        var msg = datas.message.message;
+        var type = datas.message.type;
+        var file_name = base_url+datas.message.file_path+'/'+datas.message.file_name;
+        var time = message.timestamp.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
+        var up_file_name =datas.message.file_name;
 
 
 
-          
-          if(msg == 'file' && type == 'image'){
 
-            var content ='<div class="chat chat-right">'+
-            '<div class="chat-body">'+
-            '<div class="chat-bubble">'+
-            '<div class="chat-content img-content">'+
-            '<div class="chat-img-group clearfix">'+
-            '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
-            '<img width="182" height="137" alt="" src="'+file_name+'">'+
-            '<div class="chat-placeholder">'+
-            '<div class="chat-img-name">'+up_file_name+'</div>'+
-            '</div>'+
-            '</a>'+
-            '</div>'+
-            '<span class="chat-time">'+time+'</span>'+
-            '</div>'+                  
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>';
+        if(msg == 'file' && type == 'image'){
 
-          }else if(msg == 'file' && type == 'others'){
+          var content ='<div class="chat chat-right">'+
+          '<div class="chat-body">'+
+          '<div class="chat-bubble">'+
+          '<div class="chat-content img-content">'+
+          '<div class="chat-img-group clearfix">'+
+          '<a class="chat-img-attach" href="'+file_name+'" target="_blank">'+
+          '<img width="182" height="137" alt="" src="'+file_name+'">'+
+          '<div class="chat-placeholder">'+
+          '<div class="chat-img-name">'+up_file_name+'</div>'+
+          '</div>'+
+          '</a>'+
+          '</div>'+
+          '<span class="chat-time">'+time+'</span>'+
+          '</div>'+                  
+          '</div>'+
+          '</div>'+
+          '</div>'+
+          '</div>';
 
-            var content ='<div class="chat chat-right">'+
-            '<div class="chat-body">'+
-            '<div class="chat-bubble">'+
-            '<div class="chat-content "><ul class="attach-list">'+
-            '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
-            '</ul>'+
-            '<span class="chat-time">'+time+'</span>'+
-            '</div>'+                  
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>';
-          }else{
-              var receiver_img = datas.profile_img;
-           var content = '<div class="chat chat-left slimscrollleft">'+
-           '<div class="chat-avatar">'+
-           '<a href="#" class="avatar">'+
-           '<img src="'+receiver_img+'" class="img-responsive img-circle">'+
-           '</a>'+
-           '</div>'+
-           '<div class="chat-body">'+
-           '<div class="chat-bubble">'+
-           '<div class="chat-content">'+
-           '<p>'+msg+'</p>'+            
-           '<span class="chat-time">'+time+'</span>'+
-           '</div>'+
-           '</div>'+
-           '</div>'+
-           '</div>';
+        }else if(msg == 'file' && type == 'others'){
 
-         }
-         $('.no_message').html('');
-         $('#ajax').append(content);
+          var content ='<div class="chat chat-right">'+
+          '<div class="chat-body">'+
+          '<div class="chat-bubble">'+
+          '<div class="chat-content "><ul class="attach-list">'+
+          '<li><i class="fa fa-file"></i><a href="'+file_name+'">'+up_file_name+'</a></li>'+
+          '</ul>'+
+          '<span class="chat-time">'+time+'</span>'+
+          '</div>'+                  
+          '</div>'+
+          '</div>'+
+          '</div>'+
+          '</div>';
+        }else{
+          var receiver_img = datas.profile_img;
+          var content = '<div class="chat chat-left slimscrollleft">'+
+          '<div class="chat-avatar">'+
+          '<a href="#" class="avatar">'+
+          '<img src="'+receiver_img+'" class="img-responsive img-circle">'+
+          '</a>'+
+          '</div>'+
+          '<div class="chat-body">'+
+          '<div class="chat-bubble">'+
+          '<div class="chat-content">'+
+          '<p>'+msg+'</p>'+            
+          '<span class="chat-time">'+time+'</span>'+
+          '</div>'+
+          '</div>'+
+          '</div>'+
+          '</div>';
+
+        }
+        $('.no_message').html('');
+        $('#ajax').append(content);
 
       }else{ // Different group 
 
-         if(datas.message){
+       if(datas.message){
         $(datas.message).each(function(){
           $('#'+this.group_name).remove();         
           var data = '<li  id="'+this.group_name+'" onclick="set_nav_bar_group_user('+this.group_id+',this)">'+
@@ -395,28 +395,28 @@ function receive_message(message){
       }   
 
 
-      }
-     
-
-
-    }else{
-
-      if( datas.online_status == 1){
-        var online_status = 'online';
-      }else{
-        var online_status = 'offline';      
-      }
-      $('#'+datas.sinch_username).remove();
-      var receiver_name = datas.first_name+' '+datas.last_name; 
-      var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
-      '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
-      '</li>';       
-      $('#new_message_user').prepend(content);
-
     }
 
 
-  });
+
+  }else{
+
+    if( datas.online_status == 1){
+      var online_status = 'online';
+    }else{
+      var online_status = 'offline';      
+    }
+    $('#'+datas.sinch_username).remove();
+    var receiver_name = datas.first_name+' '+datas.last_name; 
+    var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
+    '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
+    '</li>';       
+    $('#new_message_user').prepend(content);
+
+  }
+
+
+});
 
 
   }
@@ -456,9 +456,192 @@ var contains = function(needle) {
 
 
 
-  var handleFail = function (error){
-   console.log(error);
- }
+  /*Audio Call Starts */
+  
+
+  /*** Define listener for managing calls ***/
+
+  var callListeners = {
+    onCallProgressing: function(call) {
+      $('audio#ringback').prop("currentTime", 0);
+      $('audio#ringback').trigger("play");
+
+    //Report call stats
+    $('span.call-timing-count').append('<div id="stats">Ringing...</div>');
+  },
+  onCallEstablished: function(call) {
+    $('audio#incoming').attr('src', call.incomingStreamURL);
+    $('audio#ringback').trigger("pause");
+    $('audio#ringtone').trigger("pause");
+
+    //Report call stats
+    var callDetails = call.getDetails();
+    $('span.call-timing-count').append('<div id="stats">Answered at: '+(callDetails.establishedTime)+'</div>');
+  },
+  onCallEnded: function(call) {
+    $('audio#ringback').trigger("pause");
+    $('audio#ringtone').trigger("pause");
+    $('audio#incoming').attr('src', '');
+    
+
+    //Report call stats
+    var callDetails = call.getDetails();    
+    $('span.call-timing-count').append('<div id="stats">Ended: '+callDetails.endedTime+'</div>');
+    $('span.call-timing-count').append('<div id="stats">Duration (s): '+callDetails.duration+'</div>');
+    $('span.call-timing-count').append('<div id="stats">End cause: '+call.getEndCause()+'</div>');
+    if(call.error) {
+      $('span.call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
+    }
+  }
+}
+
+
+/*** Set up callClient and define how to handle incoming calls ***/
+
+var callClient = sinchClient.getCallClient();
+// callClient.initStream().then(function() { // Directly init streams, in order to force user to accept use of media sources at a time we choose
+//   $('div.frame').not('#chromeFileWarning').show();
+// }); 
+
+var call;
+callClient.addEventListener({
+  onIncomingCall: function(incomingCall) {
+    console.log(incomingCall);
+  //Play some groovy tunes 
+  $('audio#ringtone').prop("currentTime", 0);
+  $('audio#ringtone').trigger("play");
+
+  $('#incoming_call').modal('show');
+
+  //Print statistics
+  $('small text-muted').append('<div id="title">Incoming call from ' + incomingCall.fromId + '</div>');  
+  $.post(base_url+'chat/get_caller_details',{sinch_username:incomingCall.fromId },function(res){
+    var obj=jQuery.parseJSON(res);
+    $('.caller_image').attr('src',obj.profile_img);
+    $('.caller_name').text(obj.name);
+    $('.caller_login_id').val(obj.login_id);      
+    $('.caller_sinchusername').val(obj.sinch_username);      
+    $('.caller_full_name').val(obj.name);      
+    $('.caller_profile_img').val(obj.profile_img);      
+  });
+
+  
+
+  //Manage the call object
+  call = incomingCall;
+  call.addEventListener(callListeners);
+
+}
+});
+
+$('.call-item').click(function(){
+  if(call){
+    if($(this).hasClass('active')){
+      $(this).removeClass('active');
+      call.unmute();
+    }else{
+      $(this).addClass('active');
+      call.mute();
+    }
+
+  }
+  
+});
+
+$('a#answer').click(function(event) {
+  event.preventDefault();
+    try {
+        var caller_login_id = $('.caller_login_id').val();
+        var caller_sinchusername = $('.caller_sinchusername').val();
+        var caller_full_name = $('.caller_full_name').val();
+        var caller_profile_img = $('.caller_profile_img').val();
+        $('.to_name').text(caller_full_name);
+        $('.receiver_title_image').attr('src',caller_profile_img);
+      call.answer();
+    }
+    catch(error) {
+      handleFail(error);
+    }
+  
+});
+
+
+
+
+
+/*** Make a new data call ***/
+
+$('button.start-call').click(function(event) {
+  event.preventDefault();    
+  $('span.call-timing-count').html('<div id="title">Calling...</div>');
+  console.log('Placing call to: ' + $('input#receiver_sinchusername').val());
+  call = callClient.callUser($('input#receiver_sinchusername').val());
+  call.addEventListener(callListeners);  
+});
+
+/*** Hang up a call ***/
+
+$('a#hangup').click(function(event) {
+  event.preventDefault();
+  console.info('Will request hangup..');
+  call && call.hangup();  
+});
+
+
+
+
+
+var h1 = document.getElementsByTagName('h1')[0],
+    // start = document.getElementById('start'),
+    // stop = document.getElementById('stop'),
+    // clear = document.getElementById('clear'),
+    seconds = 0, minutes = 0, hours = 0,
+    t;
+
+function add() {
+    seconds++;
+    if (seconds >= 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes >= 60) {
+            minutes = 0;
+            hours++;
+        }
+    }
+    
+    h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+
+    timer();
+}
+
+function timer() {
+    t = setTimeout(add, 1000);
+}
+timer();
+
+
+/* Start button */
+start.onclick = timer;
+
+/* Stop button */
+stop.onclick = function() {
+    clearTimeout(t);
+}
+
+/* Clear button */
+clear.onclick = function() {
+    h1.textContent = "00:00:00";
+    seconds = 0; minutes = 0; hours = 0;
+}
+
+
+
+
+
+
+var handleFail = function (error){
+ console.log(error);
+}
 
 
 

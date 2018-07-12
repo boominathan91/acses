@@ -29,10 +29,66 @@ function search_user(){
 }
 
 
+
 /*Set Current Active User in Chat */
 function set_nav_bar_audio_user(login_id,element){
 
-                          // $('.chats').html(content);
+   $('li').removeClass('active').removeClass('hidden');
+	$(element).addClass('active');
+	$(element).next('span').next('span').empty();
+	var id = $(element).attr('id');
+	 $('#'+id).closest('bg-danger').empty();
+	 $.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
+		var obj = jQuery.parseJSON(res);
+		
+		if(obj.online_status == 1){
+			var online_status = 'online';
+			$('.title_status').removeClass('offline');
+			$('.title_status').addClass('online');
+		}else{
+			var online_status = 'offline';
+			$('.title_status').removeClass('online');
+			$('.title_status').addClass('offline');
+		}
+		if(obj.profile_img != ''){
+			var receiver_image = obj.profile_img;
+		}else{
+			var receiver_image = base_url+'assets/img/user.jpg';
+		}
+
+		$('#user_list').html('');
+		$('#add_chat_user').modal('hide');
+		$('#search_user').val('');
+		// $('.chat-main-row,#task_window').removeClass('hidden');
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		$('#receiver_sinchusername').val(obj.sinch_username);
+		$('#receiver_id').val(obj.login_id);
+		$('#receiver_image').val(receiver_image);
+		$('.receiver_title_image').attr('src',receiver_image);
+		$('.dob').text(obj.dob);
+		$('.receiver_email').text(obj.email);
+		$('.phone_number').text(obj.phone_number);		
+
+		$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = parseInt($(this).attr('total'));
+			if(total>0){                        
+				load_more(total);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+				if(total == 0){
+					$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+				}
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
+
+		});
+
+
+
+
+	});
 
 }
 

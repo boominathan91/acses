@@ -14,35 +14,33 @@ class Chat extends CI_Controller {
 	}
 	public function index()
 	{	
-		
-			$page = $this->session->userdata('page');
-			$data['profile_class'] = "hidden";
-			$data['text_chat_class'] = "hidden";
-			$data['audio_class'] = "hidden";
-			$data['video_class'] = "hidden";
-			if(!empty($page)){							 	
+
+		$page = $this->session->userdata('page');
+		$data['profile_class'] = "hidden";
+		$data['text_chat_class'] = "hidden";
+		$data['audio_class'] = "hidden";
+		$data['video_class'] = "hidden";
+		if(!empty($page)){							 	
 			switch($page){
-			case 'profile':
-			$data['profile_class'] = '';
-			break;
-			case 'text_chat':
-			$data['text_chat_class'] = '';
-			break;
-			case 'audio':
-			$data['audio_class'] = '';
-			break;
-			case 'video':
-			$data['video_class'] = '';
-			break;
-			default:
-			$data['profile_class'] = '';
-			break;
-
+				case 'profile':
+				$data['profile_class'] = '';
+				break;
+				case 'text_chat':
+				$data['text_chat_class'] = '';
+				break;
+				case 'audio':
+				$data['audio_class'] = '';
+				break;
+				case 'video':
+				$data['video_class'] = '';
+				break;
+				default:
+				$data['profile_class'] = '';
+				break;
 			}
-			}else{
+		}else{
 			$data['profile_class']  = "";
-			}
-
+		}
 		$data['title'] = 'Chat';		
 		$data['text_group'] = $this->chat->get_text_group();
 		$data['page'] = $this->chat->get_page_no();
@@ -59,6 +57,16 @@ class Chat extends CI_Controller {
 			$this->session->set_userdata($page);
 		}
 		echo json_encode($page);
+	}
+	public function get_caller_details(){
+		$where = array('sinch_username' => $_POST['sinch_username']);
+		$data = $this->db
+					 ->select('first_name,last_name,login_id,sinch_username,profile_img')
+					 ->get_where('login_details',$where)
+					 ->row_array();
+		$data['name'] = ucfirst($data['first_name']).' '.ucfirst($data['last_name']);
+		$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
+		echo json_encode($data);
 	}
 	public function get_group_datas(){
 		$group_id = $_POST['group_id'];
