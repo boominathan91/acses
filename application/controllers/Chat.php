@@ -50,6 +50,26 @@ class Chat extends CI_Controller {
 		$data['chat_users'] = $this->chat->get_chated_users();
 		render_page('chat',$data);
 	}
+	public function update_call_details(){
+
+	$call_started_at = substr($_POST['call_started_at'], 0, strpos($_POST['call_started_at'], '('));
+		$call_ended_at = substr($_POST['call_ended_at'], 0, strpos($_POST['call_ended_at'], '('));
+		$call_started_at = date('Y-m-d H:i:s',strtotime($call_started_at));
+		$call_ended_at = date('Y-m-d H:i:s',strtotime($call_ended_at));
+				$data = array(
+					'call_from_id' => $this->login_id,
+					'call_to_id' => $_POST['call_to_id'],
+					'group_id' => $_POST['group_id'],
+					'call_type' => $_POST['call_type'],
+					'call_duration' => $_POST['call_duration'],
+					'call_started_at' => $call_started_at,
+					'call_ended_at' => $call_ended_at,
+					 'end_cause' => $_POST['end_cause']
+					);
+				echo  $this->db->insert('call_details',$data);
+
+
+	}
 	public function set_nav_bar(){
 		$page = array();
 		if(!empty($_POST['page'])){

@@ -33,12 +33,12 @@ function search_user(){
 /*Set Current Active User in Chat */
 function set_nav_bar_audio_user(login_id,element){
 
-   $('li').removeClass('active').removeClass('hidden');
+	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
-	 $('#'+id).closest('bg-danger').empty();
-	 $.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
+	$('#'+id).closest('bg-danger').empty();
+	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
 		
 		if(obj.online_status == 1){
@@ -92,6 +92,39 @@ function set_nav_bar_audio_user(login_id,element){
 
 }
 
+
+function update_call_details(){
+	var call_to_id = $('#call_to_id').val();
+	var group_id = $('#group_id').val();
+	var call_type = $('#call_type').val();
+	var call_duration = $('#call_duration').val();
+	var call_started_at = $('#call_started_at').val();
+	var call_ended_at = $('#call_ended_at').val();
+	var end_cause = $('#end_cause').val();
+
+
+
+	$.post(base_url+'chat/update_call_details',
+	{
+		call_to_id :call_to_id,
+		group_id :group_id,
+		call_type :call_type,
+		call_duration :call_duration,
+		call_started_at :call_started_at,
+		call_ended_at :call_ended_at,
+		end_cause :end_cause
+	},function(res){
+		console.log(res);
+	});
+}
+
+
+
+
+
+
+
+
 /*Set Current */
 function set_nav_bar_chat_user(login_id,element){
 
@@ -99,7 +132,7 @@ function set_nav_bar_chat_user(login_id,element){
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
-	 $('#'+id).closest('bg-danger').empty();
+	$('#'+id).closest('bg-danger').empty();
 	$('.chats').html('');
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
@@ -230,26 +263,26 @@ function delete_conversation()
 
 	if(confirm('Are you sure to delete this conversation?')){
 		var sender_id = $('#receiver_id').val();
-        $.post(base_url+'chat/delete_conversation',{sender_id:sender_id},function(response){
-         if(response == 1){
-             $('.chats').html('<div class="no_message">No Record Found</div><div id="ajax"></div><input type="hidden"  id="hidden_id">');
-         }
-     });
+		$.post(base_url+'chat/delete_conversation',{sender_id:sender_id},function(response){
+			if(response == 1){
+				$('.chats').html('<div class="no_message">No Record Found</div><div id="ajax"></div><input type="hidden"  id="hidden_id">');
+			}
+		});
 	}
 }
 
 $('.load-more-btn').click(function(){
-			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-			var total = $(this).attr('total');
-			if(total>0 || total == 0 ){                        
-				load_more(total);   
-				var total = total - 1;
-				$(this).attr('total',total); 
-			}else{
-				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-			}
+	$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+	var total = $(this).attr('total');
+	if(total>0 || total == 0 ){                        
+		load_more(total);   
+		var total = total - 1;
+		$(this).attr('total',total); 
+	}else{
+		$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+	}
 
-		});
+});
 
 /*Append message onclick send button */
 

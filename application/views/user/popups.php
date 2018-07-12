@@ -63,10 +63,10 @@
 					<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="client-profile.html" class="caller_name"></a></h4>
 					<div class="small text-muted"></div>
 				<div class="incoming-btns">
-								<input type="text" name="caller_login_id" class="caller_login_id">
-								<input type="text" name="caller_sinchusername" class="caller_sinchusername">
-								<input type="text" name="caller_full_name" class="caller_full_name">
-								<input type="text" name="caller_profile_img" class="caller_profile_img">
+								<input type="hidden" name="caller_login_id" class="caller_login_id">
+								<input type="hidden" name="caller_sinchusername" class="caller_sinchusername">
+								<input type="hidden" name="caller_full_name" class="caller_full_name">
+								<input type="hidden" name="caller_profile_img" class="caller_profile_img">
 						<a href="javascript:void(0)" class="btn btn-success m-r-10" id="answer">Answer</a>
 						<a href="javascript:void(0)" class="btn btn-danger" data-dismiss="modal" id="hangup">Decline</a>
 					</div>

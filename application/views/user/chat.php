@@ -310,15 +310,25 @@
 							</div>
 							<div class="chat-contents">
 								<div class="chat-content-wrap">
+									
 									<div class="voice-call-avatar">
 										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="call-avatar receiver_title_image">
 										<span class="username to_name"><?php echo $name; ?></span>
-										<span class="call-timing-count"><button class="start-call">Call</button></span>
-										<span id="timer"></span>
+										<span class="call-timing-count" id="timer">
+											<button class="start-call">Call</button>
+										</span>
 										<audio id="incoming" autoplay></audio>
-										<audio id="ringback" src=<?php echo base_url().'assets/audio/ringback.wav'; ?> loop></audio>
-										<audio id="ringtone" src=<?php echo base_url().'assets/audio/phone_ring.wav'; ?> loop></audio>
+										<audio id="ringback" src="<?php echo base_url().'assets/audio/ringback.wav'; ?>" loop></audio>
+										<audio id="ringtone" src="<?php echo base_url().'assets/audio/phone_ring.wav'; ?>" loop></audio>
 									</div>
+									
+										<input type="hidden"  id="call_to_id" value="<?php echo $receiver_id ?>" >
+										<input type="hidden" id="group_id" value="0">
+										<input type="hidden" id="call_type" value="audio">
+										<input type="hidden" id="call_duration" value="call_duration" >
+										<input type="hidden" id="call_started_at" value="call_started_at" >
+										<input type="hidden" id="call_ended_at" value="call_ended_at">
+										<input type="hidden" id="end_cause" value="end_cause" >								
                                    <!--  <div class="call-users">
                                         <ul>
                                             <li>
@@ -358,7 +368,7 @@
                                         </li> -->
                                     </ul>
                                     <div class="end-call">
-                                    	<a href="javascript:void(0);">End Call</a>
+                                    	<a href="javascript:void(0);" class="hangup">End Call</a>
                                     </div>
                                 </div>
                             </div>

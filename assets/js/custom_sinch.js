@@ -6,8 +6,8 @@ var sinchClient = new SinchClient({
 	supportActiveConnection: true,
   startActiveConnection: true,
   onLogMessage: function(message) {
-		console.log(message.message);
-}
+    console.log(message.message);
+  }
 });
 //sinchClient.startActiveConnection();
 // Get the messageClient
@@ -457,14 +457,43 @@ var contains = function(needle) {
 
 
   /*Audio Call Starts */
-  
 
-  /*** Define listener for managing calls ***/
 
-  var callListeners = {
-    onCallProgressing: function(call) {
-      $('audio#ringback').prop("currentTime", 0);
-      $('audio#ringback').trigger("play");
+
+  var h1 = document.getElementById('timer'),seconds = 0, minutes = 0, hours = 0,t;
+  function add() {
+    seconds++;
+    if (seconds >= 60) {
+      seconds = 0;
+      minutes++;
+      if (minutes >= 60) {
+        minutes = 0;
+        hours++;
+      }
+    }
+    
+    h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+    $('#call_duration').val((hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds));
+
+    timer();
+  }
+
+  function timer() {
+    t = setTimeout(add, 1000);
+  }
+
+/* Clear button */
+var clear = function() {
+  h1.textContent = "00:00:00";
+  seconds = 0; minutes = 0; hours = 0;
+}
+
+/*** Define listener for managing calls ***/
+
+var callListeners = {
+  onCallProgressing: function(call) {
+    $('audio#ringback').prop("currentTime", 0);
+    $('audio#ringback').trigger("play");
 
     //Report call stats
     $('span.call-timing-count').append('<div id="stats">Ringing...</div>');
@@ -473,22 +502,31 @@ var contains = function(needle) {
     $('audio#incoming').attr('src', call.incomingStreamURL);
     $('audio#ringback').trigger("pause");
     $('audio#ringtone').trigger("pause");
+    $('#incoming_call').modal('hide');
 
     //Report call stats
     var callDetails = call.getDetails();
-    $('span.call-timing-count').append('<div id="stats">Answered at: '+(callDetails.establishedTime)+'</div>');
+    timer();    
+    $('#call_started_at').val(callDetails.establishedTime);
   },
   onCallEnded: function(call) {
+    clearTimeout(t);
     $('audio#ringback').trigger("pause");
     $('audio#ringtone').trigger("pause");
-    $('audio#incoming').attr('src', '');
-    
+    $('audio#incoming').attr('src', '');     
 
     //Report call stats
     var callDetails = call.getDetails();    
-    $('span.call-timing-count').append('<div id="stats">Ended: '+callDetails.endedTime+'</div>');
-    $('span.call-timing-count').append('<div id="stats">Duration (s): '+callDetails.duration+'</div>');
-    $('span.call-timing-count').append('<div id="stats">End cause: '+call.getEndCause()+'</div>');
+    $('#call_ended_at').val(callDetails.endedTime);    
+    $('#end_cause').val(call.getEndCause());
+
+    if(call.getEndCause() == 'CANCELED'){
+      $('span.call-timing-count').html('Call Canceled.');    
+    }else if(call.getEndCause == 'HUNG_UP'){
+      $('span.call-timing-count').html('Call Ended.'); 
+      $('span.call-timing-count').prepend('<button class="start-call">Call</button>');   
+    }
+    update_call_details();
     if(call.error) {
       $('span.call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
     }
@@ -550,18 +588,18 @@ $('.call-item').click(function(){
 
 $('a#answer').click(function(event) {
   event.preventDefault();
-    try {
-        var caller_login_id = $('.caller_login_id').val();
-        var caller_sinchusername = $('.caller_sinchusername').val();
-        var caller_full_name = $('.caller_full_name').val();
-        var caller_profile_img = $('.caller_profile_img').val();
-        $('.to_name').text(caller_full_name);
-        $('.receiver_title_image').attr('src',caller_profile_img);
-      call.answer();
-    }
-    catch(error) {
-      handleFail(error);
-    }
+  try {
+    var caller_login_id = $('.caller_login_id').val();
+    var caller_sinchusername = $('.caller_sinchusername').val();
+    var caller_full_name = $('.caller_full_name').val();
+    var caller_profile_img = $('.caller_profile_img').val();
+    $('.to_name').text(caller_full_name);
+    $('.receiver_title_image').attr('src',caller_profile_img);
+    call.answer();
+  }
+  catch(error) {
+    handleFail(error);
+  }
   
 });
 
@@ -574,14 +612,15 @@ $('a#answer').click(function(event) {
 $('button.start-call').click(function(event) {
   event.preventDefault();    
   $('span.call-timing-count').html('<div id="title">Calling...</div>');
-  console.log('Placing call to: ' + $('input#receiver_sinchusername').val());
+  //console.log('Placing call to: ' + $('input#receiver_sinchusername').val());
   call = callClient.callUser($('input#receiver_sinchusername').val());
   call.addEventListener(callListeners);  
+  $.post(base_url+'chat/')
 });
 
 /*** Hang up a call ***/
 
-$('a#hangup').click(function(event) {
+$('a#hangup,.hangup').click(function(event) {
   event.preventDefault();
   console.info('Will request hangup..');
   call && call.hangup();  
@@ -591,48 +630,7 @@ $('a#hangup').click(function(event) {
 
 
 
-var h1 = document.getElementsByTagName('h1')[0],
-    // start = document.getElementById('start'),
-    // stop = document.getElementById('stop'),
-    // clear = document.getElementById('clear'),
-    seconds = 0, minutes = 0, hours = 0,
-    t;
 
-function add() {
-    seconds++;
-    if (seconds >= 60) {
-        seconds = 0;
-        minutes++;
-        if (minutes >= 60) {
-            minutes = 0;
-            hours++;
-        }
-    }
-    
-    h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
-
-    timer();
-}
-
-function timer() {
-    t = setTimeout(add, 1000);
-}
-timer();
-
-
-/* Start button */
-start.onclick = timer;
-
-/* Stop button */
-stop.onclick = function() {
-    clearTimeout(t);
-}
-
-/* Clear button */
-clear.onclick = function() {
-    h1.textContent = "00:00:00";
-    seconds = 0; minutes = 0; hours = 0;
-}
 
 
 
