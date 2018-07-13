@@ -42,14 +42,16 @@ class Chat extends CI_Controller {
 			$data['profile_class']  = "";
 		}
 		$data['title'] = 'Chat';		
-		$data['text_group'] = $this->chat->get_text_group();
+		$data['text_group'] = $this->chat->get_group_details('text');
+		$data['audio_group'] = $this->chat->get_group_details('audio');
+		$data['video_group'] = $this->chat->get_group_details('video');
 		$data['call_history'] = $this->chat->get_call_history();
 		$data['page'] = $this->chat->get_page_no();
 		$data['chat'] = $this->chat->get_chat_data();
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
-		// echo '<pre>';print_r($data);exit;
+		 //echo '<pre>';print_r($data);exit;
 		render_page('chat',$data);
 	}
 	public function update_call_details(){
@@ -203,7 +205,8 @@ class Chat extends CI_Controller {
 	public function create_group(){
 
 		$this->session->set_userdata(array('session_chat_id'=>''));
-		$data = array('group_name' => $_POST['group_name'],'type' => $_POST['type']);
+		$group_type = $_POST['group_type'];
+		$data = array('group_name' => $_POST['group_name'],'type' => $group_type,'channel'=>$_POST['channel']);
 		$count = $this->db->get_where('chat_group_details',$data)->num_rows();
 		if($count!=0){
 			$result = array('error'=>'Group name already taken!');		
@@ -212,7 +215,7 @@ class Chat extends CI_Controller {
 
 			$this->db->insert('chat_group_details',$data);
 			$group_id = $this->db->insert_id();
-			$this->session->set_userdata(array('session_group_id'=>$group_id));
+			$this->session->set_userdata(array('session_group_id'=>$group_id,'group_type' => $group_type));
 
 			$member = explode(',',$_POST['members']);
 			for ($i=0; $i <count($member) ; $i++) { 
@@ -234,6 +237,7 @@ class Chat extends CI_Controller {
 				'success'=>'Group created successfully!',
 				'group_name' => ucfirst($_POST['group_name']),
 				'group_id'=>$group_id,
+				'group_type'=>$group_type,
 				'sinch_username' => $sinch_usernames
 			);
 			

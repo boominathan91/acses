@@ -276,11 +276,10 @@
 		</div>
 		<!-- Text Chat Page Content ends  -->
 
-		<!-- Audio Call Page Content starts -->
+		<!-- Audio Call Page Content starts -->	
 
-
-		<div class="page-wrapper audio <?php echo $audio_class; ?> hidden">
-			<div class="chat-main-row hidden" id="audio_panel">
+		<div class="page-wrapper audio <?php echo $audio_class; ?>">
+			<div class="chat-main-row <?php echo $class; ?>" id="audio_panel">
 				<div class="chat-main-wrapper">
 					<div class="col-xs-9 message-view task-view">
 						<div class="chat-window">
@@ -691,63 +690,9 @@
             		</div>
             	</div>
             </div>
-            <div id="add_group" class="modal custom-modal fade center-modal" role="dialog">
-            	<div class="modal-dialog">
-            		<button type="button" class="close" data-dismiss="modal">&times;</button>
-            		<div class="modal-content">
-            			<div class="modal-header">
-            				<h3 class="modal-title">Create a group</h3>
-            			</div>
-            			<div class="modal-body">
-            				<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
-            				<form>
-            					<div class="form-group">
-            						<label>Group Name <span class="text-danger">*</span></label>
-            						<input class="form-control" required="" type="text">
-            					</div>
-            					<div class="form-group">
-            						<label>Send invites to: <span class="text-muted-light">(optional)</span></label>
-            						<input class="form-control" required="" type="text">
-            					</div>
-            					<div class="m-t-50 text-center">
-            						<button class="btn btn-primary btn-lg">Create Group</button>
-            					</div>
-            				</form>
-            			</div>
-            		</div>
-            	</div>
-            </div>
+       
 
-            <div id="share_files" class="modal custom-modal fade center-modal" role="dialog">
-            	<div class="modal-dialog">
-            		<button type="button" class="close" data-dismiss="modal">&times;</button>
-            		<div class="modal-content">
-            			<div class="modal-header">
-            				<h3 class="modal-title">Share File</h3>
-            			</div>
-            			<div class="modal-body">
-            				<div class="files-share-list">
-            					<div class="files-cont">
-            						<div class="file-type">
-            							<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-            						</div>
-            						<div class="files-info">
-            							<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-            							<span class="file-author"><a href="#">Bernardo Galaviz</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-            						</div>
-            					</div>
-            				</div>
-            				<div class="form-group">
-            					<label>Share With</label>
-            					<input class="form-control" type="text">
-            				</div>
-            				<div class="m-t-50 text-center">
-            					<button class="btn btn-primary btn-lg">Share</button>
-            				</div>
-            			</div>
-            		</div>
-            	</div>
-            </div>
+        
         </div>
 
 

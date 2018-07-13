@@ -59,7 +59,7 @@ function set_nav_bar_audio_user(login_id,element){
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
-		$('#audio_panel').removeClass('hidden');
+		$('#audio_panel,.audio').removeClass('hidden');
 		$('.to_name').text(obj.first_name+' '+obj.last_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);

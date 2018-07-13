@@ -136,115 +136,16 @@ $website_name = $this->session->userdata('website_name');
 								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>							
 								</ul>
 
-							<ul>		
-								<div class="audio <?php echo $audio_class; ?>">
-									<ul>
-										<li> 
-											<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
-										</li>
-										<li class="menu-title">Voice Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
-										<li> 
-											<a href="chat.html">#General</a>
-										</li>
-										<li> 
-											<a href="chat.html">#Video Responsive Survey</a>
-										</li>
-										<li> 
-											<a href="chat.html">#500rs</a>
-										</li>
-										<li> 
-											<a href="chat.html">#warehouse</a>
-										</li>
-										<li class="menu-title">Direct Voice Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
-										<!-- Session selected user  -->
-										<div id="session_audio_user" class="session_chat_user"></div>	
-										<!-- Newly Messaged user  -->
-										<div id="new_audio_user" class="new_message_user"></div>
-
-									<?php
-										if(!empty($chat_users)){
-
-											foreach($chat_users as $u){
-												$online_status = ($u['online_status'] == 1)?'online':'offline';
-												$login_id = $this->session->userdata('login_id');
-												$where = array('sender_id' => $u['login_id'],'receiver_id' =>$login_id,'read_status' =>0);
-												$count = $this->db->get_where('chat_details',$where)->num_rows();
-												$count = ($count!=0)?$count:'';
-												if(!empty($this->session->userdata('session_chat_id'))){
-													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
-												}else{
-													$class = '';	
-												}
-
-
-												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_audio_user('.$u['login_id'].',this)">
-												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
-												</li>';
-											}
-
-										}
-										?>
-									</ul>
-								</div>
-								<!-- Video Call  -->
-								<ul class="video <?php echo $video_class; ?>">
-									<li> 
-										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
-									</li>
-									<li class="menu-title">Video Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
-									<li> 
-										<a href="chat.html">#General</a>
-									</li>
-									<li> 
-										<a href="chat.html">#Video Responsive Survey</a>
-									</li>
-									<li> 
-										<a href="chat.html">#500rs</a>
-									</li>
-									<li> 
-										<a href="chat.html">#warehouse</a>
-									</li>
-									<li class="menu-title">Direct Video Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
-
-										<!-- Session selected user  -->
-										<div id="session_video_user" class="session_chat_user"></div>	
-										<!-- Newly Messaged user  -->
-										<div id="new_video_user" class="new_message_user"></div>
-
-									<?php
-										if(!empty($chat_users)){
-
-											foreach($chat_users as $u){
-												$online_status = ($u['online_status'] == 1)?'online':'offline';
-												$login_id = $this->session->userdata('login_id');
-												$where = array('sender_id' => $u['login_id'],'receiver_id' =>$login_id,'read_status' =>0);
-												$count = $this->db->get_where('chat_details',$where)->num_rows();
-												$count = ($count!=0)?$count:'';
-												if(!empty($this->session->userdata('session_chat_id'))){
-													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
-												}else{
-													$class = '';	
-												}
-
-
-												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)">
-												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
-												</li>';
-											}
-
-										}
-										?>
-								</ul>
-
-								<div  class="text_chat <?php echo $text_chat_class; ?>">									
+								<ul>
+									<div  class="text_chat <?php echo $text_chat_class; ?>">									
 									<!-- Text Chat  -->	
 									<li> 
 										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
 									</li>
 
-									<li class="menu-title" id="text_chat">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+									<li class="menu-title" id="text_chat" onclick="set_group_type(1)">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
 									<!-- Session selected user  -->
-									<div id="session_group_user"></div>	
+									<div id="session_group_text"></div>	
 									<!-- Newly Messaged user  -->
 									<div id="new_group_user"></div>
 
@@ -311,6 +212,123 @@ $website_name = $this->session->userdata('website_name');
 									<!-- Text Chat  ends -->					
 									
 								</div>
+
+								<!-- Audio Call  -->
+								<div class="audio <?php echo $audio_class; ?>">
+									<ul>
+										<li> 
+											<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
+										</li>
+										<li class="menu-title" onclick="set_group_type(2)">Voice Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+									<div id="session_group_audio"></div>
+									<div id="other_audio_group">
+											<?php if(!empty($audio_group)){ 
+											foreach($audio_group['groups'] as $t){
+
+
+												$login_id = $this->session->userdata('login_id');
+												$where = array(
+													'group_id' => $t['group_id']
+													,'receiver_id' =>$login_id,
+													'read_status' =>0
+												);
+												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = ($count!=0)?$count:'';
+												if(!empty($this->session->userdata('session_group_id'))){
+													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+												}else{
+													$class = '';	
+												}
+
+
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+											}
+										} ?>
+										</div>
+
+										<li class="menu-title">Direct Voice Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+										<!-- Session selected user  -->
+										<div id="session_audio_user" class="session_chat_user"></div>	
+										<!-- Newly Messaged user  -->
+										<div id="new_audio_user" class="new_message_user"></div>
+										
+
+									<?php
+										if(!empty($chat_users)){
+
+											foreach($chat_users as $u){
+												$online_status = ($u['online_status'] == 1)?'online':'offline';
+												$login_id = $this->session->userdata('login_id');
+												$where = array('sender_id' => $u['login_id'],'receiver_id' =>$login_id,'read_status' =>0);
+												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = ($count!=0)?$count:'';
+												if(!empty($this->session->userdata('session_chat_id'))){
+													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
+												}else{
+													$class = '';	
+												}
+
+
+												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_audio_user('.$u['login_id'].',this)">
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
+												</li>';
+											}
+
+										}
+										?>
+									</ul>
+								</div>
+								<!-- Video Call  -->
+								<ul class="video <?php echo $video_class; ?>">
+									<li> 
+										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
+									</li>
+									<li class="menu-title" onclick="set_group_type(3)">Video Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+									<li> 
+										<a href="chat.html">#General</a>
+									</li>
+									<li> 
+										<a href="chat.html">#Video Responsive Survey</a>
+									</li>
+									<li> 
+										<a href="chat.html">#500rs</a>
+									</li>
+									<li> 
+										<a href="chat.html">#warehouse</a>
+									</li>
+									<li class="menu-title">Direct Video Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+
+										<!-- Session selected user  -->
+										<div id="session_video_user" class="session_chat_user"></div>	
+										<!-- Newly Messaged user  -->
+										<div id="new_video_user" class="new_message_user"></div>
+
+									<?php
+										if(!empty($chat_users)){
+
+											foreach($chat_users as $u){
+												$online_status = ($u['online_status'] == 1)?'online':'offline';
+												$login_id = $this->session->userdata('login_id');
+												$where = array('sender_id' => $u['login_id'],'receiver_id' =>$login_id,'read_status' =>0);
+												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = ($count!=0)?$count:'';
+												if(!empty($this->session->userdata('session_chat_id'))){
+													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
+												}else{
+													$class = '';	
+												}
+
+
+												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)">
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
+												</li>';
+											}
+
+										}
+										?>
+								</ul>
+
+							
 							</ul>
 						</div>
 					</div>

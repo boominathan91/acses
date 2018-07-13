@@ -7,11 +7,11 @@ class Chat_model extends CI_Model {
 		parent::__construct();
 		$this->login_id = $this->session->userdata('login_id');
 	}
-	public function get_text_group(){
+	public function get_group_details($type){
 		$sql = "SELECT g.group_id,g.group_name,l.sinch_username FROM chat_group_details g 
 		JOIN chat_group_members m ON g.group_id = m.group_id 
 		JOIN login_details l ON l.login_id = m.login_id
-		WHERE m.login_id =$this->login_id AND g.type = 'text' ";
+		WHERE m.login_id =$this->login_id AND g.type = '$type' ";
 		$data['groups'] =  $this->db->query($sql)->result_array();			
 		$data['group_members'] = $this->get_group_members($data['groups']);
 		return $data;
@@ -151,6 +151,7 @@ class Chat_model extends CI_Model {
 
 	}
 	public function get_chat_data(){
+		$result = array();
 		if(!empty($this->session->userdata('session_chat_id'))){
 			$session_chat_id = $this->session->userdata('session_chat_id');
 			$where = array('l.login_id' => $session_chat_id);
@@ -163,17 +164,16 @@ class Chat_model extends CI_Model {
 		}elseif(!empty($this->session->userdata('session_group_id'))){
 			
 			$session_group_id = $this->session->userdata('session_group_id');
+			$group_type = $this->session->userdata('group_type');
 			$sql = "SELECT g.group_id,g.group_name,l.sinch_username,l.login_id FROM chat_group_details g 
 			JOIN chat_group_members m ON g.group_id = m.group_id 
 			JOIN login_details l ON l.login_id = m.login_id
-			WHERE m.group_id =$session_group_id AND g.type = 'text' AND l.login_id !=$this->login_id";
+			WHERE m.group_id =$session_group_id AND g.type = '$group_type' AND l.login_id !=$this->login_id";
 
 			$result =  $this->db
 			->query($sql)
 			->result_array();
 
-		}else{
-			$result = array();
 		}
 		return $result;
 

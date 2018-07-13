@@ -1,6 +1,33 @@
-$('#text_group_form').submit(function(){
+function set_group_type(type){
+	switch(type){
+		case 1:
+		$('#group_type').val('text');
+		break;
+		case 2:
+		$('#group_type').val('audio');
+		break;
+		case 3:
+		$('#group_type').val('video');
+		break;
+	}
+}
+
+
+//Support functions
+var getUuid = function() {
+	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+	    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+	    return v.toString(16);
+	});
+};
+
+window.location.hash = window.location.hash || getUuid(); //random channel name
+channel = window.location.hash;
+
+$('#group_form').submit(function(){
 	var group_name = $('#group_name').val();
 	var members = $('#members').val();
+	var group_type = $('#group_type').val();
 	if(group_name == ''){
 		updateNotification('Warning !','Enter group name to create!','error');
 		return false
@@ -9,13 +36,13 @@ $('#text_group_form').submit(function(){
 		return false
 	}
 
-	$.post(base_url+'chat/create_group',{group_name:group_name,members:members,type:'text'},function(res){
+	$.post(base_url+'chat/create_group',{group_name:group_name,members:members,group_type:group_type,channel:channel},function(res){
 		if(res){
 			var obj = jQuery.parseJSON(res);
 			if(obj.error){
 				updateNotification('Warning !',obj.error,'error');			
 			}else{
-				$('#text_group_form')[0].reset();
+				$('#group_form')[0].reset();
 				updateNotification('Success  !',obj.success,'success');		
 				
 				$('li').removeClass('active');
@@ -25,13 +52,20 @@ $('#text_group_form').submit(function(){
 				var data = '<li class="active" id="'+obj.group_name+'" onclick="set_nav_bar_group_user('+obj.group_id+',this)">'+
 				'<a href="#">#'+obj.group_name+ '<span class="badge bg-danger pull-right"></span></a>'+
 				'</li>';
-				$('#session_group_user').prepend(data);
-				$('.chat-main-row').removeClass('hidden');
+				
+				if(obj.group_type == 'text'){
+					$('#session_group_text').prepend(data);
+						
+				}else if(obj.group_type == 'audio'){
+					$('#session_group_audio').prepend(data);
+
+				}else if(obj.group_type == 'video'){
+					$('#session_group_video').prepend(data);
+				}
+				$('.chat-main-row').removeClass('hidden');				
 				$('.to_name').text(obj.group_name);
 				$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');
-
-
-
+				$('#channel').val(channel);
 			}
 		}
 	})
@@ -52,7 +86,7 @@ function set_nav_bar_group_user(group_id,element){
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');	
-	 $('#'+id).closest('bg-danger').empty();
+	$('#'+id).closest('bg-danger').empty();
 
 	$('.chats').html('');
 	$('.chat-main-row').removeClass('hidden');
@@ -82,17 +116,17 @@ function set_nav_bar_group_user(group_id,element){
 				$('.chats').html(obj.messages);
 
 				$('.load-more-btn').click(function(){
-			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-			var total = $(this).attr('total');
-			if(total>0 || total == 0 ){                        
-				load_more(total);   
-				var total = total - 1;
-				$(this).attr('total',total); 
-			}else{
-				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-			}
+					$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+					var total = $(this).attr('total');
+					if(total>0 || total == 0 ){                        
+						load_more(total);   
+						var total = total - 1;
+						$(this).attr('total',total); 
+					}else{
+						$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+					}
 
-		});
+				});
 
 
 

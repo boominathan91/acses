@@ -9,10 +9,11 @@
 			</div>
 			<div class="modal-body">
 				<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
-				<form id="text_group_form" method="post">
+				<form id="group_form" method="post">
 					<div class="form-group">
 						<label>Group Name <span class="text-danger">*</span></label>
 						<input class="form-control"  type="text" name="group_name" id="group_name">
+						<input class="form-control"  type="hidden" name="group_type" id="group_type">
 					</div>
 					<div class="form-group">
 						<label>Send invites to: <span class="text-muted-light"></span></label>

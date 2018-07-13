@@ -630,16 +630,9 @@ $('button.start-call').click(function(event) {
 
 $('a#hangup,.hangup').click(function(event) {
   event.preventDefault();
-  console.info('Will request hangup..');
+  // console.info('Will request hangup..');
   call && call.hangup();  
 });
-
-
-
-
-
-
-
 
 
 
