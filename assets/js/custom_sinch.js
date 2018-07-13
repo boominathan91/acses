@@ -2,7 +2,7 @@ var global_username = '';
 /*Intialize the sinch */
 var sinchClient = new SinchClient({
 	applicationKey: 'f06ae4f2-4980-40aa-89ca-9b98d80d70c4',
-	capabilities: {messaging: true,calling: true},
+	capabilities: {messaging: true,calling: true,video:true},
 	supportActiveConnection: true,
   startActiveConnection: true,
   onLogMessage: function(message) {
@@ -461,6 +461,7 @@ var contains = function(needle) {
 
 
   var h1 = document.getElementById('timer'),seconds = 0, minutes = 0, hours = 0,t;
+  var video_timer = document.getElementById('video_timer'),seconds = 0, minutes = 0, hours = 0,t;
   function add() {
     seconds++;
     if (seconds >= 60) {
@@ -473,6 +474,7 @@ var contains = function(needle) {
     }
     
     h1.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
+    video_timer.textContent = (hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds);
     $('#call_duration').val((hours ? (hours > 9 ? hours : "0" + hours) : "00") + ":" + (minutes ? (minutes > 9 ? minutes : "0" + minutes) : "00") + ":" + (seconds > 9 ? seconds : "0" + seconds));
 
     timer();
@@ -499,7 +501,14 @@ var callListeners = {
     $('span.call-timing-count').html('<div id="stats">Ringing...</div>');
   },
   onCallEstablished: function(call) {
-    $('audio#incoming').attr('src', call.incomingStreamURL);
+    console.log(call);
+    // $('audio#incoming').attr('src', call.incomingStreamURL);
+
+    $('.outgoing_image').hide();  
+    $('.incoming_image').hide();  
+    $('video#outgoing').attr('src', call.outgoingStreamURL);
+    $('video#incoming').attr('src', call.incomingStreamURL);
+
     $('audio#ringback').trigger("pause");
     $('audio#ringtone').trigger("pause");
     $('#incoming_call').modal('hide');
@@ -514,7 +523,13 @@ var callListeners = {
     clearTimeout(t);
     $('audio#ringback').trigger("pause");
     $('audio#ringtone').trigger("pause");
-    $('audio#incoming').attr('src', '');     
+    // $('audio#incoming').attr('src', '');  
+
+    $('video#outgoing').attr('src', '');
+    $('video#incoming').attr('src', '');
+
+    $('.outgoing_image').show();  
+    $('.incoming_image').show();  
 
     //Report call stats
     var callDetails = call.getDetails();    
@@ -580,7 +595,7 @@ callClient.addEventListener({
 }
 });
 
-$('.call-item').click(function(){
+$('.mute_icon').click(function(){
   if(call){
     if($(this).hasClass('active')){
       $(this).removeClass('active');

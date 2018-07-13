@@ -1,5 +1,7 @@
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
+
+	// error_reporting(0);
 	$name = '';
 	$class = 'hidden';
 	$online_status = '';
@@ -297,13 +299,7 @@
 									<ul class="nav navbar-nav pull-right chat-menu">
 										<li>
 											<a href="#chat_sidebar" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
-										</li>
-										<li class="dropdown">
-											<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
-											<ul class="dropdown-menu">
-												<li><a href="javascript:void(0)">Settings</a></li>
-											</ul>
-										</li>
+										</li>										
 									</ul>
 								</div>
 							</div>
@@ -354,7 +350,7 @@
                             <div class="chat-footer hidden" id="audio-footer">
                             	<div class="call-icons">
                             		<ul class="call-items">                                    
-                            			<li class="call-item">
+                            			<li class="call-item mute_icon">
                             				<a href="#" title="Mute" data-placement="top" data-toggle="tooltip">
                             					<i class="fa fa-microphone microphone" aria-hidden="true"></i>
                             				</a>
@@ -622,74 +618,6 @@
                     </div>
                 </div>
             </div>
-            <div id="drag_files" class="modal custom-modal fade center-modal" role="dialog">
-            	<div class="modal-dialog">
-            		<button type="button" class="close" data-dismiss="modal">&times;</button>
-            		<div class="modal-content">
-            			<div class="modal-header">
-            				<h3 class="modal-title">Drag and drop files upload</h3>
-            			</div>
-            			<div class="modal-body p-t-0">
-            				<form id="js-upload-form">
-            					<div class="upload-drop-zone" id="drop-zone">
-            						<i class="fa fa-cloud-upload fa-2x"></i> <span class="upload-text">Just drag and drop files here</span>
-            					</div>
-            					<h4>Uploading</h4>
-            					<ul class="upload-list">
-            						<li class="file-list">
-            							<div class="upload-wrap">
-            								<div class="file-name">
-            									<i class="fa fa-photo"></i> photo.png
-            								</div>
-            								<div class="file-size">1.07 gb</div>
-            								<button type="button" class="file-close">
-            									<i class="fa fa-close"></i>
-            								</button>
-            							</div>
-            							<div class="progress progress-xs progress-striped">
-            								<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-            							</div>
-            							<div class="upload-process">37% done</div>
-            						</li>
-            						<li class="file-list">
-            							<div class="upload-wrap">
-            								<div class="file-name">
-            									<i class="fa fa-file"></i> task.doc
-            								</div>
-            								<div class="file-size">5.8 kb</div>
-            								<button type="button" class="file-close">
-            									<i class="fa fa-close"></i>
-            								</button>
-            							</div>
-            							<div class="progress progress-xs progress-striped">
-            								<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-            							</div>
-            							<div class="upload-process">37% done</div>
-            						</li>
-            						<li class="file-list">
-            							<div class="upload-wrap">
-            								<div class="file-name">
-            									<i class="fa fa-photo"></i> dashboard.png
-            								</div>
-            								<div class="file-size">2.1 mb</div>
-            								<button type="button" class="file-close">
-            									<i class="fa fa-close"></i>
-            								</button>
-            							</div>
-            							<div class="progress progress-xs progress-striped">
-            								<div class="progress-bar bg-success" role="progressbar" style="width: 65%"></div>
-            							</div>
-            							<div class="upload-process">Completed</div>
-            						</li>
-            					</ul>
-            				</form>
-            				<div class="m-t-30 text-center">
-            					<button class="btn btn-primary btn-lg">Add to upload</button>
-            				</div>
-            			</div>
-            		</div>
-            	</div>
-            </div>
        
 
         
@@ -697,6 +625,103 @@
 
 
         <!-- Audio Call Page Content ends  -->
+
+        <!-- Video Call Page Content Starts  -->
+
+         <div class="page-wrapper">
+            <div class="chat-main-row">
+                <div class="chat-main-wrapper">
+                    <div class="col-xs-9 message-view task-view">
+                        <div class="chat-window">
+                            <div class="chat-header">
+								<div class="navbar">
+									<div class="user-details">
+										<div class="pull-left user-img m-r-10">
+											<a href="#" title="<?php echo $name; ?>"><img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status online"></span></a>
+										</div>
+										<div class="user-info pull-left">
+											<a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
+										</div>
+									</div>
+									<ul class="nav navbar-nav pull-right chat-menu">
+										<li>
+											<a href="#chat_sidebar" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
+										</li>										
+									</ul>
+								</div>
+							</div>
+                            <div class="chat-contents">
+                                <div class="chat-content-wrap">
+                                    <div class="user-video voice-call-avatar">
+                                        <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar outgoing_image">
+												<video id="outgoing" autoplay class="img-responsive" muted></video>			
+                                    </div>
+                                    <div class="my-video">
+                                        <ul>
+                                            <li>
+                                            	<video id="incoming" autoplay class="img-responsive"></video>
+                                                <img src="<?php echo $profile_img; ?>" class="img-responsive incoming_image" alt="">
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-footer" id="video_footer">
+                                <div class="call-icons">
+                                    <span class="call-duration" id="video_timer"></span>
+                                    <ul class="call-items">
+                                        <li class="call-item">
+                                            <a href="" title="Enable Video" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-video-camera camera" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="call-item mute_icon">
+                                            <a href="" title="Mute Audio" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-microphone microphone" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="call-item">
+                                            <a href="" title="Add User" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="call-item">
+                                            <a href="" title="Full Screen" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-arrows-v full-screen" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+										<li class="call-item">
+                                            <a href="" title="Screen Share" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-desktop full-screen" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="end-call">
+                                        <a href="">
+												End Call
+											</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
+                        <div class="chat-window video-window">
+                            <div class="chat-header">
+                                <ul class="nav nav-tabs nav-tabs-bottom">
+                                    <li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-content chat-contents">
+                                <div class="content-full tab-pane active hidden" id="calls_tab">                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        <!-- Video Call Starts ends  -->
 
 
 
