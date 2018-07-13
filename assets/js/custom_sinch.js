@@ -504,7 +504,7 @@ var callListeners = {
     $('audio#ringtone').trigger("pause");
     $('#incoming_call').modal('hide');
     $('.start-call').hide();
-    $('.hangup').removeClass('hidden');  
+    $('.hangup,#audio-footer').removeClass('hidden');  
     //Report call stats
     var callDetails = call.getDetails();
     timer();    
@@ -527,7 +527,7 @@ var callListeners = {
       $('span.call-timing-count').html('Call Ended.'); 
     }
       $('.start-call').show();  
-      $('.hangup').addClass('hidden');  
+      $('.hangup,#audio-footer').addClass('hidden');    
     update_call_details();
     setTimeout(function() {        
       clear();
@@ -561,9 +561,11 @@ callClient.addEventListener({
   $('small text-muted').append('<div id="title">Incoming call from ' + incomingCall.fromId + '</div>');  
   $.post(base_url+'chat/get_caller_details',{sinch_username:incomingCall.fromId },function(res){
     var obj=jQuery.parseJSON(res);
+    
     $('.caller_image').attr('src',obj.profile_img);
     $('.caller_name').text(obj.name);
-    $('.caller_login_id').val(obj.login_id);      
+    $('#call_from_id').val(obj.call_from_id);      
+    $('#call_to_id').val(obj.call_to_id);
     $('.caller_sinchusername').val(obj.sinch_username);      
     $('.caller_full_name').val(obj.name);      
     $('.caller_profile_img').val(obj.profile_img);      

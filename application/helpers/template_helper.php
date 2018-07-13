@@ -37,7 +37,7 @@ if(!function_exists('lang')){
 		if(!$CI->session->userdata('label_data')){
 
 			//if(empty($default_lang)){ /*Default language is empty */
-				$where = array('l.lang_id'=>1);
+			$where = array('l.lang_id'=>1);
 			// }else{
 			// 	$where = array('l.status'=>1,'l.lang_id'=>$default_lang); /*Default Language selected*/
 			// }			
@@ -74,6 +74,18 @@ if(!function_exists('lang')){
 }
 
 
+
+if(!function_exists('convert_datetime')){	/*  Covert Date time Format for call details   */
+
+	function convert_datetime($date=null) {	
+		 $date = substr($date, 0, strpos($date, '('));
+		$date = new DateTime($date, new DateTimeZone('IST'));
+		return   $date->format('Y-m-d H:i:s');
+	}
+}
+
+
+
 if(!function_exists('lang_new')){
 	/*  Language  */
 	function lang_new($data=null){
@@ -83,7 +95,7 @@ if(!function_exists('lang_new')){
 		if(!$CI->session->userdata('label_data')){
 
 			//if(empty($default_lang)){ /*Default language is empty */
-				$where = array('l.lang_id'=>1);
+			$where = array('l.lang_id'=>1);
 			// }else{
 			// 	$where = array('l.status'=>1,'l.lang_id'=>$default_lang); /*Default Language selected*/
 			// }			

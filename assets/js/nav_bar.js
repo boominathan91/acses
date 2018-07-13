@@ -21,7 +21,7 @@
         	break;    
         }
         $.post(base_url+'chat/set_nav_bar',{page:page},function(res){
-        	console.log(res);
+        	//console.log(res);
         });	
    
 }

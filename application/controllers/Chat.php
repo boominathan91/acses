@@ -43,21 +43,22 @@ class Chat extends CI_Controller {
 		}
 		$data['title'] = 'Chat';		
 		$data['text_group'] = $this->chat->get_text_group();
+		$data['call_history'] = $this->chat->get_call_history();
 		$data['page'] = $this->chat->get_page_no();
 		$data['chat'] = $this->chat->get_chat_data();
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
+		// echo '<pre>';print_r($data);exit;
 		render_page('chat',$data);
 	}
 	public function update_call_details(){
-		if($_POST['call_to_id'] != $this->login_id){
-			$call_started_at = substr($_POST['call_started_at'], 0, strpos($_POST['call_started_at'], '('));
-			$call_ended_at = substr($_POST['call_ended_at'], 0, strpos($_POST['call_ended_at'], '('));
-			$call_started_at = date('Y-m-d H:i:s',strtotime($call_started_at));
-			$call_ended_at = date('Y-m-d H:i:s',strtotime($call_ended_at));
+	
+		if($_POST['call_to_id'] == $this->login_id){
+			 $call_started_at = convert_datetime($_POST['call_started_at']);
+			 $call_ended_at = convert_datetime($_POST['call_ended_at']);			
 			$data = array(
-				'call_from_id' => $this->login_id,
+				'call_from_id' => $_POST['call_from_id'],
 				'call_to_id' => $_POST['call_to_id'],
 				'group_id' => $_POST['group_id'],
 				'call_type' => $_POST['call_type'],
@@ -66,7 +67,7 @@ class Chat extends CI_Controller {
 				'call_ended_at' => $call_ended_at,
 				'end_cause' => $_POST['end_cause']
 			);
-			echo  $this->db->insert('call_details',$data);
+			return  $this->db->insert('call_details',$data);
 		}
 	}
 	public function set_nav_bar(){
@@ -80,11 +81,12 @@ class Chat extends CI_Controller {
 	public function get_caller_details(){
 		$where = array('sinch_username' => $_POST['sinch_username']);
 		$data = $this->db
-		->select('first_name,last_name,login_id,sinch_username,profile_img')
+		->select('first_name,last_name,login_id as call_from_id,sinch_username,profile_img')
 		->get_where('login_details',$where)
 		->row_array();
 		$data['name'] = ucfirst($data['first_name']).' '.ucfirst($data['last_name']);
 		$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
+		$data['call_to_id'] = $this->login_id;
 		echo json_encode($data);
 	}
 	public function get_group_datas(){

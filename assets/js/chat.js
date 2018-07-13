@@ -59,7 +59,7 @@ function set_nav_bar_audio_user(login_id,element){
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
-		// $('.chat-main-row,#task_window').removeClass('hidden');
+		$('#audio_panel').removeClass('hidden');
 		$('.to_name').text(obj.first_name+' '+obj.last_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
@@ -95,6 +95,7 @@ function set_nav_bar_audio_user(login_id,element){
 
 function update_call_details(){
 	var call_to_id = $('#call_to_id').val();
+	var call_from_id = $('#call_from_id').val();
 	var group_id = $('#group_id').val();
 	var call_type = $('#call_type').val();
 	var call_duration = $('#call_duration').val();
@@ -106,6 +107,7 @@ function update_call_details(){
 
 	$.post(base_url+'chat/update_call_details',
 	{
+		call_from_id :call_from_id,
 		call_to_id :call_to_id,
 		group_id :group_id,
 		call_type :call_type,

@@ -24,6 +24,8 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 
 	<!-- CSS  -->
 	<link rel="stylesheet" href="<?php echo base_url();?>assets/css/jquery.mCustomScrollbar.min.css" type="text/css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
 	<!-- JS -->
 	<script type="text/javascript" src="<?php echo base_url() ?>assets/js/jquery.form.min.js"></script>
 	<script src='<?php echo base_url()."assets/" ?>js/jquery.mCustomScrollbar.concat.min.js'></script>
