@@ -496,14 +496,15 @@ var callListeners = {
     $('audio#ringback').trigger("play");
 
     //Report call stats
-    $('span.call-timing-count').append('<div id="stats">Ringing...</div>');
+    $('span.call-timing-count').html('<div id="stats">Ringing...</div>');
   },
   onCallEstablished: function(call) {
     $('audio#incoming').attr('src', call.incomingStreamURL);
     $('audio#ringback').trigger("pause");
     $('audio#ringtone').trigger("pause");
     $('#incoming_call').modal('hide');
-
+    $('.start-call').hide();
+    $('.hangup').removeClass('hidden');  
     //Report call stats
     var callDetails = call.getDetails();
     timer();    
@@ -524,9 +525,14 @@ var callListeners = {
       $('span.call-timing-count').html('Call Canceled.');    
     }else if(call.getEndCause == 'HUNG_UP'){
       $('span.call-timing-count').html('Call Ended.'); 
-      $('span.call-timing-count').prepend('<button class="start-call">Call</button>');   
     }
+      $('.start-call').show();  
+      $('.hangup').addClass('hidden');  
     update_call_details();
+    setTimeout(function() {        
+      clear();
+      $('#timer').html('');
+      }, 2000);
     if(call.error) {
       $('span.call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
     }
@@ -615,7 +621,7 @@ $('button.start-call').click(function(event) {
   //console.log('Placing call to: ' + $('input#receiver_sinchusername').val());
   call = callClient.callUser($('input#receiver_sinchusername').val());
   call.addEventListener(callListeners);  
-  $.post(base_url+'chat/')
+  $('.start-call').hide();
 });
 
 /*** Hang up a call ***/

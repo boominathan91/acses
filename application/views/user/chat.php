@@ -85,7 +85,7 @@
 											<!-- <span class="last-seen"><?php echo ucfirst($online_status); ?></span> -->
 										</div>
 									</div>		
-									<button data-target="#incoming_call" data-toggle="modal">Call</button>
+									
 									<ul class="nav navbar-nav pull-right chat-menu <?php echo $task_class; ?>">											
 										<li class="dropdown">
 											<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
@@ -314,16 +314,14 @@
 									<div class="voice-call-avatar">
 										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="call-avatar receiver_title_image">
 										<span class="username to_name"><?php echo $name; ?></span>
-										<span class="call-timing-count" id="timer">
-											<button class="start-call">Call</button>
-										</span>
+										<span class="call-timing-count" id="timer"></span>
+										<button class="start-call">Call</button>
 										<audio id="incoming" autoplay></audio>
 										<audio id="ringback" src="<?php echo base_url().'assets/audio/ringback.wav'; ?>" loop></audio>
 										<audio id="ringtone" src="<?php echo base_url().'assets/audio/phone_ring.wav'; ?>" loop></audio>
 									</div>
 									
-										<input type="hidden"  id="call_to_id" value="<?php echo $receiver_id ?>" >
-										<input type="hidden" id="group_id" value="0">
+										<input type="hidden"  id="call_to_id" value="<?php echo $receiver_id ?>" >										
 										<input type="hidden" id="call_type" value="audio">
 										<input type="hidden" id="call_duration" value="call_duration" >
 										<input type="hidden" id="call_started_at" value="call_started_at" >
@@ -368,7 +366,7 @@
                                         </li> -->
                                     </ul>
                                     <div class="end-call">
-                                    	<a href="javascript:void(0);" class="hangup">End Call</a>
+                                    	<a href="javascript:void(0);" class="hangup hidden">End Call</a>
                                     </div>
                                 </div>
                             </div>
@@ -488,83 +486,7 @@
                     						<div class="chat-content-wrap">
                     							<div class="chat-wrap-inner">
                     								<div class="chat-box">
-                    									<div class="chatss">
-                    										<div class="chat chat-left">
-                    											<div class="chat-avatar">
-                    												<a href="profile.html" class="avatar">
-                    													<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-                    												</a>
-                    											</div>
-                    											<div class="chat-body">
-                    												<div class="chat-bubble">
-                    													<div class="chat-content">
-                    														<span class="task-chat-user">John Doe</span> <span class="chat-time">8:35 am</span>
-                    														<p>I'm just looking around.</p>
-                    														<p>Will you tell me something about yourself? </p>
-                    													</div>
-                    												</div>
-                    											</div>
-                    										</div>
-                    										<div class="chat chat-left">
-                    											<div class="chat-avatar">
-                    												<a href="profile.html" class="avatar">
-                    													<img alt="John Doe" src="assets/img/user.jpg" class="img-responsive img-circle">
-                    												</a>
-                    											</div>
-                    											<div class="chat-body">
-                    												<div class="chat-bubble">
-                    													<div class="chat-content">
-                    														<span class="task-chat-user">John Doe</span> <span class="file-attached">attached 3 files <i class="fa fa-paperclip" aria-hidden="true"></i></span> <span class="chat-time">Dec 17, 2014 at 4:32am</span>
-                    														<ul class="attach-list">
-                    															<li><i class="fa fa-file"></i> <a href="#">project_document.avi</a></li>
-                    															<li><i class="fa fa-file"></i> <a href="#">video_conferencing.psd</a></li>
-                    															<li><i class="fa fa-file"></i> <a href="#">landing_page.psd</a></li>
-                    														</ul>
-                    													</div>
-                    												</div>
-                    											</div>
-                    										</div>
-                    										<div class="chat-line">
-                    											<span class="chat-date">January 29th, 2017</span>
-                    										</div>
-                    										<div class="chat chat-left">
-                    											<div class="chat-avatar">
-                    												<a href="profile.html" class="avatar">
-                    													<img alt="Jeffery Lalor" src="assets/img/user.jpg" class="img-responsive img-circle">
-                    												</a>
-                    											</div>
-                    											<div class="chat-body">
-                    												<div class="chat-bubble">
-                    													<div class="chat-content">
-                    														<span class="task-chat-user">Jeffery Lalor</span> <span class="file-attached">attached file <i class="fa fa-paperclip" aria-hidden="true"></i></span> <span class="chat-time">Yesterday at 9:16pm</span>
-                    														<ul class="attach-list">
-                    															<li class="pdf-file"><i class="fa fa-file-pdf-o"></i> <a href="#">Document_2016.pdf</a></li>
-                    														</ul>
-                    													</div>
-                    												</div>
-                    											</div>
-                    										</div>
-                    										<div class="chat chat-left">
-                    											<div class="chat-avatar">
-                    												<a href="profile.html" class="avatar">
-                    													<img alt="Jeffery Lalor" src="assets/img/user.jpg" class="img-responsive img-circle">
-                    												</a>
-                    											</div>
-                    											<div class="chat-body">
-                    												<div class="chat-bubble">
-                    													<div class="chat-content">
-                    														<span class="task-chat-user">Jeffery Lalor</span> <span class="file-attached">attached file <i class="fa fa-paperclip" aria-hidden="true"></i></span> <span class="chat-time">Today at 12:42pm</span>
-                    														<ul class="attach-list">
-                    															<li class="img-file">
-                    																<div class="attach-img-download"><a href="#">avatar-1.jpg</a></div>
-                    																<div class="task-attach-img"><img src="assets/img/user.jpg" alt=""></div>
-                    															</li>
-                    														</ul>
-                    													</div>
-                    												</div>
-                    											</div>
-                    										</div>
-                    									</div>
+                    									<div class="chats">	
                     								</div>
                     							</div>
                     						</div>
@@ -594,11 +516,11 @@
                     								<div class="chat-profile-img">
                     									<div class="edit-profile-img">
                     										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="receiver_title_image">
-                    										<span class="change-img">Change Image</span>
+                    										
                     									</div>
                     									<h3 class="user-name m-t-10 m-b-0"><?php echo $name; ?></h3>
                     									<small class="text-muted"><?php echo $department_name; ?></small>
-                    									<a href="edit-profile.html" class="btn btn-primary edit-btn"><i class="fa fa-pencil"></i></a>
+                    									
                     								</div>
                     								<div class="chat-profile-info">
                     									<ul class="user-det-list">													

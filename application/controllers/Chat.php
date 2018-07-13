@@ -51,24 +51,23 @@ class Chat extends CI_Controller {
 		render_page('chat',$data);
 	}
 	public function update_call_details(){
-
-	$call_started_at = substr($_POST['call_started_at'], 0, strpos($_POST['call_started_at'], '('));
-		$call_ended_at = substr($_POST['call_ended_at'], 0, strpos($_POST['call_ended_at'], '('));
-		$call_started_at = date('Y-m-d H:i:s',strtotime($call_started_at));
-		$call_ended_at = date('Y-m-d H:i:s',strtotime($call_ended_at));
-				$data = array(
-					'call_from_id' => $this->login_id,
-					'call_to_id' => $_POST['call_to_id'],
-					'group_id' => $_POST['group_id'],
-					'call_type' => $_POST['call_type'],
-					'call_duration' => $_POST['call_duration'],
-					'call_started_at' => $call_started_at,
-					'call_ended_at' => $call_ended_at,
-					 'end_cause' => $_POST['end_cause']
-					);
-				echo  $this->db->insert('call_details',$data);
-
-
+		if($_POST['call_to_id'] != $this->login_id){
+			$call_started_at = substr($_POST['call_started_at'], 0, strpos($_POST['call_started_at'], '('));
+			$call_ended_at = substr($_POST['call_ended_at'], 0, strpos($_POST['call_ended_at'], '('));
+			$call_started_at = date('Y-m-d H:i:s',strtotime($call_started_at));
+			$call_ended_at = date('Y-m-d H:i:s',strtotime($call_ended_at));
+			$data = array(
+				'call_from_id' => $this->login_id,
+				'call_to_id' => $_POST['call_to_id'],
+				'group_id' => $_POST['group_id'],
+				'call_type' => $_POST['call_type'],
+				'call_duration' => $_POST['call_duration'],
+				'call_started_at' => $call_started_at,
+				'call_ended_at' => $call_ended_at,
+				'end_cause' => $_POST['end_cause']
+			);
+			echo  $this->db->insert('call_details',$data);
+		}
 	}
 	public function set_nav_bar(){
 		$page = array();
@@ -81,9 +80,9 @@ class Chat extends CI_Controller {
 	public function get_caller_details(){
 		$where = array('sinch_username' => $_POST['sinch_username']);
 		$data = $this->db
-					 ->select('first_name,last_name,login_id,sinch_username,profile_img')
-					 ->get_where('login_details',$where)
-					 ->row_array();
+		->select('first_name,last_name,login_id,sinch_username,profile_img')
+		->get_where('login_details',$where)
+		->row_array();
 		$data['name'] = ucfirst($data['first_name']).' '.ucfirst($data['last_name']);
 		$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
 		echo json_encode($data);
