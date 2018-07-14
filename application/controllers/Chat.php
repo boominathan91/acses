@@ -107,8 +107,6 @@ class Chat extends CI_Controller {
 		$data = $this->chat->get_group_datas($group_id);
 		$total_chat= $this->chat->get_total_chat_group_count($group_id); 
 
-
-
 		$this->session->set_userdata(array('session_group_id'=>$group_id));
 		$latest_chats = $this->chat->get_group_messages($total=null,$group_id);  		
 		$page=0;

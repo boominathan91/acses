@@ -85,6 +85,8 @@ function set_nav_bar_group_user(group_id,element){
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');	
+	var type = $(element).attr('type');	
+
 	$('#'+id).closest('bg-danger').empty();
 
 	$('.chats').html('');
@@ -92,8 +94,8 @@ function set_nav_bar_group_user(group_id,element){
 
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
-
-	$.post(base_url+'chat/get_group_datas',{group_id:group_id},function(res){
+	$('.group_members').html('');
+	$.post(base_url+'chat/get_group_datas',{group_id:group_id,type:type},function(res){
 		if(res){
 			var obj = jQuery.parseJSON(res);
 			if(obj.group){
@@ -102,11 +104,29 @@ function set_nav_bar_group_user(group_id,element){
 				$('#task_window').addClass('hidden');
 				var receivers = [];
 				var receiver_id = [];
+				var group_members_thumbnail = '';;
+				var i=0;
 				if(obj.group_members){
+					i++;
 					$(obj.group_members).each(function(){
 						receivers.push(this.sinch_username);
 						receiver_id.push(this.login_id);
+
+						if(this.profile_img != ''){
+						var receiver_image = this.profile_img;
+						}else{
+						var receiver_image = base_url+'assets/img/user.jpg';
+						}
+
+						group_members_thumbnail +='<li>'+
+                                            	'<video id="outgoing'+i+'" autoplay class="img-responsive"></video>'+
+                                                '<img src="'+receiver_image+'" class="img-responsive outgoing_image" alt="">'+
+                                            	'</li>';
 					});
+					// $('.group_members').html(group_members_thumbnail);
+
+
+
 				}
 				$('#receiver_sinchusername').val(receivers);
 				$('#receiver_id').val(receiver_id);

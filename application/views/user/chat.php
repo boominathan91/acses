@@ -676,6 +676,7 @@
                                             	<video id="outgoing" autoplay class="img-responsive"></video>
                                                 <img src="<?php echo $profile_img; ?>" class="img-responsive outgoing_image" alt="">
                                             </li>
+                                            <div class="group_members"></div>
                                         </ul>
                                     </div>
                                 </div>

@@ -170,7 +170,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type=""><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
 									</div>
@@ -241,7 +241,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type=""><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
 										</div>
@@ -305,7 +305,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_video"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
 									<li class="menu-title">Direct Video Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>

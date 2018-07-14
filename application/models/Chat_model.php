@@ -107,7 +107,7 @@ class Chat_model extends CI_Model {
 
 		$result = array();
 		if(!empty($group_id)){				
-			$this->db->select('l.sinch_username,l.login_id');
+			$this->db->select('l.sinch_username,l.login_id,l.profile_img,l.first_name,l.last_name');
 			$this->db->where('cg.group_id',$group_id);
 			$this->db->where('cg.login_id !=',$this->login_id);
 			$this->db->join('login_details l','l.login_id = cg.login_id');
