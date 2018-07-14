@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server version:               10.1.19-MariaDB - mariadb.org binary distribution
+-- Server version:               10.1.25-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win32
 -- HeidiSQL Version:             9.4.0.5125
 -- --------------------------------------------------------
@@ -16,157 +16,69 @@
 CREATE DATABASE IF NOT EXISTS `acses` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `acses`;
 
+-- Dumping structure for table acses.call_details
+CREATE TABLE IF NOT EXISTS `call_details` (
+  `call_id` int(11) NOT NULL AUTO_INCREMENT,
+  `call_from_id` int(11) NOT NULL,
+  `call_to_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `call_type` enum('audio','video') NOT NULL,
+  `call_duration` time NOT NULL,
+  `call_started_at` datetime NOT NULL,
+  `call_ended_at` datetime NOT NULL,
+  `end_cause` varchar(255) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`call_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses.call_details: ~0 rows (approximately)
+/*!40000 ALTER TABLE `call_details` DISABLE KEYS */;
+/*!40000 ALTER TABLE `call_details` ENABLE KEYS */;
+
+-- Dumping structure for table acses.call_type
+CREATE TABLE IF NOT EXISTS `call_type` (
+  `call_id` int(11) NOT NULL AUTO_INCREMENT,
+  `login_id` int(11) NOT NULL,
+  `type` enum('audio','video') NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`call_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses.call_type: ~0 rows (approximately)
+/*!40000 ALTER TABLE `call_type` DISABLE KEYS */;
+/*!40000 ALTER TABLE `call_type` ENABLE KEYS */;
+
 -- Dumping structure for table acses.chat_deleted_details
 CREATE TABLE IF NOT EXISTS `chat_deleted_details` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `chat_id` int(11) DEFAULT NULL,
   `can_view` int(11) DEFAULT NULL,
+  `group_id` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT '1',
   `date_created` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=139 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.chat_deleted_details: ~132 rows (approximately)
+-- Dumping data for table acses.chat_deleted_details: ~10 rows (approximately)
 /*!40000 ALTER TABLE `chat_deleted_details` DISABLE KEYS */;
-INSERT INTO `chat_deleted_details` (`id`, `chat_id`, `can_view`, `status`, `date_created`) VALUES
-	(1, 1, 65, 1, '2018-07-10 17:41:25'),
-	(2, 1, 64, 1, '2018-07-10 17:41:25'),
-	(3, 2, 65, 1, '2018-07-10 17:42:19'),
-	(4, 2, 64, 1, '2018-07-10 17:42:20'),
-	(5, 3, 65, 1, '2018-07-10 17:47:31'),
-	(6, 3, 64, 1, '2018-07-10 17:47:31'),
-	(7, 4, 65, 1, '2018-07-10 17:47:45'),
-	(8, 4, 64, 1, '2018-07-10 17:47:45'),
-	(9, 5, 65, 1, '2018-07-10 17:52:57'),
-	(10, 5, 64, 1, '2018-07-10 17:52:57'),
-	(11, 6, 65, 1, '2018-07-10 17:53:32'),
-	(12, 6, 64, 1, '2018-07-10 17:53:32'),
-	(13, 7, 65, 1, '2018-07-10 17:54:58'),
-	(14, 7, 64, 1, '2018-07-10 17:54:58'),
-	(15, 8, 64, 1, '2018-07-10 17:55:05'),
-	(16, 8, 65, 1, '2018-07-10 17:55:05'),
-	(17, 9, 66, 1, '2018-07-10 17:55:05'),
-	(18, 9, 65, 1, '2018-07-10 17:55:05'),
-	(19, 10, 65, 1, '2018-07-10 17:56:11'),
-	(20, 10, 64, 1, '2018-07-10 17:56:11'),
-	(21, 11, 66, 1, '2018-07-10 17:56:11'),
-	(22, 11, 64, 1, '2018-07-10 17:56:11'),
-	(23, 12, 64, 1, '2018-07-10 17:56:26'),
-	(24, 12, 65, 1, '2018-07-10 17:56:26'),
-	(25, 13, 66, 1, '2018-07-10 17:56:26'),
-	(26, 13, 65, 1, '2018-07-10 17:56:26'),
-	(27, 14, 66, 1, '2018-07-10 18:00:55'),
-	(28, 14, 64, 1, '2018-07-10 18:00:55'),
-	(29, 15, 65, 1, '2018-07-10 18:04:00'),
-	(30, 15, 64, 1, '2018-07-10 18:04:00'),
-	(31, 16, 66, 1, '2018-07-10 18:04:00'),
-	(32, 16, 64, 1, '2018-07-10 18:04:00'),
-	(33, 17, 65, 1, '2018-07-10 18:09:42'),
-	(34, 17, 64, 1, '2018-07-10 18:09:42'),
-	(35, 18, 66, 1, '2018-07-10 18:09:42'),
-	(36, 18, 64, 1, '2018-07-10 18:09:42'),
-	(37, 19, 65, 1, '2018-07-10 18:11:04'),
-	(38, 19, 64, 1, '2018-07-10 18:11:04'),
-	(39, 20, 66, 1, '2018-07-10 18:11:05'),
-	(40, 20, 64, 1, '2018-07-10 18:11:05'),
-	(41, 21, 64, 1, '2018-07-10 18:11:47'),
-	(42, 21, 65, 1, '2018-07-10 18:11:47'),
-	(43, 22, 66, 1, '2018-07-10 18:11:47'),
-	(44, 22, 65, 1, '2018-07-10 18:11:47'),
-	(45, 23, 64, 1, '2018-07-10 18:12:48'),
-	(46, 23, 65, 1, '2018-07-10 18:12:48'),
-	(47, 24, 66, 1, '2018-07-10 18:12:48'),
-	(48, 24, 65, 1, '2018-07-10 18:12:48'),
-	(49, 25, 64, 1, '2018-07-10 18:13:28'),
-	(50, 25, 65, 1, '2018-07-10 18:13:28'),
-	(51, 26, 66, 1, '2018-07-10 18:13:29'),
-	(52, 26, 65, 1, '2018-07-10 18:13:29'),
-	(53, 27, 64, 1, '2018-07-10 18:14:20'),
-	(54, 27, 65, 1, '2018-07-10 18:14:20'),
-	(55, 28, 66, 1, '2018-07-10 18:14:20'),
-	(56, 28, 65, 1, '2018-07-10 18:14:20'),
-	(57, 29, 64, 1, '2018-07-10 18:29:46'),
-	(58, 29, 65, 1, '2018-07-10 18:29:46'),
-	(59, 30, 66, 1, '2018-07-10 18:29:46'),
-	(60, 30, 65, 1, '2018-07-10 18:29:46'),
-	(61, 31, 64, 1, '2018-07-10 18:31:10'),
-	(62, 31, 65, 1, '2018-07-10 18:31:10'),
-	(63, 32, 66, 1, '2018-07-10 18:31:10'),
-	(64, 32, 65, 1, '2018-07-10 18:31:11'),
-	(65, 33, 64, 1, '2018-07-10 18:32:31'),
-	(66, 33, 65, 1, '2018-07-10 18:32:32'),
-	(67, 34, 64, 1, '2018-07-10 18:32:45'),
-	(68, 34, 65, 1, '2018-07-10 18:32:45'),
-	(69, 35, 66, 1, '2018-07-10 18:32:45'),
-	(70, 35, 65, 1, '2018-07-10 18:32:45'),
-	(71, 36, 64, 1, '2018-07-10 18:33:19'),
-	(72, 36, 65, 1, '2018-07-10 18:33:19'),
-	(73, 37, 66, 1, '2018-07-10 18:33:19'),
-	(74, 37, 65, 1, '2018-07-10 18:33:20'),
-	(75, 38, 64, 1, '2018-07-10 18:34:22'),
-	(76, 38, 65, 1, '2018-07-10 18:34:22'),
-	(77, 39, 66, 1, '2018-07-10 18:34:22'),
-	(78, 39, 65, 1, '2018-07-10 18:34:22'),
-	(79, 40, 64, 1, '2018-07-10 18:35:53'),
-	(80, 40, 65, 1, '2018-07-10 18:35:53'),
-	(81, 41, 66, 1, '2018-07-10 18:35:53'),
-	(82, 41, 65, 1, '2018-07-10 18:35:53'),
-	(83, 42, 64, 1, '2018-07-10 18:36:15'),
-	(84, 42, 65, 1, '2018-07-10 18:36:15'),
-	(85, 43, 66, 1, '2018-07-10 18:36:15'),
-	(86, 43, 65, 1, '2018-07-10 18:36:15'),
-	(87, 44, 64, 1, '2018-07-10 18:37:33'),
-	(88, 44, 66, 1, '2018-07-10 18:37:33'),
-	(89, 45, 65, 1, '2018-07-10 18:37:33'),
-	(90, 45, 66, 1, '2018-07-10 18:37:33'),
-	(91, 46, 64, 1, '2018-07-10 18:38:09'),
-	(92, 46, 65, 1, '2018-07-10 18:38:09'),
-	(93, 47, 66, 1, '2018-07-10 18:38:09'),
-	(94, 47, 65, 1, '2018-07-10 18:38:09'),
-	(95, 48, 65, 1, '2018-07-10 22:46:26'),
-	(96, 48, 64, 1, '2018-07-10 22:46:26'),
-	(97, 49, 64, 1, '2018-07-10 22:46:39'),
-	(98, 49, 65, 1, '2018-07-10 22:46:39'),
-	(99, 50, 64, 1, '2018-07-10 22:46:52'),
-	(100, 50, 65, 1, '2018-07-10 22:46:52'),
-	(101, 51, 66, 1, '2018-07-10 22:46:52'),
-	(102, 51, 65, 1, '2018-07-10 22:46:52'),
-	(103, 52, 64, 1, '2018-07-10 22:50:07'),
-	(104, 52, 65, 1, '2018-07-10 22:50:07'),
-	(105, 53, 64, 1, '2018-07-10 22:50:13'),
-	(106, 53, 65, 1, '2018-07-10 22:50:13'),
-	(107, 54, 66, 1, '2018-07-10 22:50:13'),
-	(108, 54, 65, 1, '2018-07-10 22:50:13'),
-	(109, 55, 64, 1, '2018-07-10 22:52:42'),
-	(110, 55, 65, 1, '2018-07-10 22:52:42'),
-	(111, 56, 66, 1, '2018-07-10 22:52:42'),
-	(112, 56, 65, 1, '2018-07-10 22:52:42'),
-	(113, 57, 64, 1, '2018-07-11 07:07:24'),
-	(114, 57, 65, 1, '2018-07-11 07:07:24'),
-	(115, 58, 66, 1, '2018-07-11 07:07:24'),
-	(116, 58, 65, 1, '2018-07-11 07:07:24'),
-	(117, 59, 64, 1, '2018-07-11 07:08:55'),
-	(118, 59, 65, 1, '2018-07-11 07:08:55'),
-	(119, 60, 66, 1, '2018-07-11 07:08:55'),
-	(120, 60, 65, 1, '2018-07-11 07:08:55'),
-	(121, 61, 64, 1, '2018-07-11 08:29:27'),
-	(122, 61, 66, 1, '2018-07-11 08:29:28'),
-	(123, 62, 65, 1, '2018-07-11 08:29:28'),
-	(124, 62, 66, 1, '2018-07-11 08:29:28'),
-	(125, 63, 66, 1, '2018-07-11 08:29:28'),
-	(126, 63, 66, 1, '2018-07-11 08:29:28'),
-	(127, 64, 64, 1, '2018-07-11 08:29:57'),
-	(128, 64, 66, 1, '2018-07-11 08:29:57'),
-	(129, 65, 65, 1, '2018-07-11 08:29:57'),
-	(130, 65, 66, 1, '2018-07-11 08:29:57'),
-	(131, 66, 66, 1, '2018-07-11 08:29:57'),
-	(132, 66, 66, 1, '2018-07-11 08:29:57'),
-	(133, 67, 64, 1, '2018-07-11 08:43:08'),
-	(134, 67, 64, 1, '2018-07-11 08:43:08'),
-	(135, 68, 65, 1, '2018-07-11 08:43:08'),
-	(136, 68, 64, 1, '2018-07-11 08:43:08'),
-	(137, 69, 66, 1, '2018-07-11 08:43:08'),
-	(138, 69, 64, 1, '2018-07-11 08:43:08');
+INSERT IGNORE INTO `chat_deleted_details` (`id`, `chat_id`, `can_view`, `group_id`, `status`, `date_created`) VALUES
+	(1, 1, 67, NULL, 1, '2018-07-14 10:36:08'),
+	(2, 1, 64, NULL, 1, '2018-07-14 10:36:08'),
+	(3, 2, 64, NULL, 1, '2018-07-14 10:36:27'),
+	(4, 2, 67, NULL, 1, '2018-07-14 10:36:27'),
+	(5, 3, 67, NULL, 1, '2018-07-14 10:37:25'),
+	(6, 3, 64, NULL, 1, '2018-07-14 10:37:26'),
+	(7, 4, 64, NULL, 1, '2018-07-14 10:38:42'),
+	(8, 4, 67, NULL, 1, '2018-07-14 10:38:42'),
+	(9, 5, 64, NULL, 1, '2018-07-14 10:38:46'),
+	(10, 5, 67, NULL, 1, '2018-07-14 10:38:46'),
+	(11, 4, 67, NULL, 1, '2018-07-14 10:50:01'),
+	(12, 4, 64, NULL, 1, '2018-07-14 10:50:01'),
+	(13, 5, 64, NULL, 1, '2018-07-14 10:50:20'),
+	(14, 5, 67, NULL, 1, '2018-07-14 10:50:20');
 /*!40000 ALTER TABLE `chat_deleted_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.chat_details
@@ -187,100 +99,36 @@ CREATE TABLE IF NOT EXISTS `chat_details` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`chat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.chat_details: ~66 rows (approximately)
+-- Dumping data for table acses.chat_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `chat_details` DISABLE KEYS */;
-INSERT INTO `chat_details` (`chat_id`, `group_id`, `message_type`, `message`, `receiver_id`, `sender_id`, `chatdate`, `file_path`, `file_name`, `read_status`, `time_zone`, `type`, `status`, `created_at`, `last_updated`) VALUES
-	(1, 0, 'text', 'Hi', 65, 64, '2018-07-10 14:11:25', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:41:25', '2018-07-10 17:47:24'),
-	(2, 0, 'text', 'Hi Siva', 65, 64, '2018-07-10 14:12:19', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:42:19', '2018-07-10 17:47:24'),
-	(3, 0, 'text', 'thow', 65, 64, '2018-07-10 14:17:31', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:47:31', '2018-07-10 17:51:22'),
-	(4, 0, 'text', 'hr', 65, 64, '2018-07-10 14:17:45', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:47:45', '2018-07-10 17:51:22'),
-	(5, 0, 'text', 'test', 65, 64, '2018-07-10 14:22:57', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:52:57', '2018-07-10 17:53:12'),
-	(6, 0, 'text', 'Works', 65, 64, '2018-07-10 14:23:32', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:53:32', '2018-07-10 17:53:41'),
-	(7, 0, 'text', 'test', 65, 64, '2018-07-10 14:24:58', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:54:58', '2018-07-10 17:56:03'),
-	(8, 2, 'group', 'Hey Siva', 64, 65, '2018-07-10 14:25:05', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:55:05', '2018-07-10 17:56:23'),
-	(9, 2, 'group', 'Hey Siva', 66, 65, '2018-07-10 14:25:05', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:55:05', '2018-07-10 17:55:10'),
-	(10, 2, 'group', 'tttt', 65, 64, '2018-07-10 14:26:11', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:56:11', '2018-07-10 18:02:04'),
-	(11, 2, 'group', 'tttt', 66, 64, '2018-07-10 14:26:11', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:56:11', '2018-07-10 17:56:13'),
-	(12, 2, 'group', 'hi', 64, 65, '2018-07-10 14:26:26', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:56:26', '2018-07-10 18:02:15'),
-	(13, 2, 'group', 'hi', 66, 65, '2018-07-10 14:26:26', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 17:56:26', '2018-07-10 17:56:53'),
-	(14, 0, 'text', 'hi vijay', 66, 64, '2018-07-10 14:30:55', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:00:55', '2018-07-10 18:01:05'),
-	(15, 2, 'group', 'Hi By Boomi', 65, 64, '2018-07-10 14:33:59', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:03:59', '2018-07-10 18:10:46'),
-	(16, 2, 'group', 'Hi By Boomi', 66, 64, '2018-07-10 14:34:00', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:04:00', '2018-07-10 18:04:08'),
-	(17, 2, 'group', 'Hello Group', 65, 64, '2018-07-10 14:39:42', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:09:42', '2018-07-10 18:10:47'),
-	(18, 2, 'group', 'Hello Group', 66, 64, '2018-07-10 14:39:42', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:09:42', '2018-07-10 18:09:47'),
-	(19, 2, 'group', 'Hi', 65, 64, '2018-07-10 14:41:04', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:11:04', '2018-07-10 18:12:36'),
-	(20, 2, 'group', 'Hi', 66, 64, '2018-07-10 14:41:05', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:11:05', '2018-07-10 18:11:07'),
-	(21, 2, 'group', 'hi', 64, 65, '2018-07-10 14:41:47', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:11:47', '2018-07-10 18:12:28'),
-	(22, 2, 'group', 'hi', 66, 65, '2018-07-10 14:41:47', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:11:47', '2018-07-10 18:11:49'),
-	(23, 2, 'group', 'huuu', 64, 65, '2018-07-10 14:42:48', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:12:48', '2018-07-10 18:13:17'),
-	(24, 2, 'group', 'huuu', 66, 65, '2018-07-10 14:42:48', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:12:48', '2018-07-10 18:12:51'),
-	(25, 2, 'group', 'Hi', 64, 65, '2018-07-10 14:43:28', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:13:28', '2018-07-10 18:29:28'),
-	(26, 2, 'group', 'Hi', 66, 65, '2018-07-10 14:43:29', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:13:29', '2018-07-10 18:13:31'),
-	(27, 2, 'group', 'gggg', 64, 65, '2018-07-10 14:44:20', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:14:20', '2018-07-10 18:29:28'),
-	(28, 2, 'group', 'gggg', 66, 65, '2018-07-10 14:44:20', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:14:20', '2018-07-10 18:14:20'),
-	(29, 2, 'group', 'yyyy', 64, 65, '2018-07-10 14:59:46', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:29:46', '2018-07-10 18:32:26'),
-	(30, 2, 'text', 'yyyy', 66, 65, '2018-07-10 14:59:46', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:29:46', '2018-07-10 18:29:51'),
-	(31, 2, 'group', 'gggggg', 64, 65, '2018-07-10 15:01:10', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:31:10', '2018-07-10 18:32:26'),
-	(32, 2, 'text', 'gggggg', 66, 65, '2018-07-10 15:01:10', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:31:10', '2018-07-10 18:31:11'),
-	(33, 0, 'text', 'rest', 64, 65, '2018-07-10 15:02:31', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:32:31', '2018-07-10 18:32:34'),
-	(34, 2, 'group', 'hi', 64, 65, '2018-07-10 15:02:45', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:32:45', '2018-07-10 18:33:13'),
-	(35, 2, 'text', 'hi', 66, 65, '2018-07-10 15:02:45', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:32:45', '2018-07-10 18:32:48'),
-	(36, 2, 'group', 'testsetset', 64, 65, '2018-07-10 15:03:19', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:33:19', '2018-07-10 18:33:55'),
-	(37, 2, 'text', 'testsetset', 66, 65, '2018-07-10 15:03:19', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:33:19', '2018-07-10 18:33:21'),
-	(38, 2, 'group', 'Heyyyy', 64, 65, '2018-07-10 15:04:22', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:34:22', '2018-07-10 18:34:57'),
-	(39, 2, 'text', 'Heyyyy', 66, 65, '2018-07-10 15:04:22', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:34:22', '2018-07-10 18:34:24'),
-	(40, 2, 'group', 'test', 64, 65, '2018-07-10 15:05:53', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:35:53', '2018-07-10 18:37:03'),
-	(41, 2, 'text', 'test', 66, 65, '2018-07-10 15:05:53', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:35:53', '2018-07-10 18:35:55'),
-	(42, 2, 'group', 'dsfsdfsd', 64, 65, '2018-07-10 15:06:15', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:36:15', '2018-07-10 18:37:03'),
-	(43, 2, 'text', 'dsfsdfsd', 66, 65, '2018-07-10 15:06:15', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:36:15', '2018-07-10 18:36:17'),
-	(44, 2, 'group', 'I am vijay', 64, 66, '2018-07-10 15:07:33', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:37:33', '2018-07-10 18:39:36'),
-	(45, 2, 'text', 'I am vijay', 65, 66, '2018-07-10 15:07:33', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:37:33', '2018-07-10 18:37:35'),
-	(46, 2, 'group', 'fdgfdgdfgdfg', 64, 65, '2018-07-10 15:08:09', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:38:09', '2018-07-10 18:39:30'),
-	(47, 2, 'text', 'fdgfdgdfgdfg', 66, 65, '2018-07-10 15:08:09', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 18:38:09', '2018-07-10 18:38:11'),
-	(48, 0, 'text', 'Boomi', 65, 64, '2018-07-10 19:16:26', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:46:26', '2018-07-10 22:46:32'),
-	(49, 0, 'text', 'This i  siva', 64, 65, '2018-07-10 19:16:39', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:46:39', '2018-07-10 22:46:40'),
-	(50, 2, 'text', 'Helo', 64, 65, '2018-07-10 19:16:51', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:46:51', '2018-07-10 22:49:55'),
-	(51, 2, 'text', 'Helo', 66, 65, '2018-07-10 19:16:52', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:46:52', '2018-07-10 22:46:54'),
-	(52, 0, 'text', 'test', 64, 65, '2018-07-10 19:20:06', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:50:06', '2018-07-10 22:52:32'),
-	(53, 2, 'text', 'di', 64, 65, '2018-07-10 19:20:13', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:50:13', '2018-07-10 22:52:32'),
-	(54, 2, 'text', 'di', 66, 65, '2018-07-10 19:20:13', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:50:13', '2018-07-10 22:50:13'),
-	(55, 2, 'text', 'hi', 64, 65, '2018-07-10 19:22:42', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:52:42', '2018-07-11 07:06:03'),
-	(56, 2, 'text', 'hi', 66, 65, '2018-07-10 19:22:42', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-10 22:52:42', '2018-07-10 22:52:45'),
-	(57, 2, 'text', 'hello', 64, 65, '2018-07-11 03:37:24', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 07:07:24', '2018-07-11 07:09:49'),
-	(58, 2, 'text', 'hello', 66, 65, '2018-07-11 03:37:24', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 07:07:24', '2018-07-11 07:07:30'),
-	(59, 2, 'text', 'hello', 64, 65, '2018-07-11 03:38:55', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 07:08:55', '2018-07-11 07:09:49'),
-	(60, 2, 'text', 'hello', 66, 65, '2018-07-11 03:38:55', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 07:08:55', '2018-07-11 08:29:08'),
-	(61, 2, 'text', 'hello', 64, 66, '2018-07-11 04:59:27', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 08:29:27', '2018-07-11 08:42:54'),
-	(62, 2, 'text', 'hello', 65, 66, '2018-07-11 04:59:28', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 08:29:28', '2018-07-11 08:37:15'),
-	(63, 2, 'group', 'hello', 66, 66, '2018-07-11 04:59:28', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-11 08:29:28', '2018-07-11 08:37:15'),
-	(64, 2, 'text', '5656', 64, 66, '2018-07-11 04:59:57', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 08:29:57', '2018-07-11 08:42:54'),
-	(65, 2, 'group', '5656', 65, 66, '2018-07-11 04:59:57', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-11 08:29:57', '2018-07-11 08:37:16'),
-	(66, 0, 'text', '5656', 66, 66, '2018-07-11 04:59:57', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 08:29:57', '2018-07-11 08:37:22'),
-	(67, 2, 'group', 'Hello', 64, 64, '2018-07-11 05:13:08', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-11 08:43:08', '2018-07-11 08:43:08'),
-	(68, 2, 'group', 'Hello', 65, 64, '2018-07-11 05:13:08', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-11 08:43:08', '2018-07-11 08:43:08'),
-	(69, 2, 'text', 'Hello', 66, 64, '2018-07-11 05:13:08', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-11 08:43:08', '2018-07-11 08:43:10');
+INSERT IGNORE INTO `chat_details` (`chat_id`, `group_id`, `message_type`, `message`, `receiver_id`, `sender_id`, `chatdate`, `file_path`, `file_name`, `read_status`, `time_zone`, `type`, `status`, `created_at`, `last_updated`) VALUES
+	(1, 1, 'text', 'file', 0, 64, '2018-07-14 07:18:59', 'uploads/64', 'Untitled17.png', 1, 'Asia/Kolkata', 'image', 1, '2018-07-14 10:48:59', '2018-07-14 10:49:02'),
+	(2, 1, 'group', 'hi', 0, 67, '2018-07-14 07:19:38', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-14 10:49:38', '2018-07-14 10:49:38'),
+	(3, 1, 'text', 'sdfds', 0, 67, '2018-07-14 07:19:40', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-14 10:49:40', '2018-07-14 10:49:42'),
+	(4, 0, 'text', 'test', 67, 64, '2018-07-14 07:20:01', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-14 10:50:01', '2018-07-14 10:50:02'),
+	(5, 0, 'text', 'test', 64, 67, '2018-07-14 07:20:20', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-14 10:50:20', '2018-07-14 10:50:21');
 /*!40000 ALTER TABLE `chat_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.chat_group_details
 CREATE TABLE IF NOT EXISTS `chat_group_details` (
   `group_id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL,
+  `channel` varchar(255) NOT NULL,
   `type` enum('text','audio','video') NOT NULL DEFAULT 'text',
   `status` int(11) NOT NULL DEFAULT '1',
   `created_by` int(11) NOT NULL DEFAULT '1',
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.chat_group_details: ~3 rows (approximately)
+-- Dumping data for table acses.chat_group_details: ~1 rows (approximately)
 /*!40000 ALTER TABLE `chat_group_details` DISABLE KEYS */;
-INSERT INTO `chat_group_details` (`group_id`, `group_name`, `type`, `status`, `created_by`, `created_at`, `last_updated`) VALUES
-	(1, 'test', 'text', 1, 1, '2018-07-10 12:11:40', '2018-07-10 12:11:40'),
-	(2, 'general', 'text', 1, 1, '2018-07-10 12:34:25', '2018-07-10 12:34:25'),
-	(3, 'testest', 'text', 1, 1, '2018-07-10 12:41:09', '2018-07-10 12:41:09');
+INSERT IGNORE INTO `chat_group_details` (`group_id`, `group_name`, `channel`, `type`, `status`, `created_by`, `created_at`, `last_updated`) VALUES
+	(1, 'test', 'c30c5110-0863-4d0c-8932-53ea569d43c5', 'text', 1, 1, '2018-07-14 10:38:36', '2018-07-14 10:38:36'),
+	(2, 'New Video', '41e5bf5a-83c3-4f95-9eab-e98b817b861b', 'video', 1, 1, '2018-07-14 10:52:49', '2018-07-14 10:52:49');
 /*!40000 ALTER TABLE `chat_group_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.chat_group_members
@@ -292,18 +140,16 @@ CREATE TABLE IF NOT EXISTS `chat_group_members` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`members_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.chat_group_members: ~7 rows (approximately)
+-- Dumping data for table acses.chat_group_members: ~2 rows (approximately)
 /*!40000 ALTER TABLE `chat_group_members` DISABLE KEYS */;
-INSERT INTO `chat_group_members` (`members_id`, `group_id`, `login_id`, `created_by`, `created_at`, `last_updated`) VALUES
-	(1, 1, 65, 1, '2018-07-10 12:11:40', '2018-07-10 12:11:40'),
-	(2, 1, 64, 1, '2018-07-10 12:11:40', '2018-07-10 12:11:40'),
-	(3, 2, 65, 1, '2018-07-10 12:34:25', '2018-07-10 12:34:25'),
-	(4, 2, 64, 1, '2018-07-10 12:34:25', '2018-07-10 12:34:25'),
-	(5, 3, 64, 1, '2018-07-10 12:41:09', '2018-07-10 12:41:09'),
-	(6, 3, 65, 1, '2018-07-10 12:41:09', '2018-07-10 12:41:09'),
-	(8, 2, 66, 1, '2018-07-10 12:34:25', '2018-07-10 12:34:25');
+INSERT IGNORE INTO `chat_group_members` (`members_id`, `group_id`, `login_id`, `created_by`, `created_at`, `last_updated`) VALUES
+	(1, 1, 64, 1, '2018-07-14 10:38:36', '2018-07-14 10:38:36'),
+	(2, 1, 67, 1, '2018-07-14 10:38:36', '2018-07-14 10:38:36'),
+	(3, 2, 65, 1, '2018-07-14 10:52:50', '2018-07-14 10:52:50'),
+	(4, 2, 66, 1, '2018-07-14 10:52:50', '2018-07-14 10:52:50'),
+	(5, 2, 64, 1, '2018-07-14 10:52:50', '2018-07-14 10:52:50');
 /*!40000 ALTER TABLE `chat_group_members` ENABLE KEYS */;
 
 -- Dumping structure for table acses.city_details
@@ -314,9 +160,9 @@ CREATE TABLE IF NOT EXISTS `city_details` (
   PRIMARY KEY (`city_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47577 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.city_details: ~47,115 rows (approximately)
+-- Dumping data for table acses.city_details: ~47,874 rows (approximately)
 /*!40000 ALTER TABLE `city_details` DISABLE KEYS */;
-INSERT INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
+INSERT IGNORE INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
 	(1, 'Bombuflat', 1),
 	(2, 'Garacharma', 1),
 	(3, 'Port Blair', 1),
@@ -33086,7 +32932,7 @@ INSERT INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
 	(32767, 'Castro Marim', 2899),
 	(32768, 'Estombar', 2899),
 	(32769, 'Faro', 2899);
-INSERT INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
+INSERT IGNORE INTO `city_details` (`city_id`, `city`, `state_id`) VALUES
 	(32770, 'Ferreiras', 2899),
 	(32771, 'Guia', 2899),
 	(32772, 'Lagoa', 2899),
@@ -47919,7 +47765,7 @@ CREATE TABLE IF NOT EXISTS `company_details` (
 
 -- Dumping data for table acses.company_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `company_details` DISABLE KEYS */;
-INSERT INTO `company_details` (`company_id`, `company_name`, `contact_person`, `address`, `country_id`, `state_id`, `city_id`, `postal_code`, `email`, `phone_number`, `mobile_number`, `fax`, `website_url`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `company_details` (`company_id`, `company_name`, `contact_person`, `address`, `country_id`, `state_id`, `city_id`, `postal_code`, `email`, `phone_number`, `mobile_number`, `fax`, `website_url`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'Dreamguys Technologies', 'Contact Person', 'Address', '101', '35', '3683', '123456', 'test@ttest.com', '8458545512', '8458545512', '345345', 'https://www.google.co.in', '2018-06-22 10:34:51', '2018-06-28 10:32:57', 1);
 /*!40000 ALTER TABLE `company_details` ENABLE KEYS */;
 
@@ -47934,7 +47780,7 @@ CREATE TABLE IF NOT EXISTS `country_details` (
 
 -- Dumping data for table acses.country_details: ~246 rows (approximately)
 /*!40000 ALTER TABLE `country_details` DISABLE KEYS */;
-INSERT INTO `country_details` (`country_id`, `sortname`, `country`, `tcode`) VALUES
+INSERT IGNORE INTO `country_details` (`country_id`, `sortname`, `country`, `tcode`) VALUES
 	(1, 'AF', 'Afghanistan', ''),
 	(2, 'AL', 'Albania', ''),
 	(3, 'DZ', 'Algeria', ''),
@@ -48195,7 +48041,7 @@ CREATE TABLE IF NOT EXISTS `department_details` (
 
 -- Dumping data for table acses.department_details: ~2 rows (approximately)
 /*!40000 ALTER TABLE `department_details` DISABLE KEYS */;
-INSERT INTO `department_details` (`department_id`, `department_name`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `department_details` (`department_id`, `department_name`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'Application Development', '2018-06-23 11:59:40', '2018-06-23 15:16:48', 1),
 	(2, 'Web Development', '2018-06-23 12:15:37', '2018-06-23 15:17:39', 1);
 /*!40000 ALTER TABLE `department_details` ENABLE KEYS */;
@@ -48213,7 +48059,7 @@ CREATE TABLE IF NOT EXISTS `designation_details` (
 
 -- Dumping data for table acses.designation_details: ~4 rows (approximately)
 /*!40000 ALTER TABLE `designation_details` DISABLE KEYS */;
-INSERT INTO `designation_details` (`designation_id`, `designation_name`, `department_id`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `designation_details` (`designation_id`, `designation_name`, `department_id`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'IOS', 1, '2018-06-25 10:15:43', '2018-06-25 11:56:19', 1),
 	(3, 'Angular', 2, '2018-06-25 10:24:07', '2018-06-25 11:56:20', 1),
 	(4, 'React js', 2, '2018-06-25 10:28:03', '2018-06-25 11:52:07', 1),
@@ -48235,7 +48081,7 @@ CREATE TABLE IF NOT EXISTS `invite_details` (
 
 -- Dumping data for table acses.invite_details: ~2 rows (approximately)
 /*!40000 ALTER TABLE `invite_details` DISABLE KEYS */;
-INSERT INTO `invite_details` (`invite_id`, `invite_from`, `invite_to`, `type`, `group_id`, `status`, `created_at`, `last_updated`) VALUES
+INSERT IGNORE INTO `invite_details` (`invite_id`, `invite_from`, `invite_to`, `type`, `group_id`, `status`, `created_at`, `last_updated`) VALUES
 	(1, 1, 2, 'text', 0, 1, '2018-07-07 12:08:03', '2018-07-07 12:08:03'),
 	(2, 6, 1, 'text', 0, 1, '2018-07-07 12:08:09', '2018-07-07 12:08:09');
 /*!40000 ALTER TABLE `invite_details` ENABLE KEYS */;
@@ -48254,7 +48100,7 @@ CREATE TABLE IF NOT EXISTS `label_details` (
 
 -- Dumping data for table acses.label_details: ~60 rows (approximately)
 /*!40000 ALTER TABLE `label_details` DISABLE KEYS */;
-INSERT INTO `label_details` (`label_id`, `label_key`, `label_value`, `lang_id`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `label_details` (`label_id`, `label_key`, `label_value`, `lang_id`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'management_login', 'Management Login', 1, '2018-06-21 15:02:59', '2018-06-21 15:33:03', 1),
 	(2, 'user_name_or_email', 'Username or Email', 1, '2018-06-21 15:36:38', '2018-06-21 15:36:42', 1),
 	(3, 'password', 'Password', 1, '2018-06-21 15:37:18', '2018-06-21 15:37:18', 1),
@@ -48329,7 +48175,7 @@ CREATE TABLE IF NOT EXISTS `lang_details` (
 
 -- Dumping data for table acses.lang_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `lang_details` DISABLE KEYS */;
-INSERT INTO `lang_details` (`lang_id`, `lang`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `lang_details` (`lang_id`, `lang`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'English', '2018-06-21 14:48:00', '2018-06-21 14:48:00', 1);
 /*!40000 ALTER TABLE `lang_details` ENABLE KEYS */;
 
@@ -48348,7 +48194,7 @@ CREATE TABLE IF NOT EXISTS `localization_details` (
 
 -- Dumping data for table acses.localization_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `localization_details` DISABLE KEYS */;
-INSERT INTO `localization_details` (`local_id`, `country_id`, `date_format`, `time_zone`, `default_language`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `localization_details` (`local_id`, `country_id`, `date_format`, `time_zone`, `default_language`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 101, 'd/m/Y', 'Asia/Kolkata', 'English', '2018-06-22 14:44:39', '2018-06-27 16:01:02', 1);
 /*!40000 ALTER TABLE `localization_details` ENABLE KEYS */;
 
@@ -48380,15 +48226,16 @@ CREATE TABLE IF NOT EXISTS `login_details` (
   `online_status` int(11) DEFAULT '0',
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`login_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses.login_details: ~4 rows (approximately)
+-- Dumping data for table acses.login_details: ~5 rows (approximately)
 /*!40000 ALTER TABLE `login_details` DISABLE KEYS */;
-INSERT INTO `login_details` (`login_id`, `sinch_username`, `user_name`, `first_name`, `last_name`, `employee_id`, `joining_date`, `profile_img`, `dob`, `gender`, `address`, `state`, `country`, `phone_number`, `company`, `department_id`, `designation_id`, `email`, `password`, `decrypted`, `date_created`, `last_updated`, `type`, `online_status`, `status`) VALUES
-	(1, '', 'admin', 'Admin', 'admin', '', '0000-00-00', '', '0000-00-00', 'male', '', '', '', '', '', 0, 0, 'admin@admin.com', '0192023a7bbd73250516f069df18b500', '', '2018-06-25 14:39:15', '2018-07-10 22:44:50', 'admin', 0, 1),
-	(64, 'boomitanah0', 'boomi', 'Boomi', 'nathan', '2', '2018-07-08', 'user-061.jpg', '0000-00-00', 'male', '', '', '', '3', 'Dreamguys Technologies', 2, 3, 'boominathan@dreamguys.co.in', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-08 11:12:14', '2018-07-10 18:01:54', 'user', 1, 1),
-	(65, 'sivaamni9', 'siva', 'siva', 'mani', 'test', '2018-08-08', 'user-031.jpg', '0000-00-00', 'male', '', '', '', '4', 'Dreamguys Technologies', 1, 5, 'siva@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-08 15:50:31', '2018-07-10 10:37:22', 'user', 1, 1),
-	(66, 'vijayivyaj10', 'vijay', 'vijay', 'vijay', '5', '2018-07-09', '', '0000-00-00', 'male', '', '', '', '1', 'Dreamguys Technologies', 1, 1, 'vijay@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-09 16:28:26', '2018-07-09 16:28:58', 'user', 1, 1);
+INSERT IGNORE INTO `login_details` (`login_id`, `sinch_username`, `user_name`, `first_name`, `last_name`, `employee_id`, `joining_date`, `profile_img`, `dob`, `gender`, `address`, `state`, `country`, `phone_number`, `company`, `department_id`, `designation_id`, `email`, `password`, `decrypted`, `date_created`, `last_updated`, `type`, `online_status`, `status`) VALUES
+	(1, '', 'admin', 'Admin', 'admin', '', '0000-00-00', '', '0000-00-00', 'male', '', '', '', '', '', 0, 0, 'admin@admin.com', '0192023a7bbd73250516f069df18b500', '', '2018-06-25 14:39:15', '2018-07-14 10:03:35', 'admin', 0, 1),
+	(64, 'boomitanah0', 'boomi', 'Boomi', 'nathan', '2', '2018-07-08', 'user-061.jpg', '0000-00-00', 'male', '', '', '', '3', 'Dreamguys Technologies', 2, 3, 'boominathan@dreamguys.co.in', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-08 11:12:14', '2018-07-14 10:35:08', 'user', 1, 1),
+	(65, 'sivaamni9', 'siva', 'siva', 'mani', 'test', '2018-08-08', 'user-031.jpg', '0000-00-00', 'male', '', '', '', '4', 'Dreamguys Technologies', 1, 5, 'siva@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-08 15:50:31', '2018-07-14 10:53:10', 'user', 1, 1),
+	(66, 'vijayivyaj10', 'vijay', 'vijay', 'vijay', '5', '2018-07-09', '', '0000-00-00', 'male', '', '', '', '1', 'Dreamguys Technologies', 1, 1, 'vijay@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-09 16:28:26', '2018-07-09 16:28:58', 'user', 1, 1),
+	(67, 'navaneetavnan4', 'navaneeth', 'Navaneeth', 'Navaneeth', '1', '2018-07-14', '', '0000-00-00', 'male', '', '', '', '123', 'Dreamguys Technologies', 2, 3, 'navaneeth@tet.com', '098f6bcd4621d373cade4e832627b4f6', 'test', '2018-07-14 10:01:35', '2018-07-14 10:53:05', 'user', 0, 1);
 /*!40000 ALTER TABLE `login_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses.state_details
@@ -48401,7 +48248,7 @@ CREATE TABLE IF NOT EXISTS `state_details` (
 
 -- Dumping data for table acses.state_details: ~4,119 rows (approximately)
 /*!40000 ALTER TABLE `state_details` DISABLE KEYS */;
-INSERT INTO `state_details` (`state_id`, `statename`, `country_id`) VALUES
+INSERT IGNORE INTO `state_details` (`state_id`, `statename`, `country_id`) VALUES
 	(1, 'Andaman and Nicobar Islands', 101),
 	(2, 'Andhra Pradesh', 101),
 	(3, 'Arunachal Pradesh', 101),
@@ -52538,7 +52385,7 @@ CREATE TABLE IF NOT EXISTS `theme_details` (
 
 -- Dumping data for table acses.theme_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `theme_details` DISABLE KEYS */;
-INSERT INTO `theme_details` (`theme_id`, `website_name`, `light_logo`, `dark_logo`, `favicon`, `date_created`, `last_updated`, `status`) VALUES
+INSERT IGNORE INTO `theme_details` (`theme_id`, `website_name`, `light_logo`, `dark_logo`, `favicon`, `date_created`, `last_updated`, `status`) VALUES
 	(1, 'Acses Technologies', 'logo.png', 'logo3.png', 'favicon.png', '2018-06-22 18:31:11', '2018-07-07 12:20:05', 1);
 /*!40000 ALTER TABLE `theme_details` ENABLE KEYS */;
 

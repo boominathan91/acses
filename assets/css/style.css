@@ -1166,7 +1166,7 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 .call-icons .call-items .call-item a i {width: 18px;height: 18px;}
 .user-video {bottom: 0;left: 0;overflow: auto;position: absolute;right: 0;top: 0;z-index:10;}
 .user-video img {width: auto;max-width: 100%;height: auto;max-height: 100%;display: block;margin: 0 auto;}
-.user-video video {width: auto;max-width: 100%;height: auto;max-height: 100%;display: block;margin: 0 auto;}
+.user-video video {width: 100%;max-width: 100%;height: auto;max-height: 100%;display: block;margin: 0 auto;}
 .my-video {position: absolute;z-index: 99;bottom: 20px;right: 20px;}
 .my-video ul {margin: 0;padding: 0;list-style: none;}
 .my-video ul li {float: left;width: 120px;margin-right: 10px;}

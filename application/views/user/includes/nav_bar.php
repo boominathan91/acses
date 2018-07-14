@@ -284,18 +284,30 @@ $website_name = $this->session->userdata('website_name');
 										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
 									</li>
 									<li class="menu-title" onclick="set_group_type(3)">Video Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
-									<li> 
-										<a href="chat.html">#General</a>
-									</li>
-									<li> 
-										<a href="chat.html">#Video Responsive Survey</a>
-									</li>
-									<li> 
-										<a href="chat.html">#500rs</a>
-									</li>
-									<li> 
-										<a href="chat.html">#warehouse</a>
-									</li>
+									<div id="session_group_video"></div>
+									<div id="other_video_group">
+									<?php if(!empty($video_group)){ 
+											foreach($video_group['groups'] as $t){
+
+
+												$login_id = $this->session->userdata('login_id');
+												$where = array(
+													'group_id' => $t['group_id']
+													,'receiver_id' =>$login_id,
+													'read_status' =>0
+												);
+												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = ($count!=0)?$count:'';
+												if(!empty($this->session->userdata('session_group_id'))){
+													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+												}else{
+													$class = '';	
+												}
+
+
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+											}
+										} ?>
 									<li class="menu-title">Direct Video Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
 
 										<!-- Session selected user  -->
@@ -327,6 +339,7 @@ $website_name = $this->session->userdata('website_name');
 										}
 										?>
 								</ul>
+							</div>
 
 							
 							</ul>

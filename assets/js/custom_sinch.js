@@ -484,36 +484,71 @@ var contains = function(needle) {
     t = setTimeout(add, 1000);
   }
 
-/* Clear button */
-var clear = function() {
-  h1.textContent = "00:00:00";
-  seconds = 0; minutes = 0; hours = 0;
-}
+  /* Clear button */
+  var clear = function() {
+    h1.textContent = "00:00:00";
+    seconds = 0; minutes = 0; hours = 0;
+  }
 
-/*** Define listener for managing calls ***/
+  /*** Define listener for managing calls ***/
 
-var callListeners = {
-  onCallProgressing: function(call) {
-    $('audio#ringback').prop("currentTime", 0);
-    $('audio#ringback').trigger("play");
+  var callListeners = {
+    onCallProgressing: function(call) {
+      $('audio#ringback').prop("currentTime", 0);
+      $('audio#ringback').trigger("play");
 
     //Report call stats
-    $('span.call-timing-count').html('<div id="stats">Ringing...</div>');
+    $('span.call-timing-count,.video_call_status').html('<div id="stats">Ringing...</div>');
   },
   onCallEstablished: function(call) {
-    console.log(call);
-    // $('audio#incoming').attr('src', call.incomingStreamURL);
+   // console.log(call); 
+   $('.video_call_status').html('');
 
-    $('.outgoing_image').hide();  
-    $('.incoming_image').hide();  
-    $('video#outgoing').attr('src', call.outgoingStreamURL);
-    $('video#incoming').attr('src', call.incomingStreamURL);
+//     $('.enable_video').click(function(){         
+//   if($(this).hasClass('active')){
+//     $(this).removeClass('active');                
+//      call.videoSupport= true; 
+//     $('.outgoing_image').hide();  
+//   }else{
+//     $(this).addClass('active');        
+//     call.videoSupport= false; 
+//    $('.outgoing_image').show();  
 
-    $('audio#ringback').trigger("pause");
-    $('audio#ringtone').trigger("pause");
-    $('#incoming_call').modal('hide');
-    $('.start-call').hide();
-    $('.hangup,#audio-footer').removeClass('hidden');  
+//   }
+// });
+$('.text_chat,.profile,.audio,.video').addClass('hidden');
+      var call_type = $('#call_type').val();
+
+
+        if(call_type == 'audio'){ 
+          $('.audio').removeClass('hidden');
+          $('#audio').addClass('active');           
+          $('#for_video').hide();
+          $('#for_audio').show();
+          $('audio#incoming_audio').attr('src', call.incomingStreamURL);        
+        } else if(call_type == 'video'){
+              $('.video').removeClass('hidden');
+              $('#video').addClass('active');
+              $('#for_audio').hide();
+              $('#for_video').show();
+              $('video#outgoing').attr('src', call.outgoingStreamURL);
+              $('video#incoming').attr('src', call.incomingStreamURL);
+              $('.outgoing_image').hide();  
+              $('.incoming_image').hide();            
+        }        
+        
+        $.post(base_url+'chat/set_nav_bar',{page:call_type},function(res){
+          //console.log(res);
+        }); 
+
+
+
+
+$('audio#ringback').trigger("pause");
+$('audio#ringtone').trigger("pause");
+$('#incoming_call').modal('hide');
+$('.start-call').hide();
+$('.hangup,#audio-footer,#video-footer').removeClass('hidden');  
     //Report call stats
     var callDetails = call.getDetails();
     timer();    
@@ -523,13 +558,20 @@ var callListeners = {
     clearTimeout(t);
     $('audio#ringback').trigger("pause");
     $('audio#ringtone').trigger("pause");
-    // $('audio#incoming').attr('src', '');  
 
-    $('video#outgoing').attr('src', '');
-    $('video#incoming').attr('src', '');
 
-    $('.outgoing_image').show();  
-    $('.incoming_image').show();  
+    var call_type = $('#call_type').val();
+    if(call_type == 'video'){
+      $('video#outgoing').attr('src', '');
+      $('video#incoming').attr('src', '');
+      $('.outgoing_image').hide();  
+      $('.incoming_image').hide();  
+    }else if(call_type == 'audio'){
+     $('audio#incoming_audio').attr('src','');    
+   }  
+   $('#for_audio,#for_video').show();
+   $('.outgoing_image').show();  
+   $('.incoming_image').show();  
 
     //Report call stats
     var callDetails = call.getDetails();    
@@ -541,13 +583,13 @@ var callListeners = {
     }else if(call.getEndCause == 'HUNG_UP'){
       $('span.call-timing-count').html('Call Ended.'); 
     }
-      $('.start-call').show();  
-      $('.hangup,#audio-footer').addClass('hidden');    
+    $('.start-call').show();  
+    $('.hangup,#audio-footer,#video-footer').addClass('hidden');    
     update_call_details();
     setTimeout(function() {        
       clear();
       $('#timer').html('');
-      }, 2000);
+    }, 2000);
     if(call.error) {
       $('span.call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
     }
@@ -565,7 +607,7 @@ var callClient = sinchClient.getCallClient();
 var call;
 callClient.addEventListener({
   onIncomingCall: function(incomingCall) {
-    console.log(incomingCall);
+    // console.log(incomingCall);
   //Play some groovy tunes 
   $('audio#ringtone').prop("currentTime", 0);
   $('audio#ringtone').trigger("play");
@@ -575,6 +617,7 @@ callClient.addEventListener({
   //Print statistics
   $('small text-muted').append('<div id="title">Incoming call from ' + incomingCall.fromId + '</div>');  
   $.post(base_url+'chat/get_caller_details',{sinch_username:incomingCall.fromId },function(res){
+
     var obj=jQuery.parseJSON(res);
     
     $('.caller_image').attr('src',obj.profile_img);
@@ -584,6 +627,7 @@ callClient.addEventListener({
     $('.caller_sinchusername').val(obj.sinch_username);      
     $('.caller_full_name').val(obj.name);      
     $('.caller_profile_img').val(obj.profile_img);      
+    $('#call_type').val(obj.type);      
   });
 
   
@@ -634,11 +678,14 @@ $('a#answer').click(function(event) {
 
 $('button.start-call').click(function(event) {
   event.preventDefault();    
-  $('span.call-timing-count').html('<div id="title">Calling...</div>');
-  //console.log('Placing call to: ' + $('input#receiver_sinchusername').val());
+  var type = $(this).attr('type');
+  $('#call_type').val(type);
+  $('span.call-timing-count,.video_call_status').html('<div id="title">Calling...</div>');
   call = callClient.callUser($('input#receiver_sinchusername').val());
   call.addEventListener(callListeners);  
   $('.start-call').hide();
+  $.post(base_url+'chat/insert_call_type',{type:type},function(res){    
+  });
 });
 
 /*** Hang up a call ***/

@@ -21,8 +21,7 @@ var getUuid = function() {
 	});
 };
 
-window.location.hash = window.location.hash || getUuid(); //random channel name
-channel = window.location.hash;
+var channel= getUuid();//random channel name
 
 $('#group_form').submit(function(){
 	var group_name = $('#group_name').val();

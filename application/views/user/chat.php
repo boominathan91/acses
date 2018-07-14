@@ -1,6 +1,5 @@
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
-
 	// error_reporting(0);
 	$name = '';
 	$class = 'hidden';
@@ -33,7 +32,7 @@
 
 	}else if(!empty($this->session->userdata('session_group_id'))){
 		
-		$name = ucfirst($chat[0]['group_name']);
+		$name = (!empty($chat[0]['group_name']))?ucfirst($chat[0]['group_name']):'';
 		$class = '';
 		$online_status = 'online';
 		$receiver_profile_img = base_url().'assets/img/user.jpg';
@@ -41,15 +40,27 @@
 			$receiver_id[]=$c['login_id'];
 			$sinch_username[]=$c['sinch_username'];
 		}
-		$receiver_id = implode(',',$receiver_id);
-		$receiver_sinchusername = implode(',',$sinch_username);
+		if(!empty($receiver_id)){
+			$receiver_id = implode(',',$receiver_id);	
+			$receiver_sinchusername = implode(',',$sinch_username);
+		}else{
+			$receiver_id = '';
+			$receiver_sinchusername ='';
+		}
+		
+	
 		$receiver_email = '';
 		$phone_number ='';		
 		$department_name = '';
 		$dob = '';
 		$mesage_type="group";
-		$group_id = $chat[0]['group_id'];
-		$task_class = 'hidden'; 
+		if(!empty( $chat[0]['group_id'])){
+			$group_id = $chat[0]['group_id'];
+			$task_class = 'hidden'; 
+		}else{
+			$group_id ='';
+			$task_class = 'hidden'; 
+		}
 
 	}
 
@@ -280,6 +291,8 @@
 
 		<!-- Audio Call Page Content starts -->	
 
+		<div id="for_audio">
+
 		<div class="page-wrapper audio <?php echo $audio_class; ?>">
 			<div class="chat-main-row <?php echo $class; ?>" id="audio_panel">
 				<div class="chat-main-wrapper">
@@ -310,8 +323,8 @@
 										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="call-avatar receiver_title_image">
 										<span class="username to_name"><?php echo $name; ?></span>
 										<span class="call-timing-count" id="timer"></span>
-										<button class="start-call">Call</button>
-										<audio id="incoming" autoplay></audio>
+										<button class="start-call" type="audio">Call</button>
+										<audio id="incoming_audio" autoplay></audio>
 										<audio id="ringback" src="<?php echo base_url().'assets/audio/ringback.wav'; ?>" loop></audio>
 										<audio id="ringtone" src="<?php echo base_url().'assets/audio/phone_ring.wav'; ?>" loop></audio>
 									</div>
@@ -617,19 +630,17 @@
                     	</div>
                     </div>
                 </div>
-            </div>
-       
-
-        
+            </div>       
+        </div>
         </div>
 
 
         <!-- Audio Call Page Content ends  -->
 
         <!-- Video Call Page Content Starts  -->
-
-         <div class="page-wrapper">
-            <div class="chat-main-row">
+	<div id="for_video">
+         <div class="page-wrapper video <?php echo $video_class; ?>">
+            <div class="chat-main-row <?php echo $class; ?>">
                 <div class="chat-main-wrapper">
                     <div class="col-xs-9 message-view task-view">
                         <div class="chat-window">
@@ -653,51 +664,54 @@
                             <div class="chat-contents">
                                 <div class="chat-content-wrap">
                                     <div class="user-video voice-call-avatar">
-                                        <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar outgoing_image">
-												<video id="outgoing" autoplay class="img-responsive" muted></video>			
+                                        <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar incoming_image receiver_title_image">
+                                        <button class="start-call" type="video">Call</button>
+                                        <div class="video_call_status"></div>
+										<video id="incoming" autoplay class="img-responsive" muted></video>			
+
                                     </div>
                                     <div class="my-video">
                                         <ul>
                                             <li>
-                                            	<video id="incoming" autoplay class="img-responsive"></video>
-                                                <img src="<?php echo $profile_img; ?>" class="img-responsive incoming_image" alt="">
+                                            	<video id="outgoing" autoplay class="img-responsive"></video>
+                                                <img src="<?php echo $profile_img; ?>" class="img-responsive outgoing_image" alt="">
                                             </li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            <div class="chat-footer" id="video_footer">
+                            <div class="chat-footer hidden" id="video-footer">
                                 <div class="call-icons">
                                     <span class="call-duration" id="video_timer"></span>
                                     <ul class="call-items">
-                                        <li class="call-item">
-                                            <a href="" title="Enable Video" data-placement="top" data-toggle="tooltip">
+                                        <li class="call-item enable_video">
+                                            <a href="javascript:void(0)" title="Enable Video" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-video-camera camera" aria-hidden="true"></i>
                                             </a>
                                         </li>
                                         <li class="call-item mute_icon">
-                                            <a href="" title="Mute Audio" data-placement="top" data-toggle="tooltip">
+                                            <a href="javascript:void(0)" title="Mute Audio" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-microphone microphone" aria-hidden="true"></i>
                                             </a>
                                         </li>
-                                        <li class="call-item">
-                                            <a href="" title="Add User" data-placement="top" data-toggle="tooltip">
+                                       <!--  <li class="call-item">
+                                            <a href="javascript:void(0)" title="Add User" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-user-plus" aria-hidden="true"></i>
                                             </a>
                                         </li>
                                         <li class="call-item">
-                                            <a href="" title="Full Screen" data-placement="top" data-toggle="tooltip">
+                                            <a href="javascript:void(0)" title="Full Screen" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-arrows-v full-screen" aria-hidden="true"></i>
                                             </a>
                                         </li>
 										<li class="call-item">
-                                            <a href="" title="Screen Share" data-placement="top" data-toggle="tooltip">
+                                            <a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-desktop full-screen" aria-hidden="true"></i>
                                             </a>
-                                        </li>
+                                        </li> -->
                                     </ul>
                                     <div class="end-call">
-                                        <a href="">
+                                        <a href="javascript:void(0)" class="hangup">
 												End Call
 											</a>
                                     </div>
@@ -720,6 +734,7 @@
                     </div>
                     </div>
                 </div>
+            </div>
             </div>
         <!-- Video Call Starts ends  -->
 
