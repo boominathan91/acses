@@ -8,6 +8,17 @@
 
 <script type="text/javascript">
 	var base_url = '<?php echo base_url(); ?>';	
+	var currentUserId = '<?php echo $this->session->userdata("login_id"); ?>';
+	var defaultImageBasePath = base_url + 'assets/img/';
+	var imageBasePath = base_url + '/uploads/';
+	var currentUserProfileImage = '<?php echo $this->session->userdata("profile_img"); ?>';
+
+	if(currentUserProfileImage != ''){
+		currentUserProfileImage = imageBasePath + currentUserProfileImage;
+	}
+	else{
+		currentUserProfileImage = defaultImageBasePath +'user.jpg';
+	}
 </script>
 <?php 
 $uri = $this->uri->segment(1);
@@ -19,6 +30,12 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 
 
 <?php } ?>	
+<?php if (strtolower($uri) == 'edit-profile') { ?>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/moment.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/edit-profile.js"></script>
+	<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/croppie.js"></script>
+<?php } ?>
 
 <?php if($uri == 'chat' ){ ?>
 
@@ -37,7 +54,7 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/group_chat.js"></script>
 <!-- Nav Bar chat  -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/nav_bar.js"></script>
-
+<script type="text/javascript" src="https://api.screenleap.com/js/screenleap.js"></script>
 
 <?php } ?>	
 

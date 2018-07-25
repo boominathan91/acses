@@ -1,3 +1,6 @@
+<!-- Loader -->
+<div class="loading style-2"><div class="loading-wheel"></div></div>
+
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
 	// error_reporting(0);
@@ -637,6 +640,343 @@
 
         <!-- Audio Call Page Content ends  -->
 
+<!-- Audio Call Page Content starts -->	
+
+		<div id="for_group_audio">
+
+		<div class="page-wrapper audio <?php echo $audio_class; ?>">
+			<div class="chat-main-row <?php echo $class; ?>" id="audio_panel">
+				<div class="chat-main-wrapper">
+					<div class="col-xs-9 message-view task-view">
+						<div class="chat-window">
+							<div class="chat-header">
+								<div class="navbar">
+									<div class="user-details">
+										<div class="pull-left user-img m-r-10">
+											<a href="#" title="<?php echo $name; ?>"><img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status online"></span></a>
+										</div>
+										<div class="user-info pull-left">
+											<a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_group_audio_name"><?php echo $name; ?></span></a>
+											<!-- <span class="last-seen">Online</span> -->
+											<span class="font-bold to_group_audio hidden"><?php echo $name; ?></span>
+										</div>
+									</div>
+									<ul class="nav navbar-nav pull-right chat-menu">
+										<li>
+											<a href="#chat_sidebar" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
+										</li>										
+									</ul>
+								</div>
+							</div>
+							<div class="chat-contents">
+								<div class="chat-content-wrap">
+									
+									<div class="voice-call-avatar">
+										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="call-avatar receiver_title_image">
+										<span class="username to_group_audio_name"><?php echo $name; ?></span>
+										<span class="group-audio-call-timing-count" id="timer"></span>
+										<button class="start-call" type="group_audio">Join</button>
+										<audio id="incoming_audio" autoplay></audio>
+										<audio id="ringback" src="<?php echo base_url().'assets/audio/ringback.wav'; ?>" loop></audio>
+										<audio id="ringtone" src="<?php echo base_url().'assets/audio/phone_ring.wav'; ?>" loop></audio>
+									</div>
+									
+										<input type="hidden"  id="call_to_id" value="<?php echo $receiver_id ?>" >	
+										<input type="hidden"  id="call_from_id" >	
+										<input type="hidden" id="call_type" value="audio">
+										<input type="hidden" id="call_duration" value="call_duration" >
+										<input type="hidden" id="call_started_at" value="call_started_at" >
+										<input type="hidden" id="call_ended_at" value="call_ended_at">
+										<input type="hidden" id="end_cause" value="end_cause" >								
+                                   
+                                   <div class="for-group-video my-audio">
+                                        <ul>
+                                            <div class="group_members">
+                                            	<li id="outgoing_audio_initial">
+                                            	</li>
+                                            </div>
+                                        </ul>
+                                    </div>
+
+
+                                </div>
+                            </div>
+                            <div class="chat-footer hidden" id="audio-footer">
+                            	<div class="call-icons">
+                            		<ul class="call-items">                                    
+                            			<li class="call-item mute_icon">
+                            				<a href="#" title="Mute" data-placement="top" data-toggle="tooltip">
+                            					<i class="fa fa-microphone microphone" aria-hidden="true"></i>
+                            				</a>
+                            			</li>
+                                      <!--   <li class="call-item">
+                                            <a href="#" title="Add User" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                            </a>
+                                        </li> -->
+                                    </ul>
+                                    <div class="end-call">
+                                    	<a href="javascript:void(0);" class="hangup hidden">End Call</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
+                    	<div class="chat-window video-window">
+                    		<div class="chat-header">
+                    			<ul class="nav nav-tabs nav-tabs-bottom">
+                    				<li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
+                    		<!-- 		<li><a href="#chats_tab" data-toggle="tab">Chats</a></li>
+                    				<li><a href="#profile_tab" data-toggle="tab">Profile</a></li> -->
+                    			</ul>
+                    		</div>
+                    		<div class="tab-content chat-contents">
+                    			<div class="content-full tab-pane active" id="calls_tab">
+                    				<div class="chat-wrap-inner">
+                    					<div class="chat-box">
+                    						<div  id="call_history">
+                    						<!-- Call History  -->
+                    						<?php
+
+                    						// echo '<pre>'; print_r($call_history);
+                    						 if(!empty($call_history)){
+                    						 	$login_id = $this->session->userdata('login_id');								
+
+                    						 	foreach($call_history as $c){
+                    						 		$end_cause = $c['end_cause'];
+                    						 		$caller_img = (!empty($c['profile_img']))?base_url().'uploads/'.$c['profile_img'] : base_url().'assets/img/user.jpg';
+                    						 		if($c['login_id'] != $login_id){
+                    						 			$caller_name = ucfirst($c['first_name']).' '.ucfirst($c['last_name']);	
+                    						 			$receiver_name = 'You';
+                    						 		}else{
+                    						 			$receiver_name =  ucfirst($c['first_name']).' '.ucfirst($c['last_name']);
+                    						 			$caller_name = 'You';                    						 		}
+                    						 			$call_duration = $c['call_duration'];                    						 			
+                    						 			if(date('Y-m-d') == date('Y-m-d',strtotime($c['call_ended_at']))){
+                    						 				$call_ended_at = date('H:i a',strtotime($c['call_ended_at']));
+                    						 			}else{
+                    						 				$call_ended_at = date('H:i a d-m-Y',strtotime($c['call_ended_at']));
+                    						 			}
+
+                    						 		if($end_cause == 'HUNG_UP'){ 
+                    						 		// Call from others and answered 
+
+                    						 			
+
+                    						 			echo '<div class="chat chat-left">
+                    								<div class="chat-avatar">
+                    									<a href="profile.html" class="avatar">
+                    										<img alt="'.$caller_name.'" src="'.$caller_img.'" class="img-responsive img-circle">
+                    									</a>
+                    								</div>
+                    								<div class="chat-body">
+                    									<div class="chat-bubble">
+                    										<div class="chat-content">
+                    											<span class="task-chat-user">'.$caller_name.'</span> <span class="chat-time">'.$call_ended_at .'</span>
+                    											<div class="call-details">
+                    												<i class="material-icons">call_end</i>
+                    												<div class="call-info">
+                    													<div class="call-user-details">
+                    														<span class="call-description">This call has ended</span>
+                    													</div>
+                    													<div class="call-timing">Duration: <strong>'.$call_duration.'</strong></div>
+                    												</div>
+                    											</div>
+                    										</div>
+                    									</div>
+                    								</div>
+                    							</div>';
+                    						 		}elseif($end_cause == 'DENIED'){                 						 		
+
+
+
+
+                    						 			echo '<div class="chat chat-left">
+                    								<div class="chat-avatar">
+                    									<a href="profile.html" class="avatar">
+                    										<img alt="'.$caller_name.'" src="'.$caller_img.'" class="img-responsive img-circle">
+                    									</a>
+                    								</div>
+                    								<div class="chat-body">
+                    									<div class="chat-bubble">
+                    										<div class="chat-content">
+                    											<span class="task-chat-user">'.$caller_name.'</span> <span class="chat-time">'.$call_ended_at .'</span>
+                    											<div class="call-details">
+                    												<i class="material-icons">phone_missed</i>
+                    												<div class="call-info">
+                    													<div class="call-user-details">
+                    														<span class="call-description">'.$receiver_name.' rejected call</span>
+                    													</div>
+                    													
+                    												</div>
+                    											</div>
+                    										</div>
+                    									</div>
+                    								</div>
+                    							</div>';
+                    						 		}else{
+
+                    						 			echo '<div class="chat chat-left">
+                    								<div class="chat-avatar">
+                    									<a href="profile.html" class="avatar">
+                    										<img alt="'.$caller_name.'" src="'.$caller_img.'" class="img-responsive img-circle">
+                    									</a>
+                    								</div>
+                    								<div class="chat-body">
+                    									<div class="chat-bubble">
+                    										<div class="chat-content">
+                    											<span class="task-chat-user">'.$caller_name.'</span> <span class="chat-time">'.$call_ended_at .'</span>
+                    											<div class="call-details">
+                    												<i class="material-icons">phone_missed</i>
+                    												<div class="call-info">
+                    													<div class="call-user-details">
+                    														<span class="call-description">'.$receiver_name.'missed the call</span>
+                    													</div>
+                    													
+                    												</div>
+                    											</div>
+                    										</div>
+                    									</div>
+                    								</div>
+                    							</div>';
+                    						 		}
+                    						 	}
+                    						 }
+                    						 ?>
+                    						</div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    			<div class="content-full tab-pane hidden"  id="chats_tab" >
+                    				<div class="chat-window">
+                    					<div class="chat-contents">
+                    						<div class="chat-content-wrap">
+                    							<div class="chat-wrap-inner">
+                    								<div class="chat-box">
+                    									<div class="chats">	
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    					<div class="chat-footer">
+                    						<div class="message-bar">
+                    							<div class="message-inner">
+                    								<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
+                    								<div class="message-area">
+                    									<div class="input-group">
+                    										<textarea class="form-control" placeholder="Type message..."></textarea>
+                    										<span class="input-group-btn">
+                    											<button class="btn btn-primary" type="button"><i class="fa fa-send"></i></button>
+                    										</span>
+                    									</div>
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    			<div class="content-full tab-pane" id="profile_tab">
+                    				<div class="display-table">
+                    					<div class="table-row">
+                    						<div class="table-body">
+                    							<div class="table-content">
+                    								<div class="chat-profile-img">
+                    									<div class="edit-profile-img">
+                    										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="receiver_title_image">
+                    										
+                    									</div>
+                    									<h3 class="user-name m-t-10 m-b-0"><?php echo $name; ?></h3>
+                    									<small class="text-muted"><?php echo $department_name; ?></small>
+                    									
+                    								</div>
+                    								<div class="chat-profile-info">
+                    									<ul class="user-det-list">													
+                    										<li>
+                    											<span>DOB:</span>
+                    											<span class="pull-right text-muted dob"><?php echo $dob; ?></span>
+                    										</li>
+                    										<li>
+                    											<span>Email:</span>
+                    											<span class="pull-right text-muted receiver_email"><?php echo $receiver_email; ?></span>
+                    										</li>
+                    										<li>
+                    											<span>Phone:</span>
+                    											<span class="pull-right text-muted phone_number"><?php echo $phone_number; ?></span>
+                    										</li>
+                    									</ul>
+                    								</div>
+                    							<!-- 	<div>
+                    									<ul class="nav nav-tabs nav-tabs-solid nav-justified m-b-0">
+                    										<li class="active"><a href="#all_files" data-toggle="tab">All Files</a></li>
+                    										<li><a href="#my_files" data-toggle="tab">My Files</a></li>
+                    									</ul>
+                    									<div class="tab-content">
+                    										<div class="tab-pane active" id="all_files">
+                    											<ul class="files-list">
+                    												<li>
+                    													<div class="files-cont">
+                    														<div class="file-type">
+                    															<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                    														</div>
+                    														<div class="files-info">
+                    															<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
+                    															<span class="file-author"><a href="#">Loren Gatlin</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+                    														</div>
+                    														<ul class="files-action">
+                    															<li class="dropdown">
+                    																<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
+                    																<ul class="dropdown-menu">
+                    																	<li><a href="javascript:void(0)">Download</a></li>
+                    																	<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
+                    																</ul>
+                    															</li>
+                    														</ul>
+                    													</div>
+                    												</li>
+                    											</ul>
+                    										</div>
+                    										<div class="tab-pane" id="my_files">
+                    											<ul class="files-list">
+                    												<li>
+                    													<div class="files-cont">
+                    														<div class="file-type">
+                    															<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                    														</div>
+                    														<div class="files-info">
+                    															<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
+                    															<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+                    														</div>
+                    														<ul class="files-action">
+                    															<li class="dropdown">
+                    																<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
+                    																<ul class="dropdown-menu">
+                    																	<li><a href="javascript:void(0)">Download</a></li>
+                    																	<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
+                    																</ul>
+                    															</li>
+                    														</ul>
+                    													</div>
+                    												</li>
+                    											</ul>
+                    										</div>
+                    									</div> -->
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+            </div>       
+        </div>
+        </div>
+
+
+        <!-- Audio Call Page Content ends  -->
         <!-- Video Call Page Content Starts  -->
 	<div id="for_video">
          <div class="page-wrapper video <?php echo $video_class; ?>">
@@ -667,7 +1007,9 @@
                                         <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar incoming_image receiver_title_image">
                                         <button class="start-call" type="video">Call</button>
                                         <div class="video_call_status"></div>
-										<video id="incoming" autoplay class="img-responsive" muted></video>			
+                                        <div>
+											<video id="incoming" autoplay class="img-responsive" muted></video>
+										</div>
 
                                     </div>
                                     <div class="my-video">
@@ -685,11 +1027,11 @@
                                 <div class="call-icons">
                                     <span class="call-duration" id="video_timer"></span>
                                     <ul class="call-items">
-                                        <li class="call-item enable_video">
+                                        <!-- <li class="call-item enable_video">
                                             <a href="javascript:void(0)" title="Enable Video" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-video-camera camera" aria-hidden="true"></i>
                                             </a>
-                                        </li>
+                                        </li> -->
                                         <li class="call-item mute_icon">
                                             <a href="javascript:void(0)" title="Mute Audio" data-placement="top" data-toggle="tooltip">
                                                 <i class="fa fa-microphone microphone" aria-hidden="true"></i>
@@ -731,6 +1073,141 @@
                                 <div class="content-full tab-pane active hidden" id="calls_tab">                                
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        <!-- Video Call Starts ends  -->
+
+
+        <!-- Video Call Page Content Starts  -->
+	<div id="for_group_video">
+         <div class="page-wrapper video <?php echo $video_class; ?>">
+            <div class="chat-main-row <?php echo $class; ?>">
+                <div class="chat-main-wrapper">
+                    <div class="col-xs-9 message-view task-view">
+                        <div class="chat-window">
+							<div class="chat-header">
+                                <div class="navbar">
+                                    <div class="user-details">
+                                        <div class="pull-left user-img m-r-10">
+                                            <a href="#" title="<?php echo $name; ?>"><img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status online"></span></a>
+                                        </div>
+                                        <div class="user-info pull-left">
+                                            <a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_group_video_name"><?php echo $name; ?></span></a>
+                                            <span class="font-bold to_group_video hidden"><?php echo $name; ?></span>
+                                        </div>
+                                    </div>
+                                    <ul class="nav navbar-nav pull-right chat-menu">
+                                        <li>
+											<a href="#chat_sidebar" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
+										</li>	
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="chat-contents">
+                                <div class="chat-content-wrap">
+                                	<div class="user-video voice-call-avatar">
+                                        <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar incoming_image receiver_title_image group_video_image">
+                                        <button class="start-call" type="group_video">Join</button>
+                                        <div class="group_video_call_status"></div>
+                                        <div id="incoming_group_video_div">
+											<!-- <video id='incoming_group_video' autoplay class='img-responsive' ></video> -->
+										</div>
+
+                                    </div>
+
+                                    <div class="my-video for-group-video">
+                                        <ul>
+                                            <li id="outgoing_video_initial">
+                                            	<!-- <video id="outgoing" autoplay class="img-responsive" muted></video> -->
+                                            </li>
+                                            <div class="group_members"></div>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div class="chat-footer hidden" id="group-video-footer">
+                                <div class="call-icons">
+                                    <ul class="call-items">
+                                        <!-- <li class="call-item enable_video">
+                                            <a href="javascript:void(0)" title="Enable Video" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-video-camera camera" aria-hidden="true"></i>
+                                            </a>
+                                        </li> -->
+                                        <li class="call-item mute_icon">
+                                            <a href="javascript:void(0)" title="Mute Audio" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-microphone microphone" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                    <div class="end-call">
+                                        <a href="javascript:void(0)" class="hangup">
+												End Call
+											</a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                    <div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
+                        <div class="chat-window video-window">
+                            <div class="chat-header">
+                                <ul class="nav nav-tabs nav-tabs-bottom">
+                                    <li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-content chat-contents">
+                                <div class="content-full tab-pane active hidden" id="calls_tab">                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        <!-- Video Call Starts ends  -->
+
+
+
+        <!-- Video Call Page Content Starts  -->
+	<div id="for_screen_share_group">
+         <div class="page-wrapper screen-share-window <?php echo $screen_share_class; ?>">
+            <div class="chat-main-row <?php echo $class; ?>">
+                <div class="chat-main-wrapper">
+                    <div class="col-xs-9 message-view task-view">
+                        <div class="chat-window">
+							
+
+                            <div class="chat-contents">
+                                <div class="chat-content-wrap">
+                                	<div class="user-video voice-call-avatar">
+                                        <button id="group_screen_btn" data-name="" data-id="" class="start-call" type="group_screen">Screen Share</button>
+                                    </div>
+                                </div>
+                                <a id="shareIframe" href="" target="_blank" style="display: none;">view</a>
+                            </div>
+
+
+
+
+                            
+
+
+
+
                         </div>
                     </div>
                     </div>

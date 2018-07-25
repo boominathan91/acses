@@ -1168,8 +1168,13 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 .user-video img {width: auto;max-width: 100%;height: auto;max-height: 100%;display: block;margin: 0 auto;}
 .user-video video {width: 100%;max-width: 100%;height: auto;max-height: 100%;display: block;margin: 0 auto;}
 .my-video {position: absolute;z-index: 99;bottom: 20px;right: 20px;}
+.for-group-video {
+    position: absolute;z-index: 99;bottom: 20px;right: 20px;overflow-x: auto;overflow-y: hidden;height: 120px;white-space: nowrap;left: 20px;
+}
 .my-video ul {margin: 0;padding: 0;list-style: none;}
 .my-video ul li {float: left;width: 120px;margin-right: 10px;}
+
+.for-group-video ul li {width: 120px;margin-right: 10px;display: inline-block;}
 .my-video ul li img {border:3px solid #fff;border-radius:6px;}
 .end-call {position: absolute;top: 7px;right: 0;}
 .end-call a {color: #fff;border-radius: 50px;display: inline-block;background-color: #f06060;padding: 8px 25px;text-transform: uppercase;}
@@ -1398,4 +1403,44 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 	.pull-left.ticket-view-details {width: 80%;}
 	.chat-menu.navbar-nav > li > a {margin-left: 10px;}
 	.contact-alphapets {top:113px;}
+}
+
+/* Loader */
+
+.loading {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.5);
+    z-index: 99999;
+}
+.loading-wheel {
+    width: 20px;
+    height: 20px;
+    margin-top: -40px;
+    margin-left: -40px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    
+    border-width: 30px;
+    border-radius: 50%;
+    -webkit-animation: spin 1s linear infinite;
+}
+.style-2 .loading-wheel {
+    border-style: double;
+    border-color: #ccc transparent;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0);
+    }
+    100% {
+        -webkit-transform: rotate(-360deg);
+    }
 }

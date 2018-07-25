@@ -211,6 +211,122 @@ class Settings extends CI_Controller {
 	}
 
 	/*Get last theme settings*/
+
+	/*Theme settings*/
+
+	public function edit_profile_setting()
+	{   
+		$user_id 	      = $this->session->userdata('login_id');
+		$data['title'] = 'Edit Profile';		
+		$data['profile_class'] = "hidden";
+		$data['text_chat_class'] = "hidden";
+		$data['audio_class'] = "hidden";
+		$data['video_class'] = "hidden";
+		if($this->input->post('first_name')){
+			$inputs = $this->input->post();
+			$record = $this->settings->update_profile($inputs);		
+			if($record){
+				$this->session->set_flashdata('message', 'The profile has been updated.');	
+				redirect(base_url().'profile');
+			}else{
+				$this->session->set_flashdata('message', 'The profile update something went wrong.');	
+			}
+			
+			
+		}
+		
+		$records =  $this->settings->profile_details($user_id);	
+		
+		$data['profile']  = $profile = $records['profile'];
+		$data['education_details'] = $records['education_details'];
+		$data['experience_informations'] = $records['experience_informations'];
+
+		$data['countries']  = $this->settings->countries();		
+		if(!empty($profile['country'])){
+			$country_id = $profile['country'];
+			$states  = $this->settings->get_states_by_id($country_id);
+			$data['states'] = $states;
+		}
+
+		if(!empty($profile['state'])){
+			$state_id = $profile['state'];
+			$cities =$this->settings->get_cities_by_id($state_id);     		
+			$data['cities'] = $cities;
+		}
+		render_page('edit_profile',$data);
+	}
+
+	public function profile_image(){
+
+if(isset($_POST["image"]))
+{
+	$data = $_POST["image"];
+ 
+
+	$image_array_1 = explode(";", $data);
+ 
+
+	$image_array_2 = explode(",", $image_array_1[1]); 
+
+	$data = base64_decode($image_array_2[1]);
+
+	$imageName = time() . '.png';
+	$savepath ='uploads/'.$imageName;
+
+
+	file_put_contents($savepath, $data);
+	
+	$array['img']= '<img src="'.base_url().$savepath.'" class="img-thumbnail" />';
+	$array['name']=$imageName;
+	echo json_encode($array);
+	exit;
+
+}
+
+	}
+
+	public function profile($value='')
+	{
+		$user_id 	      = $this->session->userdata('login_id');
+		$data['title'] 	  = 'Profile';		
+		$data['profile_class'] = "hidden";
+		$data['text_chat_class'] = "hidden";
+		$data['audio_class'] = "hidden";
+		$data['video_class'] = "hidden";
+		$records =  $this->settings->profile_details($user_id);	
+		$data['profile']  = $profile = $records['profile'];
+		$data['education_details'] = $records['education_details'];
+		$data['experience_informations'] = $records['experience_informations'];
+		render_page('profile',$data);
+	}
+
+	public function get_country_states($country_id='')
+	{
+		$result = $this->settings->get_states_by_id($country_id);
+		$data=array();
+		foreach($result as $r){
+			$data['value']=$r['state_id'];
+			$data['label']=$r['statename'];
+			$json[]=$data;
+		}
+		echo  json($json);	
+		die();
+	}
+	
+	public function get_state_cities($state_id){
+
+		$result=$this->settings->get_cities_by_id($state_id);     		
+		$data=array();
+		foreach($result as $r){
+			$data['value']=$r['city_id'];
+			$data['label']=$r['city'];
+			$json[]=$data;
+		}
+		echo  json($json);
+		die();
+	}
+
+	/*Get last theme settings*/
 	public function get_theme_settings_row(){		
 		return $this->settings->get_theme_settings_row();
 	}

@@ -8,6 +8,10 @@ if(!empty($light_logo)){
 }
 
 $website_name = $this->session->userdata('website_name');
+
+$session_data = $this->session->userdata();
+
+
 ?>
 
 
@@ -100,14 +104,24 @@ $website_name = $this->session->userdata('website_name');
 		<a href="javascript:;" id="open_msg_box" class="hasnotifications"><i class="fa fa-comment-o"></i> <span class="badge bg-purple pull-right">8</span></a>
 	</li>	
 	<li class="dropdown">
+		<?php 
+			$profile_img = $this->session->userdata('profile_img');
+			$profile_img = !empty($profile_img)?'uploads/'.$profile_img:'assets/img/user.jpg';
+		 ?>
 		<a href="#" class="dropdown-toggle user-link" data-toggle="dropdown" title="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
-			<span class="user-img"><img class="img-circle" src="<?php echo base_url(); ?>assets/img/user.jpg" width="40" alt="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
+			<span class="user-img"><img class="img-circle" src="<?php echo base_url().$profile_img; ?>" width="40" alt="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
 				<span class="status online"></span></span>
 				<span><?php echo ucfirst($this->session->userdata('first_name')); ?></span>
 				<i class="caret"></i>
 			</a>
-			<ul class="dropdown-menu">							
-				<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
+			<ul class="dropdown-menu">				
+				<?php if(strtolower($session_data['type']) == 'admin'){ ?>
+					<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
+				<?php }else{ ?>
+					<li><a href="<?php echo base_url(); ?>profile">Profile</a></li>
+					<li><a href="<?php echo base_url(); ?>edit-profile">Edit Profile</a></li>
+				<?php } ?>			
+				
 				<li><a href="<?php echo base_url(); ?>logout">Logout</a></li>
 			</ul>
 		</li>
@@ -117,7 +131,12 @@ $website_name = $this->session->userdata('website_name');
 		<ul class="dropdown-menu pull-right">
 						<!-- <li><a href="#">My Profile</a></li>
 							<li><a href="#">Edit Profile</a></li> -->
-							<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
+							<?php if(strtolower($session_data['type']) == 'admin'){ ?>
+								<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
+							<?php }else{ ?>
+								<li><a href="<?php echo base_url(); ?>profile">Profile</a></li>
+								<li><a href="<?php echo base_url(); ?>edit-profile">Edit Profile</a></li>
+							<?php } ?>			
 							<li><a href="<?php echo base_url(); ?>login">Logout</a></li>
 						</ul>
 					</div>
@@ -133,7 +152,8 @@ $website_name = $this->session->userdata('website_name');
 								<li id="profile"><a href="javascript:void(0)" page="profile">Profile</a></li>			
 								<li><a href="javascript:void(0)" page="text_chat" onclick="navigate(this)">Chat</a></li>
 								<li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li>
-								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>							
+								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>	
+								<li><a href="javascript:void(0)" page="screen_share" onclick="navigate(this)">Screen Share</a></li>							
 								</ul>
 
 								<ul>
@@ -170,12 +190,12 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type=""><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
 									</div>
 
-									<li class="menu-title">Direct Chats <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+									<li class="menu-title">Direct Chats <a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
 									<!-- Session selected user  -->
 									<div id="session_chat_user" class="session_chat_user"></div>	
 									<!-- Newly Messaged user  -->
@@ -199,7 +219,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)">
+												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)" type="text_chat">
 												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
 												</li>';
 											}
@@ -241,12 +261,12 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type=""><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_audio"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
 										</div>
 
-										<li class="menu-title">Direct Voice Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+										<li class="menu-title">Direct Voice Call <a href="javascript:void(0);" onclick="modal_open('audio')"><i class="fa fa-plus"></i></a></li>
 										<!-- Session selected user  -->
 										<div id="session_audio_user" class="session_chat_user"></div>	
 										<!-- Newly Messaged user  -->
@@ -269,7 +289,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_audio_user('.$u['login_id'].',this)">
+												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)" type="audio">
 												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
 												</li>';
 											}
@@ -308,7 +328,7 @@ $website_name = $this->session->userdata('website_name');
 												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_video"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
-									<li class="menu-title">Direct Video Call <a href="#" data-toggle="modal" data-target="#add_chat_user"><i class="fa fa-plus"></i></a></li>
+									<li class="menu-title">Direct Video Call <a href="javascript:void(0);" onclick="modal_open('video')"><i class="fa fa-plus"></i></a></li>
 
 										<!-- Session selected user  -->
 										<div id="session_video_user" class="session_chat_user"></div>	
@@ -331,7 +351,7 @@ $website_name = $this->session->userdata('website_name');
 												}
 
 
-												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)">
+												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)" type="video">
 												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
 												</li>';
 											}
@@ -339,6 +359,34 @@ $website_name = $this->session->userdata('website_name');
 										}
 										?>
 								</ul>
+
+
+								<div class="screen_share <?php echo $screen_share_class; ?>">
+									<ul>
+										<li> 
+											<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
+										</li>
+										<li class="menu-title" onclick="set_group_type(4)">Screen Share Groups <a href="#" data-toggle="modal" data-target="#screen_share"><i class="fa fa-plus"></i></a></li>
+									<div id="session_screen_shrare_group"></div>
+											<?php if(!empty($screen_share_group)){ 
+												$class = '';
+											foreach($screen_share_group as $t){
+												if( $this->login_id == $t['from_id'] ) {
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_share_group_user(this)" data-src="" data-id="'.$t['from_id'].'" data-name="'. $t['group_name'] .'" type="screen_share_group"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												}
+												else {
+
+												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_share_group_user(this)" data-src="'.$t['url'].'" data-id="'.$t['from_id'].'" data-name="'. $t['group_name'] .'" type="screen_share_group"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';													
+
+												}
+											}
+										} ?>
+										</div>
+										
+
+									
+									</ul>
+								</div>
 							</div>
 
 							

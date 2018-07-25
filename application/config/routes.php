@@ -61,6 +61,9 @@ $route['theme-settings'] = 'settings/theme_settings';
 $route['change-password'] = 'settings/change_password';
 $route['department-settings'] = 'settings/department';
 $route['designation-settings'] = 'settings/designation';
+$route['edit-profile'] = 'settings/edit_profile_setting';
+$route['profile'] = 'settings/profile';
+$route['profile_image'] = 'settings/profile_image';
 
 /*Login */
 $route['logout'] = 'login/logout';

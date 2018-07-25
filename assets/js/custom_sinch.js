@@ -2,7 +2,7 @@ var global_username = '';
 /*Intialize the sinch */
 var sinchClient = new SinchClient({
 	applicationKey: 'f06ae4f2-4980-40aa-89ca-9b98d80d70c4',
-	capabilities: {messaging: true,calling: true,video:true},
+	capabilities: {messaging: true,calling: true,video: true, multiCall: true},
 	supportActiveConnection: true,
   startActiveConnection: true,
   onLogMessage: function(message) {
@@ -51,11 +51,28 @@ var login = function(data){
 
 var sessionObj = JSON.parse(localStorage[sessionName] || '{}');
 if(sessionObj.userId) { 
+  $('.loading').show();
 	sinchClient.start(sessionObj)
 	.then(function() {
+    $('.loading').hide();
 		localStorage[sessionName] = JSON.stringify(sinchClient.getSession());
+
+    // var groupCall = callClient.callGroup("general");
+    // groupCall.addEventListener({
+    //     onGroupRemoteCallAdded: function(call) { // Called when a remote participant stream is ready
+    //         $("#incoming_group_video").append("<video autoplay class="+ call.toId +" class='img-responsive' src='" + call.incomingStreamURL + "'muted></video>");
+    //     },
+    //     onGroupLocalMediaAdded: function(stream) { // Called when the local media stream is ready (optional)
+    //         $('video#outgoing').attr('src', window.URL.createObjectURL(stream));
+    //     },
+    //     onGroupRemoteCallRemoved: function(call) { // Called when a remote participant has left and the stream needs to be removed from the HTML element
+    //       console.log('--------------------remove call--------------');
+    //         $('video#incoming').attr('src', (remoteCalls[index] || {}).incomingStreamURL || '');
+    //     },
+    // });
 	})
 	.fail(function() {
+    $('.loading').hide();
 
 	});
 }
@@ -480,10 +497,31 @@ var contains = function(needle) {
     timer();
   }
 
+  group_audio_members_status = setInterval(get_group_audio_member_status, 5000);
+
+  function get_group_audio_member_status() {
+    if( $("#for_group_audio").is(":visible") && $("#group_id").val() ) {
+          $.post(base_url+'chat/get_group_members_status',{ group_id : $("#group_id").val() },function(res) {
+              if(res) {
+                var obj=jQuery.parseJSON(res);
+
+                jQuery.each(obj, function(key, value) {
+                    if( value.is_active == "0") {
+                      $("#" + value.members_id).hide();
+                    }
+                    else {
+                      $("#" + value.members_id).show(); 
+                    }
+                });
+              }
+          });       
+    }
+  }
+
   function timer() {
     t = setTimeout(add, 1000);
   }
-
+  
   /* Clear button */
   var clear = function() {
     h1.textContent = "00:00:00";
@@ -494,14 +532,20 @@ var contains = function(needle) {
 
   var callListeners = {
     onCallProgressing: function(call) {
-      $('audio#ringback').prop("currentTime", 0);
-      $('audio#ringback').trigger("play");
+        var call_type = $('#call_type').val();
+      if(call_type == 'audio' || call_type == 'video'){
+      console.log('call progress'); 
+        $('audio#ringback').prop("currentTime", 0);
+        $('audio#ringback').trigger("play");
 
-    //Report call stats
-    $('span.call-timing-count,.video_call_status').html('<div id="stats">Ringing...</div>');
+      //Report call stats
+      $('span.call-timing-count,.video_call_status').html('<div id="stats">Ringing...</div>');
+    }
   },
   onCallEstablished: function(call) {
-   // console.log(call); 
+      var call_type = $('#call_type').val();
+    if(call_type == 'audio' || call_type == 'video'){
+      $('.loading').hide();
    $('.video_call_status').html('');
 
 //     $('.enable_video').click(function(){         
@@ -517,81 +561,85 @@ var contains = function(needle) {
 //   }
 // });
 $('.text_chat,.profile,.audio,.video').addClass('hidden');
-      var call_type = $('#call_type').val();
 
-
+  
         if(call_type == 'audio'){ 
-          $('.audio').removeClass('hidden');
-          $('#audio').addClass('active');           
-          $('#for_video').hide();
-          $('#for_audio').show();
-          $('audio#incoming_audio').attr('src', call.incomingStreamURL);        
-        } else if(call_type == 'video'){
-              $('.video').removeClass('hidden');
-              $('#video').addClass('active');
-              $('#for_audio').hide();
-              $('#for_video').show();
-              $('video#outgoing').attr('src', call.outgoingStreamURL);
-              $('video#incoming').attr('src', call.incomingStreamURL);
-              $('.outgoing_image').hide();  
-              $('.incoming_image').hide();            
-        }        
-        
-        $.post(base_url+'chat/set_nav_bar',{page:call_type},function(res){
-          //console.log(res);
-        }); 
+            $('.audio').removeClass('hidden');
+            $('#audio').addClass('active');           
+            $('#for_video').hide();  
+            $('#for_group_audio').hide();
+            $('#for_group_video').hide();
+            $('#for_audio').show();
+            $('audio#incoming_audio').attr('src', call.incomingStreamURL);        
+          } else if(call_type == 'video'){
+                $('.video').removeClass('hidden');
+                $('#video').addClass('active');
+                $('#for_audio').hide();
+                $('#for_video').show();
+                $('#for_group_video').hide();
+                $('#for_group_audio').hide();
+                $('video#outgoing').attr('src', call.outgoingStreamURL);
+                $('video#incoming').attr('src', call.incomingStreamURL);
+                $('.outgoing_image').hide();  
+                $('.incoming_image').hide();        
+                console.log(call);    
+          }         
+          
+          $.post(base_url+'chat/set_nav_bar',{page:call_type},function(res){
+            //console.log(res);
+          }); 
 
 
 
 
-$('audio#ringback').trigger("pause");
-$('audio#ringtone').trigger("pause");
-$('#incoming_call').modal('hide');
-$('.start-call').hide();
-$('.hangup,#audio-footer,#video-footer').removeClass('hidden');  
-    //Report call stats
-    var callDetails = call.getDetails();
-    timer();    
-    $('#call_started_at').val(callDetails.establishedTime);
+        $('audio#ringback').trigger("pause");
+        $('audio#ringtone').trigger("pause");
+        $('#incoming_call').modal('hide');
+        $('.start-call').hide();
+        $('.hangup,#audio-footer,#video-footer').removeClass('hidden');  
+      //Report call stats
+      var callDetails = call.getDetails();
+      timer();    
+      $('#call_started_at').val(callDetails.establishedTime);
+    }
   },
   onCallEnded: function(call) {
-    clearTimeout(t);
-    $('audio#ringback').trigger("pause");
-    $('audio#ringtone').trigger("pause");
-
-
     var call_type = $('#call_type').val();
-    if(call_type == 'video'){
-      $('video#outgoing').attr('src', '');
-      $('video#incoming').attr('src', '');
-      $('.outgoing_image').hide();  
-      $('.incoming_image').hide();  
-    }else if(call_type == 'audio'){
-     $('audio#incoming_audio').attr('src','');    
-   }  
-   $('#for_audio,#for_video').show();
-   $('.outgoing_image').show();  
-   $('.incoming_image').show();  
-
-    //Report call stats
-    var callDetails = call.getDetails();    
-    $('#call_ended_at').val(callDetails.endedTime);    
-    $('#end_cause').val(call.getEndCause());
-
-    if(call.getEndCause() == 'CANCELED'){
-      $('span.call-timing-count').html('Call Canceled.');    
-    }else if(call.getEndCause == 'HUNG_UP'){
-      $('span.call-timing-count').html('Call Ended.'); 
-    }
-    $('.start-call').show();  
-    $('.hangup,#audio-footer,#video-footer').addClass('hidden');    
-    update_call_details();
-    setTimeout(function() {        
-      clear();
-      $('#timer').html('');
-    }, 2000);
-    if(call.error) {
-      $('span.call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
+    if(call_type == 'audio' || call_type == 'video'){
+      clearTimeout(t);
+      $('audio#ringback').trigger("pause");
+      $('audio#ringtone').trigger("pause");
+      if(call_type == 'video'){
+        $('video#outgoing').attr('src', '');
+        $('video#incoming').attr('src', '');
+        $('.outgoing_image').hide();  
+        $('.incoming_image').hide();  
+        $('#for_video').show();
+      }else if(call_type == 'audio'){
+       $('audio#incoming_audio').attr('src','');    
+        $('#for_audio').show();
+     }  
+     $('.outgoing_image').show();  
+     $('.incoming_image').show();  
+      //Report call stats
+      var callDetails = call.getDetails();    
+      $('#call_ended_at').val(callDetails.endedTime);    
+      $('#end_cause').val(call.getEndCause());
+      if(call.getEndCause() == 'CANCELED'){
+        $('span.call-timing-count').html('Call Canceled.');    
+      }else if(call.getEndCause() == 'HUNG_UP'){
+        $('span.call-timing-count').html('Call Ended.'); 
+      }
+      $('.start-call').show();  
+      $('.hangup,#audio-footer,#video-footer').addClass('hidden');   
+      update_call_details();
+      setTimeout(function() {        
+        clear();
+        $('#timer').html('');
+      }, 2000);
+      if(call.error) {
+        $('span.call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
+      }
     }
   }
 }
@@ -605,20 +653,25 @@ var callClient = sinchClient.getCallClient();
 // }); 
 
 var call;
-callClient.addEventListener({
-  onIncomingCall: function(incomingCall) {
-    // console.log(incomingCall);
-  //Play some groovy tunes 
-  $('audio#ringtone').prop("currentTime", 0);
-  $('audio#ringtone').trigger("play");
 
-  $('#incoming_call').modal('show');
+var groupCall;
+callClient.addEventListener({
+
+      
+
+  onIncomingCall: function(incomingCall) {
+    console.log('-----------------------incomingCall----------------------------');
+  //Play some groovy tunes 
+
 
   //Print statistics
   $('small text-muted').append('<div id="title">Incoming call from ' + incomingCall.fromId + '</div>');  
   $.post(base_url+'chat/get_caller_details',{sinch_username:incomingCall.fromId },function(res){
 
     var obj=jQuery.parseJSON(res);
+    if(obj.type == 'audio' || obj.type == 'video'){
+  $('audio#ringtone').prop("currentTime", 0);
+  $('audio#ringtone').trigger("play");
     
     $('.caller_image').attr('src',obj.profile_img);
     $('.caller_name').text(obj.name);
@@ -627,42 +680,96 @@ callClient.addEventListener({
     $('.caller_sinchusername').val(obj.sinch_username);      
     $('.caller_full_name').val(obj.name);      
     $('.caller_profile_img').val(obj.profile_img);      
-    $('#call_type').val(obj.type);      
-  });
-
+    $('#call_type').val(obj.type);    
+      $('#incoming_call').modal('show');
   
 
   //Manage the call object
   call = incomingCall;
   call.addEventListener(callListeners);
+    }  
+  });
+
 
 }
+
+
 });
 
 $('.mute_icon').click(function(){
-  if(call){
-    if($(this).hasClass('active')){
-      $(this).removeClass('active');
-      call.unmute();
-    }else{
-      $(this).addClass('active');
-      call.mute();
-    }
 
+    event.preventDefault();
+  // console.info('Will request hangup..');
+  var communicating_obj;
+
+
+  var type = $('#call_type').val();
+  switch(type){
+    case 'video':      
+        if(call){
+          communicating_obj = call;
+          if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            communicating_obj.unmute();
+          }else{
+            $(this).addClass('active');
+            communicating_obj.mute();
+          }
+        }
+      break;
+    case 'audio':  
+        if(call){
+          communicating_obj = call;
+          if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            communicating_obj.unmute();
+          }else{
+            $(this).addClass('active');
+            communicating_obj.mute();
+          }
+        }
+      break;
+    case 'group_video':
+        if(group_video_members[callId]){
+          communicating_obj = group_video_members[callId];
+          if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            communicating_obj.unmute();
+          }else{
+            $(this).addClass('active');
+            communicating_obj.mute();
+          }
+        } 
+    break;
+    case 'group_audio':
+        if(group_audio_members[audioCallId]){
+          communicating_obj = group_audio_members[audioCallId];
+          if($(this).hasClass('active')){
+            $(this).removeClass('active');
+            communicating_obj.unmute();
+          }else{
+            $(this).addClass('active');
+            communicating_obj.mute();
+          }
+        } 
+    break;
   }
+
+  console.log(communicating_obj);
   
 });
 
 $('a#answer').click(function(event) {
   event.preventDefault();
   try {
+    $('.loading').show();
+    call.answer();
     var caller_login_id = $('.caller_login_id').val();
     var caller_sinchusername = $('.caller_sinchusername').val();
     var caller_full_name = $('.caller_full_name').val();
     var caller_profile_img = $('.caller_profile_img').val();
     $('.to_name').text(caller_full_name);
     $('.receiver_title_image').attr('src',caller_profile_img);
-    call.answer();
   }
   catch(error) {
     handleFail(error);
@@ -672,20 +779,241 @@ $('a#answer').click(function(event) {
 
 
 
+var group_video_members = {};
+var group_audio_members = {};
+var callId;
+var audioCallId;
+var group_audio_count;
+var my_stream_url;
 
 
 /*** Make a new data call ***/
 
 $('button.start-call').click(function(event) {
+  $('.loading').show();
   event.preventDefault();    
   var type = $(this).attr('type');
   $('#call_type').val(type);
-  $('span.call-timing-count,.video_call_status').html('<div id="title">Calling...</div>');
-  call = callClient.callUser($('input#receiver_sinchusername').val());
-  call.addEventListener(callListeners);  
-  $('.start-call').hide();
-  $.post(base_url+'chat/insert_call_type',{type:type},function(res){    
+  var call_status = 'calling..';
+  group_audio_count = 0;
+  switch(type){
+    case 'video':
+      call = callClient.callUser($('input#receiver_sinchusername').val()); 
+      $('.start-call').hide();
+      call.addEventListener(callListeners);  
+      break;
+    case 'audio':
+      call = callClient.callUser($('input#receiver_sinchusername').val());
+      $('.start-call').hide();
+      call.addEventListener(callListeners);  
+      break;
+    case 'group_audio':
+
+      call = callClient.callConference($('.to_group_audio').text());
+      $('.start-call').hide();
+      call.addEventListener({
+          onCallProgressing: function(call) {
+            console.log('call progress'); 
+            $('audio#ringback').prop("currentTime", 0);
+            $('audio#ringback').trigger("play");
+
+            //Report call stats
+            $('span.group-audio-call-timing-count').html('<div id="stats">Ringing...</div>');
+          },
+         onCallEstablished: function(call) {
+            $.post(base_url+'chat/update_group_member',
+            {
+              group_id : $("#group_id").val(),
+              is_active : 1
+            },function(res){
+                 $('.loading').hide();
+                 $('audio#ringback').trigger("pause");
+
+                //Report call stats
+                $('span.group-audio-call-timing-count').html('<div id="stats">You have joined in a call</div>');
+                $('audio#incoming_audio').attr('src', call.incomingStreamURL); //If audio element has attribute "autoplay"        
+                $('.hangup,#audio-footer').removeClass('hidden');  
+                // $(".my-audio ul").html("<li memberId='" + call.callId + "'><img src='"+base_url+"assets/img/user.jpg' alt='" + call.callId + "' title='" + call.callId + "' class='img-responsive outgoing_image'></li>");
+                group_audio_members[call.callId] = call;
+
+                audioCallId = call.callId;
+            });
+        },
+        onCallEnded: function(call) {
+          var call_type = $('#call_type').val();
+
+          if(call_type == 'audio' || call_type == 'video'){
+            clearTimeout(t);
+            $('#for_group_audio audio#ringback').trigger("pause");
+            $('#for_group_audio audio#ringtone').trigger("pause");
+           
+           $('#for_group_audio audio#incoming_audio').attr('src','');   
+           $('#for_group_audio').show();
+           $('#for_group_audio .outgoing_image').show();  
+           $('#for_group_audio .incoming_image').show();  
+
+            //Report call stats
+            var callDetails = call.getDetails();    
+            $('#for_group_audio #call_ended_at').val(callDetails.endedTime);    
+            $('#for_group_audio #end_cause').val(call.getEndCause());
+
+            if(call.getEndCause() == 'CANCELED'){
+              $('span.group-audio-call-timing-count').html('Call Canceled.');    
+            }else if(call.getEndCause == 'HUNG_UP'){
+              $('span.group-audio-call-timing-count').html('Call Ended.'); 
+            }
+            $('span.group-audio-call-timing-count').html('');
+            $('.start-call').show();  
+            $('.hangup,#audio-footer').addClass('hidden');    
+            update_call_details();
+            setTimeout(function() {        
+              clear();
+              $('#timer').html('');
+            }, 2000);
+            if(call.error) {
+              $('span.group-audio-call-timing-count').append('<div id="stats">Failure message: '+call.error.message+'</div>');
+            }
+          }
+        }
   });
+      break;
+    case 'group_video':
+      call_status = 'Joining in a group..';
+      groupName = $('.to_group_video').text();
+      groupName = groupName.replace(" ","_");
+      groupCall = callClient.callGroup( groupName );
+
+      // console.log(groupCall);
+      groupCall.addEventListener({
+      onGroupLocalMediaAdded: function(stream) { // Called when the local media stream is ready (optional)
+        console.log('------------------My stream----------------------'); 
+        $("#outgoing_video_initial").html("<video autoplay id='outgoing' class='img-responsive' src='" + window.URL.createObjectURL(stream) + "' muted></video>");    
+        console.log(stream);
+        $('.hangup,#group-video-footer').removeClass('hidden');  
+        call_status = 'Joined in a group';
+        $('.group_video_call_status').html('<div id="title">' + call_status + '</div>');
+        my_stream_url = $('#for_group_video video#outgoing').attr('src');
+
+        $('.loading').hide();
+      },
+    onGroupRemoteCallAdded: function(call) { // Called when a remote participant stream is ready
+        console.log('------------------remote stream----------------------');
+      callId = call.callId;
+      group_video_members[call.callId] = call;
+      // console.log(group_video_members);
+        // $('#incoming_call').modal('show');
+        //$('video#incoming').attr('src', call.incomingStreamURL);   
+        call_status = call.toId + ' joined in a group';     
+        if(call.toId === global_username){          
+        call_status = 'You have joined in a group';
+        }        
+        $('#for_group_video .group_video_call_status').html('<div id="title">' + call_status + '</div>');
+        var is_mute = "";
+        if(my_stream_url === call.incomingStreamURL){
+          is_mute = "muted";
+        }
+        else{
+          is_mute = "";
+        }
+        $("#for_group_video .my-video ul").append("<li memberId='" + call.callId + "'><video id='incoming" + call.callId + "' autoplay class='img-responsive' title='" + call.callId + "' src='" + call.incomingStreamURL + "' " + is_mute +"></video></li>");
+        // $("#incoming_group_video").append("<video autoplay class="+ call.callId +" class='img-responsive' src='" + call.incomingStreamURL + "'muted></video>");
+        // $("#incoming_group_video ." + call.callId).hide();
+
+        $("#for_group_video .my-video ul li").click(function(){
+            $('#for_group_video span.call-timing-count,.group_video_call_status').html('');
+            $("#for_group_video .group_video_image").addClass("hidden");  
+            var active_video = $(".my-video ul li.active");
+            if(active_video.length){
+              var current_src = $('#for_group_video #incoming_group_video').attr("src");
+
+              if(my_stream_url === current_src){
+                is_mute = "muted";
+              }
+              else{
+                is_mute = "";
+              }
+              $("#for_group_video .my-video ul li.active").html("<video autoplay class='img-responsive' src='" + current_src + "' " + is_mute +"></video>").removeClass("active");
+              $(this).addClass("active");
+
+              var clicked_src = $('#for_group_video .my-video ul li.active video').attr("src");
+
+
+              if(my_stream_url === clicked_src){
+                is_mute = "muted";
+              }
+              else{
+                is_mute = "";
+              }
+              // $('#incoming_group_video').attr('src', clicked_src);
+              $('#for_group_video #incoming_group_video_div').html("<video id='incoming_group_video' autoplay class='img-responsive' src='" + clicked_src + "' " + is_mute +">");
+              $(this).html("<img src='"+base_url+"assets/img/user.jpg' class='img-responsive'>");
+            }
+            else{
+              $(this).addClass("active");
+              var final_src = $('#for_group_video .my-video ul li.active video').attr("src");
+              if(my_stream_url === final_src){
+                is_mute = "muted";
+              }
+              else{
+                is_mute = "";
+              }
+              // $('#incoming_group_video').attr("src", $('.my-video ul li.active video').attr("src"));
+              $('#for_group_video #incoming_group_video_div').html("<video id='incoming_group_video' autoplay class='img-responsive' src='" + final_src + "' " + is_mute +">");
+              $(this).html("<img src='"+base_url+"assets/img/user.jpg' class='img-responsive'>");
+            }
+            
+        });
+
+        call.addEventListener({
+            onGroupRemoteCallRemoved: function(call) { // Called when a remote participant has left and the stream needs to be removed from the HTML element
+              $('video#other').attr('src', (remoteCalls[index] || {}).incomingStreamURL || '');
+              console.log('---------------------Remove Call------------------------');
+              console.log(call);
+            },
+            onCallEnded: function(call) {
+              console.log('---------------------Call Hangup-----------------');
+              console.log(call);
+              delete group_video_members[call.callId];
+                $("#for_group_video .my-video ul li[memberId='" + call.callId + "']").remove();
+
+              /* For displaying self video if ended call id is active */
+              if( $("#for_group_video .my-video ul li.active").attr("memberId") == call.callId ) {
+                $("#for_group_video .my-video ul li#outgoing_video_initial").click();
+              }
+
+
+               /* If no one is active in room */
+               /*if( $("#for_group_video .my-video ul li").length == 1 ) {
+                 $('#for_group_video #incoming_group_video_div').hide();  
+                 $('#for_group_video #outgoing_video_initial').hide();  
+                 $('#for_group_video #group-video-footer').hide();
+                 $('#for_group_video .start-call').show();  
+                 $('#for_group_video .group_video_image').removeClass('hidden');
+               }*/
+
+               // window.location = <?php echo $base_url()."chat"; ?>
+               // $('video#outgoing').attr('src', '');
+               // $('video#incoming').attr('src', '');
+               // $('.hangup,#audio-footer,#video-footer').addClass('hidden');   
+               // $('span.call-timing-count,.video_call_status').html('');
+            }
+        });
+
+
+
+      }
+});
+
+      break;
+
+  }
+    $('.start-call').hide();
+      $.post(base_url+'chat/insert_call_type',{type:type},function(res){    
+      });  
+  // call = callClient.callUser($('input#receiver_sinchusername').val());
+
+      // call.addEventListener(callListeners);  
+  
 });
 
 /*** Hang up a call ***/
@@ -693,7 +1021,57 @@ $('button.start-call').click(function(event) {
 $('a#hangup,.hangup').click(function(event) {
   event.preventDefault();
   // console.info('Will request hangup..');
-  call && call.hangup();  
+  $('.loading').show();
+  var communicating_obj;
+
+
+  var type = $('#call_type').val();
+  var call_status = 'calling..';
+  switch(type){
+    case 'video':      
+      communicating_obj = call;
+      communicating_obj && communicating_obj.hangup(); 
+      $('#for_video').show();
+      $('#for_audio').hide();
+      $('#for_group_audio').hide();
+      $('#for_group_video').hide();
+      location.reload();   
+      break;
+    case 'audio':
+      communicating_obj = call;
+      communicating_obj && communicating_obj.hangup();  
+      $('#for_video').hide();
+      $('#for_audio').show();
+      $('#for_group_audio').hide();
+      $('#for_group_video').hide();
+      location.reload();  
+      break;
+    case 'group_video':
+          group_video_members[callId] && group_video_members[callId].hangup();
+          $('#for_video').hide();
+          $('#for_audio').hide();
+          $('#for_group_audio').hide();
+          $('#for_group_video').show();
+          location.reload();
+    break;
+    case 'group_audio':
+            group_audio_members[audioCallId] && group_audio_members[audioCallId].hangup();  
+            $.post(base_url+'chat/update_group_member',
+            {
+              group_id : $("#group_id").val(),
+              is_active : 0
+            },function(res){
+                $('#for_video').hide();
+                $('#for_audio').hide();
+                $('#for_group_audio').show();
+                $('#for_group_video').hide();
+                location.reload();
+            });  
+    break;
+  }
+
+
+
 });
 
 

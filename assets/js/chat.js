@@ -8,7 +8,7 @@ function search_user(){
 			$(obj).each(function(){
 
 				data +='<li class="media">'+
-				'<a href="#" class="media-link" onclick="set_chat_user('+this.login_id+')">'+
+				'<a href="#" class="media-link" onclick="set_chat_user('+this.login_id+', this)">'+
 				'<div class="media-left"><span class="avatar">'+this.first_letter+'</span></div>'+
 				'<div class="media-body media-middle text-nowrap">'+
 				'<div class="user-name">'+this.first_name+' '+this.last_name+'</div>'+
@@ -28,7 +28,19 @@ function search_user(){
 	});
 }
 
+$(document).ready(function(){
 
+	$("#for_audio").hide();
+	$("#for_group_audio").hide();
+	$("#for_video").hide();
+	$("#for_group_video").hide();
+	$("#for_screen_share_group").hide();
+	/* To make active group enable */
+	$("#other_video_group li.active").click();
+	$("#other_audio_group li.active").click();
+	$("#session_video_user li.active").click();
+	$("#session_audio_user li.active").click();
+});
 
 /*Set Current Active User in Chat */
 function set_nav_bar_audio_user(login_id,element){
@@ -38,6 +50,8 @@ function set_nav_bar_audio_user(login_id,element){
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
 	$('#'+id).closest('bg-danger').empty();
+	var type = $(element).attr('type');	
+
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
 		
@@ -60,7 +74,8 @@ function set_nav_bar_audio_user(login_id,element){
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
 		$('#audio_panel,.audio').removeClass('hidden');
-		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		var type_name = type.replace('_', ' ');
+		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' Call )');
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
 		$('#receiver_image').val(receiver_image);
@@ -136,6 +151,8 @@ function set_nav_bar_chat_user(login_id,element){
 	var id = $(element).attr('id');
 	$('#'+id).closest('bg-danger').empty();
 	$('.chats').html('');
+	var type = $(element).attr('type');	
+
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
 		
@@ -157,8 +174,36 @@ function set_nav_bar_chat_user(login_id,element){
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
-		$('.chat-main-row,#task_window').removeClass('hidden');
-		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		var session_type = $(element).parent().attr('id');
+		if(session_type == 'session_chat_user'){
+			$('.chat-main-row,#task_window').removeClass('hidden');
+			$("#for_screen_share_group").hide();
+		}
+		else if(session_type == 'session_audio_user'){			
+			$('#for_audio').show();			
+			$('#for_group_audio').hide();
+			$("#for_video").hide();
+			$("#for_group_video").hide();
+			$("#for_screen_share_group").hide();
+			$('button.start-call').attr('type', 'audio');
+			$("#for_screen_share_group").hide();
+		}
+		else if(session_type == 'session_video_user'){			
+			$('#for_audio').show();			
+			$('#for_group_audio').hide();		
+			$('#for_video').show();			
+			$('#for_group_video').hide();
+			$("#for_screen_share_group").hide();
+			$('button.start-call').attr('type', 'video');
+			$("#for_screen_share_group").hide();
+		}
+		var group_type_name = type.replace(/_/g, ' ');
+		var extra_add = 'Call';
+		if(type == 'text_chat'){
+		extra_add = '';
+		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		}
+		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
 		$('#receiver_image').val(receiver_image);
@@ -196,8 +241,8 @@ function set_nav_bar_chat_user(login_id,element){
 
 
 /*Set Current Active User in Chat */
-function set_chat_user(login_id){
-
+function set_chat_user(login_id, element){
+	var chat_user_type = $(element).parent().parent().parent().attr('data-type');
 	$('li').removeClass('active');
 	$('.chats').html('');
 
@@ -214,16 +259,41 @@ function set_chat_user(login_id){
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
 		$('#'+obj.sinch_username).remove();
-		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)">'+
+		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)" type=' + chat_user_type +'>'+
 		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
 		'</li>';
-		
-		$('.session_chat_user').prepend(data);
+		var group_type_name = chat_user_type.replace(/_/g, ' ');
+		var extra_add = 'Call';
+		if(chat_user_type == 'text_chat'){
+			$('#session_chat_user').prepend(data);
+			$('.chat-main-row,#task_window').removeClass('hidden');
+			extra_add = '';
+		}
+		else if(chat_user_type == 'audio'){
+			$('#session_audio_user').prepend(data);
+
+			$("#for_audio").show();
+			$("#for_group_audio").hide();
+			$("#for_video").hide();
+			$("#for_group_video").hide();
+			$("#for_screen_share_group").hide();
+			$('button.start-call').attr('type', 'audio');
+		}
+		else if(chat_user_type == 'video'){
+			$('#session_video_user').prepend(data);
+
+			$("#for_audio").hide();
+			$("#for_group_audio").hide();
+			$("#for_video").show();
+			$("#for_group_video").hide();
+			$("#for_screen_share_group").hide();
+			$('button.start-call').attr('type', 'video');
+		}
+		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
-		$('#search_user').val('');
-		$('.chat-main-row,#task_window').removeClass('hidden');
-		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		$('#search_user').val('');		
 		$('.department').text(obj.department_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
@@ -447,4 +517,8 @@ function clock() {
 }
 clock();
 
+function modal_open(modal_type){
+   $('#user_list').attr('data-type', modal_type);
+   $('#add_chat_user').modal('show');
+}
 

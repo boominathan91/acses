@@ -20,6 +20,9 @@ class Chat extends CI_Controller {
 		$data['text_chat_class'] = "hidden";
 		$data['audio_class'] = "hidden";
 		$data['video_class'] = "hidden";
+		$data['group_video_class'] = "hidden";
+		$data['group_audio_class'] = "hidden";
+		$data['screen_share_class'] = "hidden";
 		if(!empty($page)){							 	
 			switch($page){
 				case 'profile':
@@ -34,6 +37,9 @@ class Chat extends CI_Controller {
 				case 'video':
 				$data['video_class'] = '';
 				break;
+				case 'screen_share':
+				$data['screen_share_class'] = '';
+				break;
 				default:
 				$data['profile_class'] = '';
 				break;
@@ -45,6 +51,7 @@ class Chat extends CI_Controller {
 		$data['text_group'] = $this->chat->get_group_details('text');
 		$data['audio_group'] = $this->chat->get_group_details('audio');
 		$data['video_group'] = $this->chat->get_group_details('video');
+		$data['screen_share_group'] = $this->chat->get_screen_share_group_details();
 		$data['call_history'] = $this->chat->get_call_history();
 		$data['page'] = $this->chat->get_page_no();
 		$data['chat'] = $this->chat->get_chat_data();
@@ -62,6 +69,17 @@ class Chat extends CI_Controller {
 					);
 		echo $this->db->insert('call_type',$data);
 	}
+
+	public function update_group_member() {
+		$result = $this->db->update('chat_group_members', array('is_active'=>$_POST['is_active']),array('group_id'=>$_POST["group_id"],'login_id'=>$this->login_id));
+		echo json_encode($result);
+	}
+
+	public function get_group_members_status() {
+		$result = $this->db->get_where('chat_group_members', array('group_id'=>$_POST["group_id"]))->result_array();
+		echo json_encode($result);
+	}
+
 	public function update_call_details(){
 	
 		if($_POST['call_to_id'] == $this->login_id){
@@ -87,6 +105,19 @@ class Chat extends CI_Controller {
 			$this->session->set_userdata($page);
 		}
 		echo json_encode($page);
+	}
+	public function get_group_member_details(){
+		$where = array('sinch_username' => $_POST['sinch_username']);
+		$data = $this->db
+		->select('l.first_name,l.last_name,l.login_id as call_from_id,l.sinch_username,l.profile_img,c.type')
+		->join('call_type c','l.login_id = c.login_id')
+		->order_by('c.date_created','desc')
+		->get_where('login_details l',$where)
+		->row_array();
+		$data['name'] = ucfirst($data['first_name']).' '.ucfirst($data['last_name']);
+		$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
+		$data['call_to_id'] = $this->login_id;
+		echo json_encode($data);
 	}
 	public function get_caller_details(){
 		$where = array('sinch_username' => $_POST['sinch_username']);
@@ -254,6 +285,61 @@ class Chat extends CI_Controller {
 
 	}
 
+	public function create_share(){
+		$data = array('group_name' => $_POST['group_name'], 'from_id' => $this->login_id);
+		$count = $this->db->get_where('screen_share_details',$data)->num_rows();
+		if($count!=0){
+			$result = array('error'=>'Group name already taken!');		
+			
+		}else{
+			$member = explode(',',$_POST['members']);
+				for ($i=0; $i <count($member) ; $i++) { 
+					$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
+					if($user){
+						$sinch_usernames[]=$user['sinch_username'];
+						$datas = array(
+							'group_name' => $_POST['group_name'],
+							'from_id' => $this->login_id,
+							'to_id' => $user['login_id'],
+							//'status' => 'invited',
+							'created_date' => date('Y-m-d H:i:s')
+						);
+						$this->db->insert('screen_share_details',$datas);	
+					}
+				}
+
+				
+				$result = array(
+				'success'=>'Group created successfully!',
+				'group_name' => ucfirst($_POST['group_name']),
+				'url' => '',
+				'fromId' => $this->login_id
+			);
+		}
+		echo json_encode($result);
+
+	}
+
+public function request_share() {
+
+/* Url to stop : POST https://api.screenleap.com/v2/screen-shares/{screenShareCode}/stop */
+
+	$url = 'https://api.screenleap.com/v2/screen-shares';
+	$ch = curl_init($url); curl_setopt($ch, CURLOPT_POST, 1);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('authtoken:LkoSIriJbW'));
+	curl_setopt($ch, CURLOPT_POSTFIELDS, 'accountid=dreamguys_technologies');
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Whether you need the following line depends on your curl configuration.
+	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+	$screenShareData = curl_exec($ch);
+	curl_close($ch);
+
+	echo json_encode($screenShareData);
+}
+
+	public function update_share(){
+		$result = $this->db->update('screen_share_details',array('is_active'=>1,'status'=>'invited','url'=> $_POST["url"]),array('group_name'=>$_POST["group_name"],'from_id'=>$_POST["from_id"]));
+		echo json_encode($result);
+	}
 	public function get_users_by_name(){
 		$users_record = array();
 		$data = $this->chat->get_users_by_name();

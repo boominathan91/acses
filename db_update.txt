@@ -1,0 +1,7 @@
+-----------------(updated in live)------------------------ 
+
+ALTER TABLE `call_type` CHANGE `type` `type` ENUM('audio','video','group_audio','group_video') CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL;
+
+-----------------(not updated in live)------------------------
+
+ALTER TABLE `chat_group_members` ADD `is_active` TINYINT(1) NOT NULL DEFAULT '0' AFTER `login_id`;

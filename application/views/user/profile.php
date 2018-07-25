@@ -8,7 +8,7 @@
 						</div>
 						
 						<div class="col-sm-4 text-right m-b-30">
-							<a href="<?php echo base_url(); ?>profile/edit" class="btn btn-primary rounded"><i class="fa fa-plus"></i> Edit Profile</a>
+							<a href="<?php echo base_url(); ?>edit-profile" class="btn btn-primary rounded"><i class="fa fa-plus"></i> Edit Profile</a>
 						</div>
 					</div>
 					<div class="card-box">
@@ -17,7 +17,14 @@
 								<div class="profile-view">
 									<div class="profile-img-wrap">
 										<div class="profile-img">
-											<a href="#"><img class="avatar" src="<?php echo base_url(); ?>assets/img/user.jpg" alt=""></a>
+											<?php 
+												if(empty($profile['profile_img'])){
+													$profile_img = base_url().'assets/img/user.jpg';
+												}else{
+													$profile_img = base_url().'uploads/'.$profile['profile_img'];
+												}
+											 ?>
+											<a href="Javascript:void(0)"><img class="avatar" src="<?php echo $profile_img; ?>" alt=""></a>
 										</div>
 									</div>
 									<div class="profile-basic">
@@ -26,7 +33,7 @@
 												<div class="profile-info-left">
 													<h3 class="user-name m-t-0 m-b-0"><?php echo ucfirst($this->session->userdata('first_name')).' '.ucfirst($this->session->userdata('last_name')) ?></h3>
 													<small class="text-muted">Web Designer</small>
-													<div class="staff-id">Employee ID : FT-0001</div>
+													<div class="staff-id">Employee ID : FT-000<?php echo $this->session->userdata('login_id'); ?></div>
 													<!-- <div class="staff-msg"><a href="chat.html" class="btn btn-primary">Send Message</a></div> -->
 												</div>
 											</div>
@@ -46,7 +53,7 @@
 													</li>
 													<li>
 														<span class="title">Address:</span>
-														<span class="text"><?php echo (!empty($profile['address']))?$profile['address']:'N/A'; ?></span>
+														<span class="text"><?php echo (!empty($profile['address']))?$profile['address'].','.$profile['cityname'].','.$profile['statename'].','.$profile['countryname']:'N/A'; ?></span>
 													</li>
 													<li>
 														<span class="title">Gender:</span>
@@ -61,7 +68,7 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-md-3">
+					<!-- 	<div class="col-md-3">
 							<div class="card-box m-b-0">
 								<h3 class="card-title">Skills</h3>
 								<div class="skills">
@@ -76,36 +83,31 @@
 									<span>Jquery</span>
 								</div>
 							</div>
-						</div>
-						<div class="col-md-9">
+						</div> -->
+						<div class="col-md-12">
 							<div class="card-box">
 								<h3 class="card-title">Education Informations</h3>
 								<div class="experience-box">
 									<ul class="experience-list">
+										<?php if(!empty($education_details)){ 
+											 
+											foreach ($education_details as $education) {  ?>
 										<li>
 											<div class="experience-user">
 												<div class="before-circle"></div>
 											</div>
 											<div class="experience-content">
 												<div class="timeline-content">
-													<a href="#/" class="name">International College of Arts and Science (UG)</a>
-													<div>Bsc Computer Science</div>
-													<span class="time">2000 - 2003</span>
+													<a href="Javascript:void(0)" class="name"><?php echo $education['institution']; ?></a>
+													<div><?php echo $education['subject']; ?></div>
+													<span class="time"><?php echo $education['start_year']; ?> - <?php echo $education['complete_year']; ?></span>
 												</div>
 											</div>
 										</li>
-										<li>
-											<div class="experience-user">
-												<div class="before-circle"></div>
-											</div>
-											<div class="experience-content">
-												<div class="timeline-content">
-													<a href="#/" class="name">International College of Arts and Science (PG)</a>
-													<div>Msc Computer Science</div>
-													<span class="time">2000 - 2003</span>
-												</div>
-											</div>
-										</li>
+										<?php } }else{ ?>
+										<li class="text-danger">No details</li>
+										<?php } ?>
+										 
 									</ul>
 								</div>
 							</div>
@@ -113,39 +115,27 @@
 								<h3 class="card-title">Experience</h3>
 								<div class="experience-box">
 									<ul class="experience-list">
-										<li>
+									 
+										<?php if(!empty($experience_informations)){ 
+											 
+											foreach ($experience_informations as $experience) {  ?>
+											<li>
 											<div class="experience-user">
 												<div class="before-circle"></div>
 											</div>
 											<div class="experience-content">
 												<div class="timeline-content">
-													<a href="#/" class="name">Web Designer at Zen Corporation</a>
-													<span class="time">Jan 2013 - Present (5 years 2 months)</span>
+													<a href="Javascript:void(0)" class="name"><?php echo $experience['company'].'-'.$experience['location']; ?></a>
+													<span class="time"><?php echo $experience['jop_position']; ?> - <?php echo $experience['period_from'].'-'.$experience['period_to']; ?></span>
 												</div>
 											</div>
 										</li>
-										<li>
-											<div class="experience-user">
-												<div class="before-circle"></div>
-											</div>
-											<div class="experience-content">
-												<div class="timeline-content">
-													<a href="#/" class="name">Web Designer at Ron-tech</a>
-													<span class="time">Jan 2013 - Present (5 years 2 months)</span>
-												</div>
-											</div>
-										</li>
-										<li>
-											<div class="experience-user">
-												<div class="before-circle"></div>
-											</div>
-											<div class="experience-content">
-												<div class="timeline-content">
-													<a href="#/" class="name">Web Designer at Dalt Technology</a>
-													<span class="time">Jan 2013 - Present (5 years 2 months)</span>
-												</div>
-											</div>
-										</li>
+										<?php } }else{ ?>
+										<li class="text-danger">No details</li>
+										<?php } ?>
+
+										
+									 
 									</ul>
 								</div>
 							</div>

@@ -230,7 +230,99 @@ class Settings_model extends CI_Model {
 		$where = array('login_id'=>$this->session->userdata('login_id'),'password' => md5($_POST['password']));
 		return $this->db->get_where('login_details',$where)->num_rows();
 	}
+	/*Sivamani Profile Setting 07/17/2018 Start */
 
+	public function profile_details($user_id='')
+	{
+		if(!empty($user_id)){
+			$where = array('login_id'=>$user_id);
+			$where1 = array('user_id'=>$user_id);
+			$this->db->select('LD.*,CD.city as cityname,SD.statename as statename,CUD.country as countryname');
+			$this->db->from('login_details LD');
+			$this->db->join('city_details CD', 'CD.city_id = LD.city', 'left');
+			$this->db->join('state_details SD', 'SD.state_id = LD.state', 'left');
+			$this->db->join('country_details CUD', 'CUD.country_id = LD.country', 'left');
+			$this->db->where($where);
+			$profile = $this->db->get()->row_array();
+			$records['profile'] = $profile; 
+			$records['education_details'] =  get_where('profile_education_details',$where1);		
+			$records['experience_informations'] =  get_where('profile_experience_informations',$where1);		
+			return $records;
+		}
+	}
+
+	public function countries()
+	{
+		return get_all('country_details');		
+	}
+
+	public function update_profile($inputs)
+	{
+		$session  = $this->session->userdata();
+		$login_id = $session['login_id'];
+
+		 
+		$user_details['first_name'] = $inputs['first_name'];
+		$user_details['last_name'] = $inputs['last_name'];
+		$user_details['profile_img'] = $inputs['profile_img'];
+
+		$user_details['dob'] = date('Y-m-d',strtotime(str_replace('/', '-',$inputs['dob'])));
+		$user_details['gender'] = $inputs['gender'];
+		$user_details['country'] = $inputs['country'];
+		$user_details['state'] = $inputs['state'];
+		$user_details['phone_number'] = $inputs['phone_number'];
+		$user_details['pincode'] = $inputs['pincode'];
+		$user_details['city'] = $inputs['city'];
+		$user_details['address'] = $inputs['address'];
+
+		$this->db->where('login_id', $login_id);
+		$this->db->update('login_details', $user_details);
+		 
+		$institution	= array_filter($inputs['institution']);
+		$subject		= array_filter($inputs['subject']);
+		$start_year		= array_filter($inputs['start_year']);
+		$complete_year	= array_filter($inputs['complete_year']);
+		$degree		    = array_filter($inputs['degree']);
+		$grade		    = array_filter($inputs['grade']);
+		for ($l=0; $l <count($institution) ; $l++) { 
+			$education_new[$l]['institution'] = $institution[$l];	
+			$education_new[$l]['subject'] = $subject[$l];	
+			$education_new[$l]['start_year']=  $start_year[$l];		
+			$education_new[$l]['complete_year']=  $complete_year[$l];		
+			$education_new[$l]['degree']=  $degree[$l];		
+			$education_new[$l]['grade']= $grade[$l];	
+			$education_new[$l]['user_id']= $login_id;	
+		}
+		if(!empty($education_new)){
+			$this->db->where('user_id', $login_id);
+			$this->db->delete('profile_education_details');
+			$this->db->insert_batch('profile_education_details', $education_new);
+		}
+		
+		$experience_new = array();
+		$company = array_filter($inputs['company']);
+		$location = array_filter($inputs['location']);
+		$jop_position = array_filter($inputs['jop_position']);
+		$period_from = array_filter($inputs['period_from']);
+		$period_to = array_filter($inputs['period_to']);
+		for ($i=0; $i < count($company); $i++) { 
+			$experience_new[$i]['company'] = $company[$i];
+			$experience_new[$i]['location'] = $location[$i];
+			$experience_new[$i]['jop_position'] = $jop_position[$i];
+			$experience_new[$i]['period_from'] = $period_from[$i];
+			$experience_new[$i]['period_to'] = $period_to[$i];
+			$experience_new[$i]['user_id']= $login_id;	
+		}
+		
+		if(!empty($experience_new)){
+			$this->db->where('user_id', $login_id);
+			$this->db->delete('profile_experience_informations');
+			$this->db->insert_batch('profile_experience_informations', $experience_new);	
+		}
+		return TRUE;
+	}
+
+	/*Sivamani Profile Setting 07/17/2018 End */
 
 
 

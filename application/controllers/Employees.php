@@ -71,7 +71,7 @@ class Employees extends CI_Controller {
     		$result = $this->employees->update_employees($data);
     	}
 
-    	echo json($result);
+    	echo json_encode($result);
 
     }
     public function validate(){

@@ -17,6 +17,12 @@ class Chat_model extends CI_Model {
 		return $data;
 
 	}
+	public function get_screen_share_group_details(){
+		$sql = "SELECT distinct group_name,from_id,url FROM screen_share_details";
+		$data =  $this->db->query($sql)->result_array();
+		return $data;
+
+	}
 	public function get_call_history(){
 		$data = array();
 		if($this->session->userdata('session_chat_id')){
@@ -107,7 +113,7 @@ class Chat_model extends CI_Model {
 
 		$result = array();
 		if(!empty($group_id)){				
-			$this->db->select('l.sinch_username,l.login_id,l.profile_img,l.first_name,l.last_name');
+			$this->db->select('l.sinch_username,l.login_id,l.profile_img,l.first_name,l.last_name, cg.members_id');
 			$this->db->where('cg.group_id',$group_id);
 			$this->db->where('cg.login_id !=',$this->login_id);
 			$this->db->join('login_details l','l.login_id = cg.login_id');

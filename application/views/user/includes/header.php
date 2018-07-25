@@ -19,6 +19,11 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css">
+    <?php 
+    $uri = $this->uri->segment(1);
+    if (strtolower($uri) == 'edit-profile') { ?>
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/croppie.css">
+    <?php } ?>
 		<!--[if lt IE 9]>
 			<script src="<?php echo base_url(); ?>assets/js/html5shiv.min.js"></script>
 			<script src="<?php echo base_url(); ?>assets/js/respond.min.js"></script>
