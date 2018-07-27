@@ -96,7 +96,7 @@ $(document).ready(function() {
 	
 	// Message Notification Slimscroll
 
-	if($('.msg-list-scroll').length > 0 ){
+	//if($('.msg-list-scroll').length > 0 ){
 		$('.msg-list-scroll').slimscroll({
 			height:'100%',
 			color: '#878787',
@@ -106,16 +106,16 @@ $(document).ready(function() {
 			alwaysVisible:false,
 			touchScrollStep : 100
 		});
-		var h=$(window).height()-124;
-		$('.msg-list-scroll').height(h);
-		$('.msg-sidebar .slimScrollDiv').height(h);  
+		// var h=$(window).height()-124;
+		// $('.msg-list-scroll').height(h);
+		// $('.msg-sidebar .slimScrollDiv').height(h);  
 		
-		$(window).resize(function(){
-			var h=$(window).height()-124;
-			$('.msg-list-scroll').height(h);
-			$('.msg-sidebar .slimScrollDiv').height(h);
-		});
-	}
+		// $(window).resize(function(){
+		// 	var h=$(window).height()-124;
+		// 	$('.msg-list-scroll').height(h);
+		// 	$('.msg-sidebar .slimScrollDiv').height(h);
+		// });
+	//}
 	
 	// Sidebar Slimscroll
 

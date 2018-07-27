@@ -1,3 +1,5 @@
+<!-- Loader -->
+<div class="loading style-2"><div class="loading-wheel"></div></div>
 <div class="main-wrapper">
 			<div class="account-page">
 				<div class="container">
@@ -9,12 +11,12 @@
 							</div>
 							<form id="login_form" method="post">
 								<div class="form-group form-focus">
-									<label class="control-label"><?php lang('user_name_or_email'); ?></label>
-									<input class="form-control floating" type="text" name="user_name" id="user_name">
+									<label class="control-label"></label>
+									<input class="form-control floating" type="text" name="user_name" id="user_name" placeholder="<?php lang('user_name_or_email'); ?>">
 								</div>
 								<div class="form-group form-focus">
-									<label class="control-label"><?php lang('password'); ?></label>
-									<input class="form-control floating" type="password" name="password" id="password">
+									<label class="control-label"></label>
+									<input class="form-control floating" type="password" name="password" id="password" placeholder="<?php lang('password'); ?>">
 								</div>
 								<div class="form-group text-center">
 									<button class="btn btn-primary btn-block account-btn" type="submit"><?php lang('login'); ?></button>

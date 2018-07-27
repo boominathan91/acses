@@ -19,6 +19,7 @@
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/select2.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/style.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>assets/css/bootstrap-tagsinput.css">
     <?php 
     $uri = $this->uri->segment(1);
     if (strtolower($uri) == 'edit-profile') { ?>

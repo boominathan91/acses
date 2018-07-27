@@ -11,6 +11,7 @@ class Chat extends CI_Controller {
 		}
 		$this->load->model('chat_model','chat');
 		$this->login_id = $this->session->userdata('login_id');
+		date_default_timezone_set($this->session->userdata('time_zone'));
 	}
 	public function index()
 	{	
@@ -175,14 +176,14 @@ class Chat extends CI_Controller {
 				}else{
 					$img_avatar = '<div class="chat-avatar">
 					<a href="#" class="avatar">
-					<img alt="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+					<img alt="'.$sender_name.'" title="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
 					</a>
 					</div>';
 					$class_name = 'chat-left';
 				}
 				if($msg == 'file' && $type == 'image'){
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content img-content">
@@ -202,7 +203,7 @@ class Chat extends CI_Controller {
 
 				}else if($msg == 'file' && $type == 'others'){
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content "><ul class="attach-list">
@@ -216,7 +217,7 @@ class Chat extends CI_Controller {
 
 				}else{
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content">
@@ -259,12 +260,15 @@ class Chat extends CI_Controller {
 			$member = explode(',',$_POST['members']);
 			for ($i=0; $i <count($member) ; $i++) { 
 				$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
-				$sinch_usernames[]=$user['sinch_username'];
-				$datas = array(
+				if(!empty($user)){
+					$sinch_usernames[]=$user['sinch_username'];
+					$datas = array(
 					'group_id' => $group_id,
 					'login_id' => $user['login_id']
-				);
+					);
 				$this->db->insert('chat_group_members',$datas);	
+				}
+				
 			}
 			$sinch_usernames = implode(',',$sinch_usernames);
 			$datas = array(
@@ -395,7 +399,7 @@ public function request_share() {
 				}
 				if($msg == 'file' && $type == 'image'){
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content img-content">
@@ -415,7 +419,7 @@ public function request_share() {
 
 				}else if($msg == 'file' && $type == 'others'){
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content "><ul class="attach-list">
@@ -429,7 +433,7 @@ public function request_share() {
 
 				}else{
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content">
@@ -482,7 +486,7 @@ public function request_share() {
 				$msg = $l['message'];
 				$type = $l['type'];
 				$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
-				$time = date('h:i A',strtotime($l['created_at']));
+				$time = date('h:i A',strtotime($l['chatdate']));
 				$up_file_name =$l['file_name'];
 
 				if($l['sender_id'] == $this->login_id){
@@ -491,14 +495,14 @@ public function request_share() {
 				}else{
 					$img_avatar = '<div class="chat-avatar">
 					<a href="#" class="avatar">
-					<img alt="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+					<img alt="'.$sender_name.'" title="'.ucfirst($sender_name).'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
 					</a>
 					</div>';
 					$class_name = 'chat-left';
 				}
 				if($msg == 'file' && $type == 'image'){
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content img-content">
@@ -518,7 +522,7 @@ public function request_share() {
 
 				}else if($msg == 'file' && $type == 'others'){
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content "><ul class="attach-list">
@@ -532,7 +536,7 @@ public function request_share() {
 
 				}else{
 
-					$html .= '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+					$html .= '<div class="chat '.$class_name.'">'.$img_avatar.'
 					<div class="chat-body">
 					<div class="chat-bubble">
 					<div class="chat-content">
@@ -582,10 +586,10 @@ public function request_share() {
 	Public function insert_chat()
 	{	
 
-		 // echo '<pre>'; print_r($_POST); exit;
-		if( $_POST['message_type'] == 'group'){
+		  // echo '<pre>'; print_r($_POST); exit;
+		if(!empty($_POST['group_id'])){
 
-			$receiver_id =explode(',',$_POST['receiver_id']);
+			//$receiver_id =explode(',',$_POST['receiver_id']);
 			
 				//$data['receiver_id'] = $receiver_id[$j];	
 			$data['receiver_id'] = 0;
@@ -595,15 +599,20 @@ public function request_share() {
 			$data['message'] = $_POST['message'];
 			$data['message_type'] = 'group';
 			$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
-
 			$result = $this->db->insert('chat_details',$data);
 			$chat_id = $this->db->insert_id();
 			$users = array($data['receiver_id'],$data['sender_id']);
+			$wher = array('login_id !='=>$this->login_id ,'group_id'=>$data['group_id']);
+			$userid_list = $this->db->select('login_id')->get_where('chat_group_members',$wher)->result_array();
+			if(!empty($userid_list)){
+				foreach($userid_list as $u){
+					$insert_data = array('group_id'=>$data['group_id'],'login_id'=>$u['login_id']);
+					$this->db->insert('chat_seen_details',$insert_data);
+				}
+			}	
+			exit;	
 
-
-			
-
-		}elseif( $_POST['message_type'] == 'text'){
+		}else{
 
 			$data['receiver_id'] =$_POST['receiver_id'];
 			$data['sender_id'] = $this->login_id;
@@ -684,6 +693,7 @@ public function request_share() {
 		->get_where('chat_details c',array('c.sender_id'=>$data['login_id']))
 		->row_array();
 		$msg['msg_data']['group_name'] = ucfirst($msg['msg_data']['group_name']);
+		$msg['msg_data']['new_group_name'] = str_replace(' ','_',$msg['msg_data']['group_name']);
 		}
 		$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' =>'group');
 		$msg['count'] = $this->db
@@ -740,6 +750,7 @@ public function request_share() {
 			->row_array();
 
 			$data['message']['group_name'] = ucfirst($data['message']['group_name']);
+			$data['message']['new_group_name'] = str_replace(' ','_',$data['message']['group_name']);
 
 
 
@@ -983,6 +994,21 @@ public function request_share() {
 
 		echo $html;
 
+	}
+	public function get_all_users(){
+		$users = array();
+		$data = $this->db->select('user_name,first_name,last_name')
+						->get_where('login_details',array('type'=>'user','login_id !='=>$this->login_id))
+						->result_array();
+		if(!empty($data)){
+			foreach($data as $d){
+				$users[] = $d['user_name'];
+				//$users['text'] = ucfirst($d['first_name']).' '.ucfirst($d['last_name']);
+				//$datas[]=$users;
+			}
+			
+		}
+		echo json_encode($users);
 	}
 
 

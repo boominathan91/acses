@@ -31,7 +31,9 @@ var register = function(data){
 
 
 /*Login  User in Sinch */
-var login = function(data){		
+var login = function(data){
+updateNotification('', 'Please wait  redirecting...', 'success'); 	
+$('.loading').show();	
 	var credential = {};
 	credential.username = data.sinch_username;
 	credential.password = data.sinch_username;		
@@ -39,6 +41,7 @@ var login = function(data){
 	global_username = sessionObj.userId;	
 	sinchClient.start(credential).then(function() {
 		localStorage[sessionName] = JSON.stringify(sinchClient.getSession());
+    $('.loading').hide();
 		window.location.href=base_url+"chat";			
 	}).fail(function(error){			
 		console.log(error);
@@ -211,10 +214,10 @@ function receive_message(message){
             '</div>';
           }else{ /* Text message */
 
-           var content = '<div class="chat chat-left slimscrollleft">'+
+           var content = '<div class="chat chat-left">'+
            '<div class="chat-avatar">'+
            '<a href="#" class="avatar">'+
-           '<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+           '<img alt="'+receiver_name+'" title="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
            '</a>'+
            '</div>'+
            '<div class="chat-body">'+
@@ -233,9 +236,9 @@ function receive_message(message){
        }else{ /*Hidden group and receiving msg group are different*/
 
 
-        $('#'+obj.msg_data.group_name).remove();         
-        var data = '<li  id="'+obj.msg_data.group_name+'" onclick="set_nav_bar_group_user('+obj.msg_data.group_id+',this)">'+
-        '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right">1</span></a>'+
+        $('#'+obj.msg_data.new_group_name).remove();         
+        var data = '<li  id="'+obj.msg_data.new_group_name+'" onclick="set_nav_bar_group_user('+obj.msg_data.group_id+',this)">'+
+        '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right">new</span></a>'+
         '</li>';
         $('#new_group_user').prepend(data);
 
@@ -284,10 +287,10 @@ function receive_message(message){
         '</div>';
       }else{
 
-       var content = '<div class="chat chat-left slimscrollleft">'+
+       var content = '<div class="chat chat-left">'+
        '<div class="chat-avatar">'+
        '<a href="#" class="avatar">'+
-       '<img alt="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+       '<img alt="'+receiver_name+'" title="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
        '</a>'+
        '</div>'+
        '<div class="chat-body">'+
@@ -378,7 +381,7 @@ function receive_message(message){
           '</div>';
         }else{
           var receiver_img = datas.profile_img;
-          var content = '<div class="chat chat-left slimscrollleft">'+
+          var content = '<div class="chat chat-left">'+
           '<div class="chat-avatar">'+
           '<a href="#" class="avatar">'+
           '<img src="'+receiver_img+'" class="img-responsive img-circle">'+
@@ -402,9 +405,9 @@ function receive_message(message){
 
        if(datas.message){
         $(datas.message).each(function(){
-          $('#'+this.group_name).remove();         
-          var data = '<li  id="'+this.group_name+'" onclick="set_nav_bar_group_user('+this.group_id+',this)">'+
-          '<a href="#">#'+this.group_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
+          $('#'+this.new_group_name).remove();         
+          var data = '<li  id="'+this.new_group_name+'" onclick="set_nav_bar_group_user('+this.group_id+',this)">'+
+          '<a href="#">#'+this.group_name+ '<span class="badge bg-danger pull-right">new</span></a>'+
           '</li>';
           $('#new_group_user').prepend(data);
 
@@ -440,6 +443,7 @@ function receive_message(message){
 
 
 }
+$(".msg-list-scroll").slimscroll({ scrollBy: '400px' });
 }
 
 

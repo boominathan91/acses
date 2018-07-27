@@ -189,8 +189,8 @@ $session_data = $this->session->userdata();
 													$class = '';	
 												}
 
-
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												$new_group_name = str_replace(' ','_',$t['group_name']);
+												echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
 									</div>

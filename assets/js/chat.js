@@ -170,6 +170,7 @@ function set_nav_bar_chat_user(login_id,element){
 		}else{
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
+		$('.chat-main-row,#task_window').removeClass('hidden');
 
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
@@ -180,7 +181,8 @@ function set_nav_bar_chat_user(login_id,element){
 			$("#for_screen_share_group").hide();
 		}
 		else if(session_type == 'session_audio_user'){			
-			$('#for_audio').show();			
+			// $('#for_audio').show();			
+			$('#for_audio').attr('display','block');			
 			$('#for_group_audio').hide();
 			$("#for_video").hide();
 			$("#for_group_video").hide();
@@ -201,9 +203,11 @@ function set_nav_bar_chat_user(login_id,element){
 		var extra_add = 'Call';
 		if(type == 'text_chat'){
 		extra_add = '';
-		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
 		}
-		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
 		$('#receiver_sinchusername').val(obj.sinch_username);
 		$('#receiver_id').val(obj.login_id);
 		$('#receiver_image').val(receiver_image);
@@ -370,7 +374,7 @@ $('#chat_form').submit(function(){
 		return false;
 	}
 	if(input_message!=''){
-		var content ='<div class="chat chat-right slimscrollleft">'+
+		var content ='<div class="chat chat-right">'+
 		'<div class="chat-body">'+
 		'<div class="chat-bubble">'+
 		'<div class="chat-content">'+
@@ -460,8 +464,9 @@ $('#user_file').change(function(e) {
             		'</div>';            		
             		$('#ajax').append(content); 
             		$('#user_file').val('');
-            		$(".slimscrollleft.chats").mCustomScrollbar("update");
-            		$(".slimscrollleft.chats").mCustomScrollbar("scrollTo", "bottom"); 
+            		
+            		$(".msg-list-scroll").slimscroll({ scrollBy: '400px' });
+
             		message('file');
             	},
             	error: function(error){
@@ -499,13 +504,6 @@ function load_more(total){
 
 
 
-(function($){
-	$(window).on("load",function(){
-		$(".chat-right,.chat-box.slimscrollleft,.chat-left").mCustomScrollbar({
-			theme:"minimal"
-		});			
-	});
-})(jQuery);
 
 
 /*setting Current time */

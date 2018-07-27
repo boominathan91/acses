@@ -121,7 +121,7 @@
 							<div class="chat-contents">
 								<div class="chat-content-wrap">
 									<div class="chat-wrap-inner">
-										<div class="chat-box slimscrollleft">
+										<div class="chat-box msg-list-scroll">
 											<div class="chats">
 												<?php 
 												if(!empty($latest_chats)){
@@ -153,14 +153,14 @@
 														}else{
 															$img_avatar = '<div class="chat-avatar">
 															<a href="#" class="avatar">
-															<img alt="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+															<img alt="'.$sender_name.'" title="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
 															</a>
 															</div>';
 															$class_name = 'chat-left';
 														}
 														if($msg == 'file' && $type == 'image'){
 
-															echo '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+															echo '<div class="chat '.$class_name.'">'.$img_avatar.'
 															<div class="chat-body">
 															<div class="chat-bubble">
 															<div class="chat-content img-content">
@@ -180,7 +180,7 @@
 
 														}else if($msg == 'file' && $type == 'others'){
 
-															echo '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+															echo '<div class="chat '.$class_name.'">'.$img_avatar.'
 															<div class="chat-body">
 															<div class="chat-bubble">
 															<div class="chat-content "><ul class="attach-list">
@@ -194,7 +194,7 @@
 
 														}else{
 
-															echo '<div class="chat '.$class_name.' slimscrollleft">'.$img_avatar.'
+															echo '<div class="chat '.$class_name.'">'.$img_avatar.'
 															<div class="chat-body">
 															<div class="chat-bubble">
 															<div class="chat-content">
@@ -239,7 +239,7 @@
 													<!-- Receiver Image  -->
 
 													<input type="hidden" name="message_type" id="type" value="<?php echo $mesage_type ?>" >
-													<input type="hidden" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
+													<input type="text" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
 
 													<span class="input-group-btn">
 														<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>
@@ -1182,7 +1182,7 @@
 
 
 
-        <!-- Video Call Page Content Starts  -->
+        <!-- Screen Share Page Content Starts  -->
 	<div id="for_screen_share_group">
          <div class="page-wrapper screen-share-window <?php echo $screen_share_class; ?>">
             <div class="chat-main-row <?php echo $class; ?>">

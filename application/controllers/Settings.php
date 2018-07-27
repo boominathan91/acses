@@ -218,10 +218,11 @@ class Settings extends CI_Controller {
 	{   
 		$user_id 	      = $this->session->userdata('login_id');
 		$data['title'] = 'Edit Profile';		
-		$data['profile_class'] = "hidden";
+		$data['profile_class'] = "";
 		$data['text_chat_class'] = "hidden";
 		$data['audio_class'] = "hidden";
 		$data['video_class'] = "hidden";
+		$data['screen_share_class'] = "hidden";
 		if($this->input->post('first_name')){
 			$inputs = $this->input->post();
 			$record = $this->settings->update_profile($inputs);		
@@ -289,10 +290,11 @@ if(isset($_POST["image"]))
 	{
 		$user_id 	      = $this->session->userdata('login_id');
 		$data['title'] 	  = 'Profile';		
-		$data['profile_class'] = "hidden";
+		$data['profile_class'] = "";
 		$data['text_chat_class'] = "hidden";
 		$data['audio_class'] = "hidden";
 		$data['video_class'] = "hidden";
+		$data['screen_share_class'] = "hidden";
 		$records =  $this->settings->profile_details($user_id);	
 		$data['profile']  = $profile = $records['profile'];
 		$data['education_details'] = $records['education_details'];

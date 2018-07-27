@@ -640,7 +640,31 @@
    * Initialize tagsinput behaviour on inputs and selects which have
    * data-role=tagsinput
    */
-  $(function() {
-    $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
-  });
+
+   var members = new Bloodhound({
+  datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+  queryTokenizer: Bloodhound.tokenizers.whitespace,
+  prefetch: {
+    url:  base_url+'chat/get_all_users',
+    filter: function(list) {
+      return $.map(list, function(response) {
+        return { name: response }; });
+    }
+  }
+});
+members.initialize();
+
+$('input[data-role=tagsinput]').tagsinput({
+  typeaheadjs: {
+    name: 'members',
+    displayKey: 'name',
+    valueKey: 'name',
+    source: members.ttAdapter()
+  }
+});
+
+
+  // $(function() {
+  //   $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
+  // });
 })(window.jQuery);

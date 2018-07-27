@@ -17,7 +17,7 @@
 					</div>
 					<div class="form-group">
 						<label>Send invites to: <span class="text-muted-light"></span></label>
-						<input class="form-control"  type="text" name="members" id="members" placeholder="e.g: username1,username2">
+						<input class="form-control"  type="text" name="members" id="members" placeholder="e.g: username1,username2" data-role="tagsinput">
 					</div>
 					<div class="m-t-50 text-center">
 						<button class="btn btn-primary btn-lg" type="submit" >Create Group</button>
