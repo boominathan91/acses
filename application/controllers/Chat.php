@@ -59,7 +59,7 @@ class Chat extends CI_Controller {
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
-		 //echo '<pre>';print_r($data);exit;
+		// echo '<pre>';print_r($data);exit;
 		render_page('chat',$data);
 	}
 
@@ -139,7 +139,7 @@ class Chat extends CI_Controller {
 		$data = $this->chat->get_group_datas($group_id);
 		$total_chat= $this->chat->get_total_chat_group_count($group_id); 
 
-		$this->session->set_userdata(array('session_group_id'=>$group_id));
+	$this->session->set_userdata(array('session_group_id'=>$group_id,'group_type'=>$data['group']['type']));
 		$latest_chats = $this->chat->get_group_messages($total=null,$group_id);  		
 		$page=0;
 		if($total_chat>5){
@@ -654,9 +654,7 @@ public function request_share() {
 	Public function get_message_details()
 	{
 
-
-
-
+		// echo '<pre>'; print_r($_POST);exit;
 		/*Receiver data */
 		$data= $this->db
 		->select('first_name,last_name,login_id,sinch_username')
@@ -694,7 +692,19 @@ public function request_share() {
 		->row_array();
 		$msg['msg_data']['group_name'] = ucfirst($msg['msg_data']['group_name']);
 		$msg['msg_data']['new_group_name'] = str_replace(' ','_',$msg['msg_data']['group_name']);
-		}
+
+
+
+
+		$where = array('login_id'=>$this->login_id ,'read_status'=>'0','group_id' =>$msg['msg_data']['group_id']);
+		$msg['count'] = $this->db
+		->get_where('chat_seen_details',$where)
+		->num_rows();		
+
+
+		}else{
+			
+
 		$where = array('sender_id'=>$data['login_id'] ,'receiver_id' =>$this->login_id,'read_status'=>0,'message_type' =>'group');
 		$msg['count'] = $this->db
 		->get_where('chat_details',$where)
@@ -705,11 +715,19 @@ public function request_share() {
 		
 		$this->db->update('chat_details',array('read_status'=>1,'message_type'=>'text'),array('chat_id'=>$msg['msg_data']['chat_id']));		
 
+		}
+
+
+
+
 		$msg['reciever_data'] = $data;
 		echo json_encode($msg);
 	}
+
+
 	Public function get_user_details(){
 
+		//echo '<pre>';print_r($_POST);exit;
 		$data = array();
 		$where =array('sinch_username'=>$_POST['receiver_sinchusername']);
 		$data= $this->db
@@ -724,17 +742,6 @@ public function request_share() {
 
 
 		if($_POST['message_type'] == 'group'){
-
-			$where = array(
-				'sender_id'=>$data['login_id'] ,
-				'receiver_id' =>0,
-				'read_status'=>0,
-				'message_type' => $_POST['message_type']
-			);
-			$data['count'] = $this->db
-			->get_where('chat_details',$where)
-			->num_rows();
-
 
 
 			$where = array(
@@ -752,6 +759,17 @@ public function request_share() {
 			$data['message']['group_name'] = ucfirst($data['message']['group_name']);
 			$data['message']['new_group_name'] = str_replace(' ','_',$data['message']['group_name']);
 
+
+
+
+			$where = array(
+				'login_id'=>$this->login_id ,
+				'group_id' =>$data['message']['group_id'],
+				'read_status'=>'0'				
+			);
+			$data['count'] = $this->db
+			->get_where('chat_seen_details',$where)
+			->num_rows();
 
 
 		}else{

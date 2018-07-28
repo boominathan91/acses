@@ -38,10 +38,12 @@ class Chat_model extends CI_Model {
 	}
 	public function get_group_datas($group_id){
 
+		$this->db->update('chat_seen_details',array('read_status'=>'1'),array('group_id'=>$group_id,'login_id'=>$this->login_id));
 		$query = "SELECT * FROM chat_group_details g WHERE g.group_id = $group_id";
 		$data['group'] =  $this->db->query($query)->row_array();	
 		$data['group']['group_name'] = ucfirst($data['group']['group_name']);
 		$data['group_members']	= $this->get_group_members_list($group_id);
+
 		
 
 		return $data;

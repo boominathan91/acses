@@ -238,7 +238,7 @@ function receive_message(message){
 
         $('#'+obj.msg_data.new_group_name).remove();         
         var data = '<li  id="'+obj.msg_data.new_group_name+'" onclick="set_nav_bar_group_user('+obj.msg_data.group_id+',this)">'+
-        '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right">new</span></a>'+
+        '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right">'+obj.count+'</span></a>'+
         '</li>';
         $('#new_group_user').prepend(data);
 
@@ -407,7 +407,7 @@ function receive_message(message){
         $(datas.message).each(function(){
           $('#'+this.new_group_name).remove();         
           var data = '<li  id="'+this.new_group_name+'" onclick="set_nav_bar_group_user('+this.group_id+',this)">'+
-          '<a href="#">#'+this.group_name+ '<span class="badge bg-danger pull-right">new</span></a>'+
+          '<a href="#">#'+this.group_name+ '<span class="badge bg-danger pull-right">'+datas.count+'</span></a>'+
           '</li>';
           $('#new_group_user').prepend(data);
 

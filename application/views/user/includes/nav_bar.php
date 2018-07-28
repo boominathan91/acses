@@ -178,10 +178,10 @@ $session_data = $this->session->userdata();
 												$login_id = $this->session->userdata('login_id');
 												$where = array(
 													'group_id' => $t['group_id']
-													,'receiver_id' =>$login_id,
-													'read_status' =>0
+													,'login_id' =>$login_id,
+													'read_status' =>'0'
 												);
-												$count = $this->db->get_where('chat_details',$where)->num_rows();
+												$count = $this->db->get_where('chat_seen_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_group_id'))){
 													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
@@ -190,7 +190,7 @@ $session_data = $this->session->userdata();
 												}
 
 												$new_group_name = str_replace(' ','_',$t['group_name']);
-												echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+												echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'<span class="badge bg-danger pull-right" id="'.ucfirst($new_group_name).'danger">'.$count.'</span></a></li>';
 											}
 										} ?>
 									</div>

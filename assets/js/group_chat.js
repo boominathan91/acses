@@ -167,17 +167,14 @@ function set_nav_bar_group_user(group_id,element){
 	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	var id = $(element).attr('id');	
-	$('#'+id).next('span').next('span').empty();
-	
+	$('#'+id+'danger').empty();
 	
 	var type = $(element).attr('type');		
 	
 
     $("div[id^='for_']").hide();
 	$('#for_' + type).show();
-
-	$('#'+id).closest('bg-danger').empty();
-	$('#'+id).next('span').next('span').empty();
+	
 
 	$('.chats').html('');
 	$('.chat-main-row').removeClass('hidden');

@@ -39,6 +39,7 @@
 		$class = '';
 		$online_status = 'online';
 		$receiver_profile_img = base_url().'assets/img/user.jpg';
+
 		foreach($chat as $c){
 			$receiver_id[]=$c['login_id'];
 			$sinch_username[]=$c['sinch_username'];
@@ -57,13 +58,13 @@
 		$department_name = '';
 		$dob = '';
 		$mesage_type="group";
-		if(!empty( $chat[0]['group_id'])){
-			$group_id = $chat[0]['group_id'];
+		//if(!empty( $chat[0]['group_id'])){
+			$group_id = $this->session->userdata('session_group_id');
 			$task_class = 'hidden'; 
-		}else{
-			$group_id ='';
-			$task_class = 'hidden'; 
-		}
+		// }else{
+		// 	$group_id ='';
+		// 	$task_class = 'hidden'; 
+		// }
 
 	}
 
@@ -239,7 +240,7 @@
 													<!-- Receiver Image  -->
 
 													<input type="hidden" name="message_type" id="type" value="<?php echo $mesage_type ?>" >
-													<input type="text" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
+													<input type="hidden" name="group_id" id="group_id" value="<?php echo $group_id; ?>">
 
 													<span class="input-group-btn">
 														<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>

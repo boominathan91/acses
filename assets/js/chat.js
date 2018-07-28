@@ -264,7 +264,7 @@ function set_chat_user(login_id, element){
 		}
 		$('#'+obj.sinch_username).remove();
 		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)" type=' + chat_user_type +'>'+
-		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right"></span></a>'+
+		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right" id="'+obj.sinch_username+'danger"></span></a>'+
 		'</li>';
 		var group_type_name = chat_user_type.replace(/_/g, ' ');
 		var extra_add = 'Call';
