@@ -6,7 +6,7 @@
 	// error_reporting(0);
 	$name = '';
 	$class = 'hidden';
-	$online_status = '';
+	$online_status = 'online';
 	$receiver_profile_img ='';
 	$receiver_id = '';
 	$receiver_sinchusername = '';

@@ -8,7 +8,7 @@ function search_user(){
 			$(obj).each(function(){
 
 				data +='<li class="media">'+
-				'<a href="#" class="media-link" onclick="set_chat_user('+this.login_id+', this)">'+
+				'<a href="#" class="media-link" type="text" onclick="set_chat_user('+this.login_id+', this)">'+
 				'<div class="media-left"><span class="avatar">'+this.first_letter+'</span></div>'+
 				'<div class="media-body media-middle text-nowrap">'+
 				'<div class="user-name">'+this.first_name+' '+this.last_name+'</div>'+
@@ -246,7 +246,7 @@ function set_nav_bar_chat_user(login_id,element){
 
 /*Set Current Active User in Chat */
 function set_chat_user(login_id, element){
-	var chat_user_type = $(element).parent().parent().parent().attr('data-type');
+	var chat_user_type = $('#user_list').attr('data-type');	
 	$('li').removeClass('active');
 	$('.chats').html('');
 
@@ -293,7 +293,8 @@ function set_chat_user(login_id, element){
 			$("#for_screen_share_group").hide();
 			$('button.start-call').attr('type', 'video');
 		}
-		$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
 
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');

@@ -108,6 +108,8 @@ $('#group_form').submit(function(){
 				$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');
 				$('#channel').val(channel);
 				$('.chats').html('<div id="ajax"></div>');
+				$('input[data-role=tagsinput]').tagsinput('removeAll');
+				message('NEW_GROUP_ADDED');
 			}
 		}
 	})
@@ -143,7 +145,7 @@ $('#screen_share_form').submit(function(){
 				'</li>';	
 				
 				$('#session_screen_shrare_group').prepend(data);
-
+				message('NEW_GROUP_ADDED');
 				location.reload();
 
 			}
@@ -204,8 +206,9 @@ function set_nav_bar_group_user(group_id,element){
 				var receiver_id = [];
 				var group_members_thumbnail = '';;
 				var i=0;
-				if( obj.group_members && type == 'group_audio' ){
+				if( obj.group_members && type == 'audio' ){
 					i++;
+					$('.to_group_audio_name').text(group.group_name);
 
 					group_members_thumbnail +='<li>'+
                                               	'<img src="'+ currentUserProfileImage +'" class="img-responsive outgoing_image" alt="">'+
@@ -229,6 +232,8 @@ function set_nav_bar_group_user(group_id,element){
 
 
 
+				}else if( obj.group_members && type == 'video'){
+					$('.to_group_video_name').text(group.group_name);
 				}else if( obj.group_members && type == 'text'){
 
 					$(obj.group_members).each(function(){

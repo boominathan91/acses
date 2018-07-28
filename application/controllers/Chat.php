@@ -266,7 +266,8 @@ class Chat extends CI_Controller {
 					'group_id' => $group_id,
 					'login_id' => $user['login_id']
 					);
-				$this->db->insert('chat_group_members',$datas);	
+				$this->db->insert('chat_group_members',$datas);
+				$this->db->insert('chat_seen_details',$datas);	
 				}
 				
 			}
@@ -275,7 +276,31 @@ class Chat extends CI_Controller {
 				'group_id' => $group_id,
 				'login_id' => $this->login_id
 			);
-			$this->db->insert('chat_group_members',$datas);	
+			$this->db->insert('chat_group_members',$datas);
+
+			$datas = array(
+				'group_id' => $group_id,
+				'login_id' => $this->login_id
+			);
+
+			$datta['receiver_id'] = 0;
+			$datta['sender_id'] = $this->login_id;
+			$datta['time_zone'] = $this->session->userdata('time_zone');
+			$datta['chatdate'] = date('Y-m-d H:i:s');
+			$datta['message'] = 'Hi there!';
+			$datta['message_type'] = 'group';
+			$datta['group_id'] = $group_id;
+			$this->db->insert('chat_details',$datta);
+
+			$note_data = array(
+				'created_by' => $this->login_id,
+				'group_id' => $group_id,
+				'group_type' =>$group_type,				
+				);
+			$this->db->insert('notification_details',$note_data);
+
+
+
 			$result = array(
 				'success'=>'Group created successfully!',
 				'group_name' => ucfirst($_POST['group_name']),
@@ -289,6 +314,27 @@ class Chat extends CI_Controller {
 
 	}
 
+	public function get_notification(){
+		$data = array();
+		$where = array('l.sinch_username' => $_POST['created_by']);
+		$data = $this->db
+					->select('l.first_name,l.last_name,l.profile_img,g.group_name,g.type as group_type')				
+					->order_by('n.note_id','desc')
+					->join('notification_details n','l.login_id = n.created_by')
+					->join('chat_group_details g','g.group_id = n.group_id')					
+					->get_where('login_details l',$where)
+					->row_array();
+
+					if(!empty($data)){
+						$data['group_name'] = ucfirst($data['group_name']);
+						$data['first_name'] = ucfirst($data['first_name']);
+						$data['last_name'] = ucfirst($data['last_name']);
+						$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';						
+					}
+
+				echo json_encode($data);
+	}
+
 	public function create_share(){
 		$data = array('group_name' => $_POST['group_name'], 'from_id' => $this->login_id);
 		$count = $this->db->get_where('screen_share_details',$data)->num_rows();
@@ -296,6 +342,15 @@ class Chat extends CI_Controller {
 			$result = array('error'=>'Group name already taken!');		
 			
 		}else{
+			$da = array(
+				'group_name' => $_POST['group_name'],
+				'channel' =>'',
+				'type' => 'screenshare',
+				'created_by' => $this->login_id				
+			);
+				$this->db->insert('chat_group_details',$da);
+				$group_id = $this->db->insert_id();
+
 			$member = explode(',',$_POST['members']);
 				for ($i=0; $i <count($member) ; $i++) { 
 					$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
@@ -309,6 +364,15 @@ class Chat extends CI_Controller {
 							'created_date' => date('Y-m-d H:i:s')
 						);
 						$this->db->insert('screen_share_details',$datas);	
+
+						/*Add group member details */
+						$datat = array(
+							'group_id' => $group_id,
+							'login_id' => $user['login_id'],
+							'created_by' => $this->login_id
+							);
+						$this->db->insert('chat_group_members',$datat);	
+
 					}
 				}
 

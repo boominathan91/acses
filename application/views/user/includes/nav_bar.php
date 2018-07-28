@@ -368,6 +368,8 @@ $session_data = $this->session->userdata();
 										</li>
 										<li class="menu-title" onclick="set_group_type(4)">Screen Share Groups <a href="#" data-toggle="modal" data-target="#screen_share"><i class="fa fa-plus"></i></a></li>
 									<div id="session_screen_shrare_group"></div>
+									<!-- Newly Messaged user  -->
+										<div id="new_screen_user" class="new_screen_user"></div>
 											<?php if(!empty($screen_share_group)){ 
 												$class = '';
 											foreach($screen_share_group as $t){

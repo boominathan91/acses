@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `call_details` (
   `end_cause` varchar(255) NOT NULL,
   `status` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`call_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table acses_new.call_details: ~14 rows (approximately)
 /*!40000 ALTER TABLE `call_details` DISABLE KEYS */;
@@ -47,7 +47,14 @@ INSERT IGNORE INTO `call_details` (`call_id`, `call_from_id`, `call_to_id`, `gro
 	(11, 71, 70, 0, 'video', '00:00:10', '2018-07-17 12:31:18', '2018-07-17 12:31:28', 'HUNG_UP', 1),
 	(12, 70, 71, 0, 'audio', '00:00:10', '2018-07-17 12:31:19', '2018-07-17 12:31:30', 'HUNG_UP', 1),
 	(13, 70, 71, 0, 'audio', '00:00:06', '2018-07-17 12:31:58', '2018-07-17 12:32:05', 'HUNG_UP', 1),
-	(14, 71, 70, 0, 'video', '00:00:06', '2018-07-17 12:31:59', '2018-07-17 12:32:05', 'HUNG_UP', 1);
+	(14, 71, 70, 0, 'video', '00:00:06', '2018-07-17 12:31:59', '2018-07-17 12:32:05', 'HUNG_UP', 1),
+	(15, 74, 76, 0, 'audio', '00:00:31', '2018-07-28 16:14:26', '2018-07-28 16:14:57', 'HUNG_UP', 1),
+	(16, 74, 76, 0, 'audio', '00:00:02', '2018-07-28 16:16:49', '2018-07-28 16:16:52', 'HUNG_UP', 1),
+	(17, 76, 74, 1, 'audio', '00:00:03', '2018-07-28 16:16:48', '2018-07-28 16:16:52', 'HUNG_UP', 1),
+	(18, 74, 76, 0, 'audio', '00:00:00', '2018-07-28 12:48:13', '2018-07-28 16:18:12', 'DENIED', 1),
+	(19, 76, 74, 0, 'audio', '00:00:03', '2018-07-28 16:16:48', '2018-07-28 16:18:18', 'TIMEOUT', 1),
+	(20, 74, 76, 0, 'video', '00:00:06', '2018-07-28 16:21:26', '2018-07-28 16:21:33', 'HUNG_UP', 1),
+	(21, 76, 74, 1, 'audio', '00:00:00', '2018-07-28 13:01:38', '2018-07-28 16:31:38', 'DENIED', 1);
 /*!40000 ALTER TABLE `call_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.call_type
@@ -55,107 +62,27 @@ CREATE TABLE IF NOT EXISTS `call_type` (
   `call_id` int(11) NOT NULL AUTO_INCREMENT,
   `login_id` int(11) NOT NULL,
   `type` enum('audio','video','group_audio','group_video') NOT NULL,
-  `date_created` datetime NOT NULL,
+  `date_created` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`call_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.call_type: ~94 rows (approximately)
+-- Dumping data for table acses_new.call_type: ~0 rows (approximately)
 /*!40000 ALTER TABLE `call_type` DISABLE KEYS */;
 INSERT IGNORE INTO `call_type` (`call_id`, `login_id`, `type`, `date_created`) VALUES
-	(1, 71, 'audio', '0000-00-00 00:00:00'),
-	(2, 70, 'audio', '0000-00-00 00:00:00'),
-	(3, 70, 'audio', '0000-00-00 00:00:00'),
-	(4, 70, 'audio', '0000-00-00 00:00:00'),
-	(5, 71, 'audio', '0000-00-00 00:00:00'),
-	(6, 70, 'audio', '0000-00-00 00:00:00'),
-	(7, 70, 'video', '0000-00-00 00:00:00'),
-	(8, 70, 'video', '0000-00-00 00:00:00'),
-	(9, 71, 'audio', '0000-00-00 00:00:00'),
-	(10, 71, 'audio', '0000-00-00 00:00:00'),
-	(11, 70, 'audio', '0000-00-00 00:00:00'),
-	(12, 71, 'video', '0000-00-00 00:00:00'),
-	(13, 71, 'video', '0000-00-00 00:00:00'),
-	(14, 71, 'video', '0000-00-00 00:00:00'),
-	(15, 71, 'video', '0000-00-00 00:00:00'),
-	(16, 71, 'video', '0000-00-00 00:00:00'),
-	(17, 70, 'video', '0000-00-00 00:00:00'),
-	(18, 71, 'video', '0000-00-00 00:00:00'),
-	(19, 71, 'video', '0000-00-00 00:00:00'),
-	(20, 71, 'video', '0000-00-00 00:00:00'),
-	(21, 71, 'audio', '0000-00-00 00:00:00'),
-	(22, 71, 'audio', '0000-00-00 00:00:00'),
-	(23, 71, 'video', '0000-00-00 00:00:00'),
-	(24, 70, 'video', '0000-00-00 00:00:00'),
-	(25, 70, 'video', '0000-00-00 00:00:00'),
-	(26, 70, 'video', '0000-00-00 00:00:00'),
-	(27, 70, 'video', '0000-00-00 00:00:00'),
-	(28, 70, 'audio', '0000-00-00 00:00:00'),
-	(29, 70, 'audio', '0000-00-00 00:00:00'),
-	(30, 71, 'audio', '0000-00-00 00:00:00'),
-	(31, 70, 'video', '0000-00-00 00:00:00'),
-	(32, 71, 'video', '0000-00-00 00:00:00'),
-	(33, 71, 'group_video', '0000-00-00 00:00:00'),
-	(34, 72, 'audio', '0000-00-00 00:00:00'),
-	(35, 72, 'group_audio', '0000-00-00 00:00:00'),
-	(36, 72, 'group_audio', '0000-00-00 00:00:00'),
-	(37, 72, 'group_audio', '0000-00-00 00:00:00'),
-	(38, 71, 'audio', '0000-00-00 00:00:00'),
-	(39, 71, 'group_audio', '0000-00-00 00:00:00'),
-	(40, 72, 'group_audio', '0000-00-00 00:00:00'),
-	(41, 70, 'group_audio', '0000-00-00 00:00:00'),
-	(42, 70, 'group_video', '0000-00-00 00:00:00'),
-	(43, 72, 'group_video', '0000-00-00 00:00:00'),
-	(44, 71, 'group_video', '0000-00-00 00:00:00'),
-	(45, 72, 'group_video', '0000-00-00 00:00:00'),
-	(46, 72, 'group_audio', '0000-00-00 00:00:00'),
-	(47, 71, 'group_video', '0000-00-00 00:00:00'),
-	(48, 72, 'group_video', '0000-00-00 00:00:00'),
-	(49, 72, 'group_video', '0000-00-00 00:00:00'),
-	(50, 70, 'group_video', '0000-00-00 00:00:00'),
-	(51, 72, 'group_video', '0000-00-00 00:00:00'),
-	(52, 71, 'group_video', '0000-00-00 00:00:00'),
-	(53, 72, 'group_video', '0000-00-00 00:00:00'),
-	(54, 72, 'group_video', '0000-00-00 00:00:00'),
-	(55, 71, 'group_video', '0000-00-00 00:00:00'),
-	(56, 72, 'group_video', '0000-00-00 00:00:00'),
-	(57, 71, 'group_audio', '0000-00-00 00:00:00'),
-	(58, 71, 'group_video', '0000-00-00 00:00:00'),
-	(59, 72, 'group_video', '0000-00-00 00:00:00'),
-	(60, 70, 'group_video', '0000-00-00 00:00:00'),
-	(61, 73, '', '0000-00-00 00:00:00'),
-	(62, 73, 'audio', '0000-00-00 00:00:00'),
-	(63, 70, 'group_video', '0000-00-00 00:00:00'),
-	(64, 76, 'group_video', '0000-00-00 00:00:00'),
-	(65, 75, 'group_video', '0000-00-00 00:00:00'),
-	(66, 75, 'group_video', '0000-00-00 00:00:00'),
-	(67, 76, 'group_video', '0000-00-00 00:00:00'),
-	(68, 75, 'group_video', '0000-00-00 00:00:00'),
-	(69, 76, 'group_video', '0000-00-00 00:00:00'),
-	(70, 74, 'group_video', '0000-00-00 00:00:00'),
-	(71, 75, 'group_video', '0000-00-00 00:00:00'),
-	(72, 74, 'group_video', '0000-00-00 00:00:00'),
-	(73, 73, 'group_video', '0000-00-00 00:00:00'),
-	(74, 75, 'group_video', '0000-00-00 00:00:00'),
-	(75, 75, 'group_video', '0000-00-00 00:00:00'),
-	(76, 76, 'group_video', '0000-00-00 00:00:00'),
-	(77, 76, 'group_video', '0000-00-00 00:00:00'),
-	(78, 74, 'group_video', '0000-00-00 00:00:00'),
-	(79, 73, 'group_video', '0000-00-00 00:00:00'),
-	(80, 74, 'group_video', '0000-00-00 00:00:00'),
-	(81, 74, 'group_video', '0000-00-00 00:00:00'),
-	(82, 75, 'group_video', '0000-00-00 00:00:00'),
-	(83, 76, 'group_video', '0000-00-00 00:00:00'),
-	(84, 74, 'group_video', '0000-00-00 00:00:00'),
-	(85, 76, 'group_video', '0000-00-00 00:00:00'),
-	(86, 75, 'group_video', '0000-00-00 00:00:00'),
-	(87, 75, '', '0000-00-00 00:00:00'),
-	(88, 76, 'group_video', '0000-00-00 00:00:00'),
-	(89, 75, '', '0000-00-00 00:00:00'),
-	(90, 76, 'group_video', '0000-00-00 00:00:00'),
-	(91, 75, '', '0000-00-00 00:00:00'),
-	(92, 71, 'group_audio', '0000-00-00 00:00:00'),
-	(93, 76, 'group_video', '0000-00-00 00:00:00'),
-	(94, 75, 'audio', '0000-00-00 00:00:00');
+	(1, 74, 'audio', '2018-07-28 16:14:15'),
+	(2, 74, 'audio', '2018-07-28 16:15:52'),
+	(3, 76, 'audio', '2018-07-28 16:16:41'),
+	(4, 76, 'audio', '2018-07-28 16:17:05'),
+	(5, 76, 'audio', '2018-07-28 16:17:37'),
+	(6, 74, 'audio', '2018-07-28 16:18:07'),
+	(7, 74, 'video', '2018-07-28 16:21:19'),
+	(8, 76, 'video', '2018-07-28 16:24:49'),
+	(9, 74, 'video', '2018-07-28 16:25:11'),
+	(10, 76, 'video', '2018-07-28 16:25:47'),
+	(11, 74, 'video', '2018-07-28 16:25:50'),
+	(12, 74, 'audio', '2018-07-28 16:26:42'),
+	(13, 76, 'audio', '2018-07-28 16:30:41'),
+	(14, 76, 'audio', '2018-07-28 16:31:28');
 /*!40000 ALTER TABLE `call_type` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.chat_deleted_details
@@ -166,13 +93,10 @@ CREATE TABLE IF NOT EXISTS `chat_deleted_details` (
   `group_id` int(11) DEFAULT NULL,
   `status` int(11) DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.chat_deleted_details: ~2 rows (approximately)
+-- Dumping data for table acses_new.chat_deleted_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `chat_deleted_details` DISABLE KEYS */;
-INSERT IGNORE INTO `chat_deleted_details` (`id`, `chat_id`, `can_view`, `group_id`, `status`) VALUES
-	(1, 2, 74, NULL, 1),
-	(2, 2, 76, NULL, 1);
 /*!40000 ALTER TABLE `chat_deleted_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.chat_details
@@ -193,23 +117,13 @@ CREATE TABLE IF NOT EXISTS `chat_details` (
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`chat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.chat_details: ~9 rows (approximately)
+-- Dumping data for table acses_new.chat_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `chat_details` DISABLE KEYS */;
 INSERT IGNORE INTO `chat_details` (`chat_id`, `group_id`, `message_type`, `message`, `receiver_id`, `sender_id`, `chatdate`, `file_path`, `file_name`, `read_status`, `time_zone`, `type`, `status`, `created_at`, `last_updated`) VALUES
-	(1, 2, 'text', 'Hi', 0, 76, '2018-07-27 18:04:33', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:04:33', '2018-07-27 18:04:33'),
-	(2, 0, 'text', 'sdfsd', 74, 76, '2018-07-27 18:07:23', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:07:23', '2018-07-27 18:07:23'),
-	(3, 2, 'text', 'sdfsd', 0, 76, '2018-07-27 18:07:58', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:07:58', '2018-07-27 18:07:58'),
-	(4, 2, 'text', 'sdfds', 0, 76, '2018-07-27 18:08:29', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:08:29', '2018-07-27 18:08:29'),
-	(5, 2, 'group', 'sdfds', 0, 76, '2018-07-27 18:09:08', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-27 18:09:08', '2018-07-27 18:09:08'),
-	(6, 2, 'group', 'sdfds', 0, 76, '2018-07-27 18:09:22', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-27 18:09:22', '2018-07-27 18:09:22'),
-	(7, 2, 'text', 'sdfdsf', 0, 76, '2018-07-27 18:09:28', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:09:28', '2018-07-27 18:09:28'),
-	(8, 2, 'text', 'terdstseteste', 0, 76, '2018-07-27 18:10:55', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:10:55', '2018-07-27 18:10:55'),
-	(9, 2, 'text', 'sdfsdfsdf', 0, 76, '2018-07-27 18:11:06', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:11:06', '2018-07-27 18:11:06'),
-	(10, 2, 'text', 'dsf', 0, 76, '2018-07-27 18:11:32', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:11:32', '2018-07-27 18:11:32'),
-	(11, 2, 'group', 'dsf', 0, 76, '2018-07-27 18:12:38', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-27 18:12:38', '2018-07-27 18:12:38'),
-	(12, 2, 'text', 'fghfghfgh', 0, 76, '2018-07-27 18:13:15', NULL, NULL, 1, 'Asia/Kolkata', '', 1, '2018-07-27 18:13:15', '2018-07-27 18:13:15');
+	(1, 1, 'group', 'Hi there!', 0, 76, '2018-07-28 16:15:26', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-28 16:15:26', '2018-07-28 16:15:26'),
+	(2, 2, 'group', 'Hi there!', 0, 74, '2018-07-28 16:24:25', NULL, NULL, 0, 'Asia/Kolkata', '', 1, '2018-07-28 16:24:25', '2018-07-28 16:24:25');
 /*!40000 ALTER TABLE `chat_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.chat_group_details
@@ -217,18 +131,17 @@ CREATE TABLE IF NOT EXISTS `chat_group_details` (
   `group_id` int(11) NOT NULL AUTO_INCREMENT,
   `group_name` varchar(255) NOT NULL,
   `channel` varchar(255) NOT NULL,
-  `type` enum('text','audio','video') NOT NULL DEFAULT 'text',
+  `type` enum('text','audio','video','screenshare') NOT NULL DEFAULT 'text',
   `status` int(11) NOT NULL DEFAULT '1',
   `created_by` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.chat_group_details: ~3 rows (approximately)
+-- Dumping data for table acses_new.chat_group_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `chat_group_details` DISABLE KEYS */;
 INSERT IGNORE INTO `chat_group_details` (`group_id`, `group_name`, `channel`, `type`, `status`, `created_by`) VALUES
-	(1, 'New', '0ffb19eb-8b4a-461f-bae9-8600313803f1', 'text', 1, 1),
-	(2, 'test', '64a8d2bd-36f6-408a-a78c-74ade3a62dd0', 'text', 1, 1),
-	(3, 'siva', '64a8d2bd-36f6-408a-a78c-74ade3a62dd0', 'text', 1, 1);
+	(1, 'test', '6aa08951-76e1-46e4-8588-0bdfbc0a971b', 'audio', 1, 1),
+	(2, 'tttt', 'a3cae664-1f0e-4597-9a22-b6daaabd177b', 'video', 1, 1);
 /*!40000 ALTER TABLE `chat_group_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.chat_group_members
@@ -239,19 +152,17 @@ CREATE TABLE IF NOT EXISTS `chat_group_members` (
   `is_active` tinyint(1) NOT NULL DEFAULT '0',
   `created_by` int(11) NOT NULL DEFAULT '1',
   PRIMARY KEY (`members_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.chat_group_members: ~8 rows (approximately)
+-- Dumping data for table acses_new.chat_group_members: ~0 rows (approximately)
 /*!40000 ALTER TABLE `chat_group_members` DISABLE KEYS */;
 INSERT IGNORE INTO `chat_group_members` (`members_id`, `group_id`, `login_id`, `is_active`, `created_by`) VALUES
 	(1, 1, 74, 0, 1),
 	(2, 1, 72, 0, 1),
 	(3, 1, 76, 0, 1),
-	(4, 2, 74, 0, 1),
-	(5, 2, 76, 0, 1),
-	(6, 3, 74, 0, 1),
-	(7, 3, 72, 0, 1),
-	(8, 3, 76, 0, 1);
+	(4, 2, 76, 0, 1),
+	(5, 2, 72, 0, 1),
+	(6, 2, 74, 0, 1);
 /*!40000 ALTER TABLE `chat_group_members` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.chat_seen_details
@@ -261,22 +172,15 @@ CREATE TABLE IF NOT EXISTS `chat_seen_details` (
   `login_id` int(11) NOT NULL,
   `read_status` enum('0','1') NOT NULL DEFAULT '0',
   PRIMARY KEY (`seen_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.chat_seen_details: ~9 rows (approximately)
+-- Dumping data for table acses_new.chat_seen_details: ~0 rows (approximately)
 /*!40000 ALTER TABLE `chat_seen_details` DISABLE KEYS */;
 INSERT IGNORE INTO `chat_seen_details` (`seen_id`, `group_id`, `login_id`, `read_status`) VALUES
-	(1, 2, 74, '0'),
-	(2, 2, 74, '0'),
-	(3, 2, 74, '0'),
-	(4, 2, 74, '0'),
-	(5, 2, 74, '0'),
-	(6, 2, 74, '0'),
-	(7, 2, 74, '0'),
-	(8, 2, 74, '0'),
-	(9, 2, 74, '0'),
-	(10, 2, 74, '0'),
-	(11, 2, 74, '0');
+	(1, 1, 74, '1'),
+	(2, 1, 72, '0'),
+	(3, 2, 76, '1'),
+	(4, 2, 72, '0');
 /*!40000 ALTER TABLE `chat_seen_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.city_details
@@ -48345,12 +48249,53 @@ INSERT IGNORE INTO `login_details` (`login_id`, `sinch_username`, `user_name`, `
 	(69, 'sivasiav6', 'siva', 'siva', 'siva', 'test', '2018-07-14', '', '0000-00-00', 'male', '', 0, 0, 0, 0, '3', 'Dreamguys Technologies', 0, 0, 'siva@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', 'user', 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(70, 'testtets0', 'test', 'Boomi', 'nathan', 'test', '2018-08-07', '1531920470.png', '2010-07-20', 'male', 'charan ma nager, peelamadu', 3683, 35, 101, 641035, '9988776655', 'test', 3, 6, 'test@test.com', '098f6bcd4621d373cade4e832627b4f6', 'test', 'user', 0, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
 	(71, 'boomimbioo9', 'boomi', 'Boomi', 'nathan', 'test', '2018-07-14', '1531919816.png', '1998-09-01', 'male', 'charan ma nager, peelamadu', 3683, 35, 101, 641035, '9988776655', '', 3, 6, 'boominathan@dreamguys.co.in', '098f6bcd4621d373cade4e832627b4f6', 'test', 'user', 1, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-	(72, 'sivamanim0', 'sivamani', 'sivamani', 'M', 'FP23', '2017-04-24', '', '0000-00-00', 'male', '', 0, 0, 0, 0, '9988776655', 'Dreams Testing Merchants', 4, 7, 'sivamani@dreamguys.co.in', '8338d6ff4f0878b222f312494c1621a9', 'Dreams99', 'user', 0, 1, '0000-00-00 00:00:00', '2018-07-14 03:35:20'),
+	(72, 'sivamanim0', 'sivamani', 'sivamani', 'M', 'FP23', '2017-04-24', '', '0000-00-00', 'male', '', 0, 0, 0, 0, '9988776655', 'Dreams Testing Merchants', 4, 7, 'sivamani@dreamguys.co.in', '8338d6ff4f0878b222f312494c1621a9', 'Dreams99', 'user', 1, 1, '0000-00-00 00:00:00', '2018-07-14 03:35:20'),
 	(73, 'johnhojn8', 'john', 'john', 'john', 'dreamsjohn', '2018-07-24', '1532352364.png', '1969-12-31', 'male', '', 0, 0, 0, 0, '1234567890', 'Dreams', 4, 7, 'john@demo.com', '527bd5b5d689e2c32ae974c6229ff785', 'john', 'user', 1, 1, '0000-00-00 00:00:00', '2018-07-23 06:16:31'),
-	(74, 'mathewhmeat8', 'mathew', 'mathew', 'mathew', 'dreamsmathew', '2018-07-18', '1532586967.png', '1969-12-31', 'male', '', 0, 0, 0, 0, '1234567890', 'Dreams', 4, 7, 'mathew@demo.com', '8d10344331a7ac7665c83d8956bfc992', 'mathew', 'user', 1, 1, '0000-00-00 00:00:00', '2018-07-23 06:17:54'),
+	(74, 'mathewhmeat8', 'mathew', 'mathew', 'mathew', 'dreamsmathew', '2018-07-18', '1532753445.png', '1969-12-31', 'male', '', 0, 0, 0, 0, '1234567890', 'Dreams', 4, 7, 'mathew@demo.com', '8d10344331a7ac7665c83d8956bfc992', 'mathew', 'user', 1, 1, '0000-00-00 00:00:00', '2018-07-23 06:17:54'),
 	(75, 'sumithtusim1', 'sumith', 'sumith', 'sumith', 'dreamssumith', '2018-07-19', '1532352322.png', '1969-12-31', 'male', '', 0, 0, 0, 0, '1234567890', 'Dreams', 3, 6, 'sumith@demo.com', 'f9ab297ab3637959e939f58050f757ff', 'sumith', 'user', 1, 1, '0000-00-00 00:00:00', '2018-07-23 06:18:43'),
 	(76, 'richardarhci3', 'richard', 'richard', 'richard', 'dreamsrichard', '2018-07-20', '1532585726.png', '1969-12-31', 'male', 'KK Nagar', 3659, 35, 101, 0, '1234567890', 'Dreams', 3, 6, 'richard@demo.com', '6ae199a93c381bf6d5de27491139d3f9', 'richard', 'user', 1, 1, '0000-00-00 00:00:00', '2018-07-23 06:19:34');
 /*!40000 ALTER TABLE `login_details` ENABLE KEYS */;
+
+-- Dumping structure for table acses_new.notification_details
+CREATE TABLE IF NOT EXISTS `notification_details` (
+  `note_id` int(11) NOT NULL AUTO_INCREMENT,
+  `group_id` int(11) NOT NULL,
+  `group_type` varchar(255) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `status` int(11) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`note_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table acses_new.notification_details: ~24 rows (approximately)
+/*!40000 ALTER TABLE `notification_details` DISABLE KEYS */;
+INSERT IGNORE INTO `notification_details` (`note_id`, `group_id`, `group_type`, `created_by`, `status`) VALUES
+	(1, 8, 'text', 76, 1),
+	(2, 9, 'text', 76, 1),
+	(3, 10, 'text', 74, 1),
+	(4, 11, 'text', 76, 1),
+	(5, 12, 'audio', 76, 1),
+	(6, 1, 'text', 76, 1),
+	(7, 2, 'audio', 76, 1),
+	(8, 3, 'text', 76, 1),
+	(9, 1, 'text', 76, 1),
+	(10, 2, 'audio', 76, 1),
+	(11, 3, 'audio', 76, 1),
+	(12, 4, 'audio', 76, 1),
+	(13, 5, 'audio', 76, 1),
+	(14, 6, 'audio', 76, 1),
+	(15, 7, 'video', 74, 1),
+	(16, 8, 'audio', 74, 1),
+	(17, 9, 'audio', 74, 1),
+	(18, 10, 'audio', 76, 1),
+	(19, 11, 'audio', 76, 1),
+	(20, 12, 'video', 76, 1),
+	(21, 13, 'audio', 74, 1),
+	(22, 14, 'text', 74, 1),
+	(23, 15, 'audio', 74, 1),
+	(24, 16, 'video', 74, 1),
+	(25, 1, 'audio', 76, 1),
+	(26, 2, 'video', 74, 1);
+/*!40000 ALTER TABLE `notification_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.profile_education_details
 CREATE TABLE IF NOT EXISTS `profile_education_details` (
@@ -48405,13 +48350,31 @@ CREATE TABLE IF NOT EXISTS `screen_share_details` (
   `created_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `modified_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 
--- Dumping data for table acses_new.screen_share_details: ~2 rows (approximately)
+-- Dumping data for table acses_new.screen_share_details: ~20 rows (approximately)
 /*!40000 ALTER TABLE `screen_share_details` DISABLE KEYS */;
 INSERT IGNORE INTO `screen_share_details` (`id`, `group_name`, `from_id`, `to_id`, `is_active`, `url`, `status`, `created_date`, `modified_date`) VALUES
 	(1, 'testing', 71, 69, 1, 'http://api.screenleap.com/v2/viewer/268410233?accountid=dreamguys_technologies', 'invited', '2018-07-20 08:47:32', '0000-00-00 00:00:00'),
-	(2, 'new test', 76, 75, 1, 'http://api.screenleap.com/v2/viewer/034776135?accountid=dreamguys_technologies', 'invited', '2018-07-25 02:37:59', '0000-00-00 00:00:00');
+	(2, 'new test', 76, 75, 1, 'http://api.screenleap.com/v2/viewer/034776135?accountid=dreamguys_technologies', 'invited', '2018-07-25 02:37:59', '0000-00-00 00:00:00'),
+	(3, 'ttt', 74, 72, 0, '', NULL, '2018-07-28 14:03:13', '0000-00-00 00:00:00'),
+	(4, 'ttt', 74, 76, 0, '', NULL, '2018-07-28 14:03:13', '0000-00-00 00:00:00'),
+	(5, 'sds', 74, 72, 0, '', NULL, '2018-07-28 14:04:26', '0000-00-00 00:00:00'),
+	(6, 'sds', 74, 76, 0, '', NULL, '2018-07-28 14:04:26', '0000-00-00 00:00:00'),
+	(7, 'testing', 76, 72, 0, '', NULL, '2018-07-28 14:26:28', '0000-00-00 00:00:00'),
+	(8, 'testing', 76, 74, 0, '', NULL, '2018-07-28 14:26:29', '0000-00-00 00:00:00'),
+	(9, 'screenshare_group', 76, 76, 0, '', NULL, '2018-07-28 15:19:49', '0000-00-00 00:00:00'),
+	(10, 'screenshare_group', 76, 72, 0, '', NULL, '2018-07-28 15:19:49', '0000-00-00 00:00:00'),
+	(11, 'hhh', 76, 74, 0, '', NULL, '2018-07-28 15:20:17', '0000-00-00 00:00:00'),
+	(12, 'hhh', 76, 72, 0, '', NULL, '2018-07-28 15:20:17', '0000-00-00 00:00:00'),
+	(13, 'eee', 74, 76, 0, '', NULL, '2018-07-28 15:22:34', '0000-00-00 00:00:00'),
+	(14, 'eee', 74, 72, 0, '', NULL, '2018-07-28 15:22:34', '0000-00-00 00:00:00'),
+	(15, 'asd', 74, 75, 0, '', NULL, '2018-07-28 15:23:09', '0000-00-00 00:00:00'),
+	(16, 'asd', 74, 76, 0, '', NULL, '2018-07-28 15:23:10', '0000-00-00 00:00:00'),
+	(17, 'asdsss', 74, 75, 0, '', NULL, '2018-07-28 15:23:28', '0000-00-00 00:00:00'),
+	(18, 'asdsss', 74, 76, 0, '', NULL, '2018-07-28 15:23:28', '0000-00-00 00:00:00'),
+	(19, 'sad', 74, 76, 0, '', NULL, '2018-07-28 15:24:02', '0000-00-00 00:00:00'),
+	(20, 'sad', 74, 72, 0, '', NULL, '2018-07-28 15:24:03', '0000-00-00 00:00:00');
 /*!40000 ALTER TABLE `screen_share_details` ENABLE KEYS */;
 
 -- Dumping structure for table acses_new.state_details
