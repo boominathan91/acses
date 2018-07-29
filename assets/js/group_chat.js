@@ -1,22 +1,22 @@
 isMobile = {
-   Android: function() {
-       return navigator.userAgent.match(/Android/i);
-   },
-   BlackBerry: function() {
-       return navigator.userAgent.match(/BlackBerry/i);
-   },
-   iOS: function() {
-       return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-   },
-   Opera: function() {
-       return navigator.userAgent.match(/Opera Mini/i);
-   },
-   Windows: function() {
-       return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
-   },
-   any: function() {
-       return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-   }
+	Android: function() {
+		return navigator.userAgent.match(/Android/i);
+	},
+	BlackBerry: function() {
+		return navigator.userAgent.match(/BlackBerry/i);
+	},
+	iOS: function() {
+		return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+	},
+	Opera: function() {
+		return navigator.userAgent.match(/Opera Mini/i);
+	},
+	Windows: function() {
+		return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+	},
+	any: function() {
+		return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+	}
 };
 
 var screenShareData = null;
@@ -42,8 +42,8 @@ function set_group_type(type){
 //Support functions
 var getUuid = function() {
 	return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-	    var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-	    return v.toString(16);
+		var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+		return v.toString(16);
 	});
 };
 
@@ -82,7 +82,7 @@ $('#group_form').submit(function(){
 				$('#add_group').modal('hide');	
 				if(obj.group_type == 'text'){
 					var gtype = obj.group_type;
-						
+
 				}else if(obj.group_type == 'audio'){
 					var gtype = 'group_audio';
 
@@ -95,7 +95,7 @@ $('#group_form').submit(function(){
 				
 				if(obj.group_type == 'text'){
 					$('#session_group_text').prepend(data);
-						
+
 				}else if(obj.group_type == 'audio'){
 					$('#session_group_audio').prepend(data);
 
@@ -164,23 +164,15 @@ $('#screen_share_form').submit(function(){
 
 function set_nav_bar_group_user(group_id,element){
 
-
-    
-	$('li').removeClass('active').removeClass('hidden');
+	$('li').removeClass('active,hidden');
 	$(element).addClass('active');
 	var id = $(element).attr('id');	
-	$('#'+id+'danger').empty();
-	
+	$('#'+id+'danger').empty();	
 	var type = $(element).attr('type');		
-	
-
-    $("div[id^='for_']").hide();
+	$("div[id^='for_']").hide();
 	$('#for_' + type).show();
-	
-
 	$('.chats').html('');
 	$('.chat-main-row').removeClass('hidden');
-
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
 	$('.group_members').html('');
@@ -190,57 +182,49 @@ function set_nav_bar_group_user(group_id,element){
 			if(obj.group){
 				var group = obj.group;
 				var type = obj.group.type;
-					var group_type_name =type.replace(/_/g, ' ');
-					var extra_add = 'Call';
-					if(type == 'text'){
-						extra_add = '';
-
-						//$('.to_name').text(group.group_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
-						$('.to_name').text(group.group_name);
+				var group_type_name =type.replace(/_/g, ' ');
+				var extra_add = 'Call';
+				if(type == 'text'){
+					extra_add = '';
+					$('.to_name').text(group.group_name);
 					}
-					// $('.to_' + type + '_name').text(group.group_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
-					// $('.to_' + type).text(group.group_name);
+					$('.to_' + type).text(group.group_name);
 					$('#task_window').addClass('hidden');
-					$('button.start-call').attr('type', type);
-				var receivers = [];
-				var receiver_id = [];
-				var group_members_thumbnail = '';;
-				var i=0;
-				if( obj.group_members && type == 'audio' ){
-					i++;
-					$('.to_group_audio_name').text(group.group_name);
+					var receivers = [];
+					var receiver_id = [];					
+					var group_members_thumbnail = '';;
+					var i=0;
+					//if( obj.group_members && (type == 'audio' || type == 'video') ){
+					if( obj.group_members && type == 'audio'){
+						i++;
+						$('.to_group_audio_name').text(group.group_name);
+						$('.to_group_audio').text(group.group_name);
+						group_members_thumbnail +='<li>'+
+						'<img src="'+ currentUserProfileImage +'" id="'+currentUserId+'" class="img-responsive outgoing_image" alt="" title="'+currentUserName+'">'+						
+						'</li>';
 
-					group_members_thumbnail +='<li>'+
-                                              	'<img src="'+ currentUserProfileImage +'" class="img-responsive outgoing_image" alt="">'+
-                                              '</li>';
-                                             
-					$(obj.group_members).each(function(){
-						receivers.push(this.sinch_username);
-						receiver_id.push(this.login_id);
+						$(obj.group_members).each(function(){
+							receivers.push(this.sinch_username);
+							receiver_id.push(this.login_id);
+							if(this.profile_img != ''){
+								var receiver_image = imageBasePath + this.profile_img;
+							}else{
+								var receiver_image = defaultImageBasePath +'user.jpg';
+							}
+							group_members_thumbnail +='<li id="' + this.members_id +'">'+
+							'<img src="'+receiver_image+'" title ="'+this.first_name+' '+this.last_name+'"class="img-responsive outgoing_image" alt="">'+
+							'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
+							'</li>';
+						});
+						$('.group_members').append(group_members_thumbnail);
 
-						if(this.profile_img != ''){
-							var receiver_image = imageBasePath + this.profile_img;
-						}else{
-							var receiver_image = defaultImageBasePath +'user.jpg';
-						}
+					}else if( obj.group_members && type == 'text'){
 
-						group_members_thumbnail +='<li id="' + this.members_id +'">'+
-                                                '<img src="'+receiver_image+'" class="img-responsive outgoing_image" alt="">'+
-                                            	'</li>';
-					});
-					$('.group_members').append(group_members_thumbnail);
-
-
-
-				}else if( obj.group_members && type == 'video'){
-					$('.to_group_video_name').text(group.group_name);
-				}else if( obj.group_members && type == 'text'){
-
-					$(obj.group_members).each(function(){
-						receivers.push(this.sinch_username);
-						receiver_id.push(this.login_id);
-					});
-				}
+						$(obj.group_members).each(function(){
+							receivers.push(this.sinch_username);
+							receiver_id.push(this.login_id);
+						});
+					}
 				// console.log(receivers);
 				$('#receiver_sinchusername').val(receivers);
 				$('#receiver_id').val(receiver_id);
@@ -305,89 +289,89 @@ $("#group_screen_btn").click(function(){
 		$("#shareIframe")[0].click();
 	}
 	else {
-							var group_name = $(this).attr("data-name");
-							var from_id = $(this).attr("data-id");
+		var group_name = $(this).attr("data-name");
+		var from_id = $(this).attr("data-id");
 		$.post(base_url+'chat/request_share', function(res){
-				if(res){
-					console.log(res);
-					var obj = jQuery.parseJSON(res);
+			if(res){
+				console.log(res);
+				var obj = jQuery.parseJSON(res);
 
-						screenShareData = jQuery.parseJSON(obj);
+				screenShareData = jQuery.parseJSON(obj);
 
-						if( screenleap.isBrowserSupportedForExtension() ) {
-							console.log("Browser supported");
-							screenleap.checkIsExtensionEnabled(
+				if( screenleap.isBrowserSupportedForExtension() ) {
+					console.log("Browser supported");
+					screenleap.checkIsExtensionEnabled(
+						function() {
+							console.log("Extension enabled");
+							console.log(screenShareData);
+							screenleap.startSharing('IN_BROWSER', screenShareData);
+						}, 
+						function() {
+							screenleap.checkIsExtensionInstalled(
 								function() {
-									console.log("Extension enabled");
-									console.log(screenShareData);
-									screenleap.startSharing('IN_BROWSER', screenShareData);
-								}, 
+									console.log("Extension already installed but not enabled.");
+								},
 								function() {
-									screenleap.checkIsExtensionInstalled(
-										function() {
-											console.log("Extension already installed but not enabled.");
-										},
-										function() {
-											console.log("Extension not installed");
-											screenleap.installExtension(
-												function(){
-													console.log('Extension installation success.');
-												}, 
-												function(){
-													console.log('Extension installation failed.');
-												}
-											);
+									console.log("Extension not installed");
+									screenleap.installExtension(
+										function(){
+											console.log('Extension installation success.');
+										}, 
+										function(){
+											console.log('Extension installation failed.');
 										}
-									);
+										);
 								}
-							);
+								);
 						}
-						else {
-							console.log('Browser not supported for screen leap extension.');
-						}
+						);
+				}
+				else {
+					console.log('Browser not supported for screen leap extension.');
+				}
 
-						screenleap.onScreenShareStart = function() { 
-							var code = screenleap.getScreenShareCode();
-							var viewerUrl = screenleap.getViewerUrl();
-							console.log('Screen is now shared using the code ' + code);
-							console.log('Screen is now shared with the url ' + viewerUrl); 
-							$.post(base_url+'chat/update_share',{'group_name': group_name,'from_id': from_id,'url':viewerUrl }, function(res){
-								updateNotification('Members are invited successfully!', 'success');
-							});
+				screenleap.onScreenShareStart = function() { 
+					var code = screenleap.getScreenShareCode();
+					var viewerUrl = screenleap.getViewerUrl();
+					console.log('Screen is now shared using the code ' + code);
+					console.log('Screen is now shared with the url ' + viewerUrl); 
+					$.post(base_url+'chat/update_share',{'group_name': group_name,'from_id': from_id,'url':viewerUrl }, function(res){
+						updateNotification('Members are invited successfully!', 'success');
+					});
 
 
-						} 
+				} 
 
-						screenleap.onScreenShareEnd = function() { 
-							console.log('Screen sharing has ended'); 
-						}
+				screenleap.onScreenShareEnd = function() { 
+					console.log('Screen sharing has ended'); 
+				}
 
-						screenleap.error = function(action, errorMessage, xhr) { 
-							var msg = action + ': ' + errorMessage; 
-							if (xhr) { 
-								msg += ' (' + xhr.status + ')'; 
-							} 
-							console.log('Error in ' + msg); 
-						}
+				screenleap.error = function(action, errorMessage, xhr) { 
+					var msg = action + ': ' + errorMessage; 
+					if (xhr) { 
+						msg += ' (' + xhr.status + ')'; 
+					} 
+					console.log('Error in ' + msg); 
+				}
 
-						screenleap.onViewerConnect = function( screenShareData ) { 
-							console.log('viewer ' + screenShareData.participantId + ' connected'); 
-						}
+				screenleap.onViewerConnect = function( screenShareData ) { 
+					console.log('viewer ' + screenShareData.participantId + ' connected'); 
+				}
 
-						screenleap.onViewerDisconnect = function( screenShareData ) { 
-							console.log('viewer ' + screenShareData.participantId + ' disconnected'); 
-						} 
+				screenleap.onViewerDisconnect = function( screenShareData ) { 
+					console.log('viewer ' + screenShareData.participantId + ' disconnected'); 
+				} 
 
-						screenleap.onPause = function() { 
-							console.log('Screen sharing paused'); 
-						}
+				screenleap.onPause = function() { 
+					console.log('Screen sharing paused'); 
+				}
 
-						screenleap.onResume = function() { 
-							console.log('Screen sharing resumed'); 
-						}
+				screenleap.onResume = function() { 
+					console.log('Screen sharing resumed'); 
+				}
 
-					}
-			});
-		}
+			}
+		});
+	}
 
 });

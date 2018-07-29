@@ -105,9 +105,9 @@ $session_data = $this->session->userdata();
 	</li>	
 	<li class="dropdown">
 		<?php 
-			$profile_img = $this->session->userdata('profile_img');
-			$profile_img = !empty($profile_img)?'uploads/'.$profile_img:'assets/img/user.jpg';
-		 ?>
+		$profile_img = $this->session->userdata('profile_img');
+		$profile_img = !empty($profile_img)?'uploads/'.$profile_img:'assets/img/user.jpg';
+		?>
 		<a href="#" class="dropdown-toggle user-link" data-toggle="dropdown" title="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
 			<span class="user-img"><img class="img-circle" src="<?php echo base_url().$profile_img; ?>" width="40" alt="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
 				<span class="status online"></span></span>
@@ -146,7 +146,19 @@ $session_data = $this->session->userdata();
 					<div class="sidebar-inner slimscroll">
 						<div class="sidebar-menu">
 							
-							<?php $uri = $this->uri->segment(1);	?>
+							<?php $uri = $this->uri->segment(1);	
+
+								if($uri == 'edit-profile'){
+
+									echo '<ul>
+											<li> 
+										<a href="'.base_url().'chat" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
+									</li>';
+
+								}else{
+
+								
+							?>
 
 							<ul class="profile <?php echo $profile_class; ?>">		
 								<li id="profile"><a href="javascript:void(0)" page="profile">Profile</a></li>			
@@ -154,10 +166,10 @@ $session_data = $this->session->userdata();
 								<li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li>
 								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>	
 								<li><a href="javascript:void(0)" page="screen_share" onclick="navigate(this)">Screen Share</a></li>							
-								</ul>
+							</ul>
 
-								<ul>
-									<div  class="text_chat <?php echo $text_chat_class; ?>">									
+							<ul>
+								<div  class="text_chat <?php echo $text_chat_class; ?>">									
 									<!-- Text Chat  -->	
 									<li> 
 										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
@@ -197,7 +209,100 @@ $session_data = $this->session->userdata();
 
 									<li class="menu-title">Direct Chats <a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
 									<!-- Session selected user  -->
-									<div id="session_chat_user" class="session_chat_user"></div>	
+									<div id="session_chat_user" class="session_chat_user">
+
+
+
+
+										<?php 										
+	// error_reporting(0);
+										$name = '';
+										$class = 'hidden';
+										$online_status = 'online';
+										$receiver_profile_img ='';
+										$receiver_id = '';
+										$receiver_sinchusername = '';
+										$department_name = '';
+										$dob ='';
+										$receiver_email = '';
+										$phone_number = '';
+										$mesage_type='';
+										$group_id = 0;
+										$task_class = ''; 
+
+
+										if(!empty($this->session->userdata('session_chat_id'))){
+											$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
+											$class = '';
+											$online_status = ($chat['online_status'] == 1)?'online':'offline';
+											$receiver_profile_img = (!empty($chat['profile_img']))?base_url().'uploads/'.$chat['profile_img']:base_url().'assets/img/user.jpg';
+											$receiver_id = $chat['login_id'];
+											$receiver_email = $chat['email'];
+											$phone_number = $chat['phone_number'];
+											$receiver_sinchusername = $chat['sinch_username'];
+											$department_name = $chat['department_name'];
+											$dob = $data['dob'] =(!empty($data['dob']) && $data['dob']!='0000-00-00')?date('d-m-Y',strtotime($data['dob'])):'N/A';
+											$mesage_type = 'text';
+											$task_class = ''; 
+
+										}else if(!empty($this->session->userdata('session_group_id'))){
+
+											$name = (!empty($chat[0]['group_name']))?ucfirst($chat[0]['group_name']):'';
+											$class = '';
+											$online_status = 'online';
+											$receiver_profile_img = base_url().'assets/img/user.jpg';
+
+											foreach($chat as $c){
+												$receiver_id[]=$c['login_id'];
+												$sinch_username[]=$c['sinch_username'];
+											}
+											if(!empty($receiver_id)){
+												$receiver_id = implode(',',$receiver_id);	
+												$receiver_sinchusername = implode(',',$sinch_username);
+											}else{
+												$receiver_id = '';
+												$receiver_sinchusername ='';
+											}
+
+
+											$receiver_email = '';
+											$phone_number ='';		
+											$department_name = '';
+											$dob = '';
+											$mesage_type="group";		
+											$group_id = $this->session->userdata('session_group_id');
+											$task_class = 'hidden'; 
+
+										}
+
+
+
+										/*From User  Image*/
+										if(!empty($profile['profile_img'])){
+											$profile_img = $profile['profile_img'];
+											$file_to_check = FCPATH . '/uploads/' . $profile_img;
+											if (file_exists($file_to_check)) {
+												$profile_img = base_url() . 'uploads/'.$profile_img;
+											}
+										}		
+										$profile_img = (!empty($profile_img))?$profile_img : base_url().'assets/img/user.jpg';
+
+										/*From User  Image*/
+
+										if(!empty($this->session->userdata('session_chat_id'))){
+
+											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="text_chat">
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right"></span></a>
+												</li>';
+										}
+
+
+
+
+										?>
+
+
+									</div>	
 									<!-- Newly Messaged user  -->
 									<div id="new_message_user" class="new_message_user"></div>
 
@@ -225,6 +330,7 @@ $session_data = $this->session->userdata();
 											}
 
 										}
+
 										?>
 
 									</div>					
@@ -240,40 +346,51 @@ $session_data = $this->session->userdata();
 											<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
 										</li>
 										<li class="menu-title" onclick="set_group_type(2)">Voice Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
-									<div id="session_group_audio"></div>
-									<div id="other_audio_group">
+										<div id="session_group_audio"></div>
+										<div id="other_audio_group">
 											<?php if(!empty($audio_group)){ 
-											foreach($audio_group['groups'] as $t){
+												foreach($audio_group['groups'] as $t){
 
 
-												$login_id = $this->session->userdata('login_id');
-												$where = array(
-													'group_id' => $t['group_id']
-													,'receiver_id' =>$login_id,
-													'read_status' =>0
-												);
-												$count = $this->db->get_where('chat_details',$where)->num_rows();
-												$count = ($count!=0)?$count:'';
-												if(!empty($this->session->userdata('session_group_id'))){
-													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
-												}else{
-													$class = '';	
+													$login_id = $this->session->userdata('login_id');
+													$where = array(
+														'group_id' => $t['group_id']
+														,'receiver_id' =>$login_id,
+														'read_status' =>0
+													);
+													$count = $this->db->get_where('chat_details',$where)->num_rows();
+													$count = ($count!=0)?$count:'';
+													if(!empty($this->session->userdata('session_group_id'))){
+														$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+													}else{
+														$class = '';	
+													}
+
+
+													echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_audio"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 												}
-
-
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_audio"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
-											}
-										} ?>
+											} ?>
 										</div>
 
 										<li class="menu-title">Direct Voice Call <a href="javascript:void(0);" onclick="modal_open('audio')"><i class="fa fa-plus"></i></a></li>
 										<!-- Session selected user  -->
-										<div id="session_audio_user" class="session_chat_user"></div>	
+										<div id="session_audio_user" class="session_chat_user">
+											<?php 
+
+											if(!empty($this->session->userdata('session_chat_id'))){
+
+											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="audio">
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right"></span></a>
+												</li>';
+										}
+
+										 ?>
+										</div>	
 										<!-- Newly Messaged user  -->
 										<div id="new_audio_user" class="new_message_user"></div>
 										
 
-									<?php
+										<?php
 										if(!empty($chat_users)){
 
 											foreach($chat_users as $u){
@@ -306,7 +423,7 @@ $session_data = $this->session->userdata();
 									<li class="menu-title" onclick="set_group_type(3)">Video Call Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
 									<div id="session_group_video"></div>
 									<div id="other_video_group">
-									<?php if(!empty($video_group)){ 
+										<?php if(!empty($video_group)){ 
 											foreach($video_group['groups'] as $t){
 
 
@@ -328,14 +445,25 @@ $session_data = $this->session->userdata();
 												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_video"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
 											}
 										} ?>
-									<li class="menu-title">Direct Video Call <a href="javascript:void(0);" onclick="modal_open('video')"><i class="fa fa-plus"></i></a></li>
+										<li class="menu-title">Direct Video Call <a href="javascript:void(0);" onclick="modal_open('video')"><i class="fa fa-plus"></i></a></li>
 
 										<!-- Session selected user  -->
-										<div id="session_video_user" class="session_chat_user"></div>	
+										<div id="session_video_user" class="session_chat_user">
+											<?php 
+
+											if(!empty($this->session->userdata('session_chat_id'))){
+
+											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="video">
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right"></span></a>
+												</li>';
+										}
+
+										 ?>
+										</div>	
 										<!-- Newly Messaged user  -->
 										<div id="new_video_user" class="new_message_user"></div>
 
-									<?php
+										<?php
 										if(!empty($chat_users)){
 
 											foreach($chat_users as $u){
@@ -358,41 +486,42 @@ $session_data = $this->session->userdata();
 
 										}
 										?>
-								</ul>
+									</ul>
 
 
-								<div class="screen_share <?php echo $screen_share_class; ?>">
-									<ul>
-										<li> 
-											<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
-										</li>
-										<li class="menu-title" onclick="set_group_type(4)">Screen Share Groups <a href="#" data-toggle="modal" data-target="#screen_share"><i class="fa fa-plus"></i></a></li>
-									<div id="session_screen_shrare_group"></div>
-									<!-- Newly Messaged user  -->
-										<div id="new_screen_user" class="new_screen_user"></div>
+									<div class="screen_share <?php echo $screen_share_class; ?>">
+										<ul>
+											<li> 
+												<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
+											</li>
+											<li class="menu-title" onclick="set_group_type(4)">Screen Share Groups <a href="#" data-toggle="modal" data-target="#screen_share"><i class="fa fa-plus"></i></a></li>
+											<div id="session_screen_shrare_group"></div>
+											<!-- Newly Messaged user  -->
+											<div id="new_screen_user" class="new_screen_user"></div>
 											<?php if(!empty($screen_share_group)){ 
 												$class = '';
-											foreach($screen_share_group as $t){
-												if( $this->login_id == $t['from_id'] ) {
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_share_group_user(this)" data-src="" data-id="'.$t['from_id'].'" data-name="'. $t['group_name'] .'" type="screen_share_group"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
-												}
-												else {
+												foreach($screen_share_group as $t){
+													if( $this->login_id == $t['from_id'] ) {
+														echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_share_group_user(this)" data-src="" data-id="'.$t['from_id'].'" data-name="'. $t['group_name'] .'" type="screen_share_group"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';
+													}
+													else {
 
-												echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_share_group_user(this)" data-src="'.$t['url'].'" data-id="'.$t['from_id'].'" data-name="'. $t['group_name'] .'" type="screen_share_group"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';													
+														echo '<li '.$class.' id="'.ucfirst($t['group_name']).'" onclick="set_nav_bar_share_group_user(this)" data-src="'.$t['url'].'" data-id="'.$t['from_id'].'" data-name="'. $t['group_name'] .'" type="screen_share_group"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'</a></li>';													
 
+													}
 												}
-											}
-										} ?>
+											} ?>
 										</div>
 										
 
-									
+
 									</ul>
+								<?php } ?>
 								</div>
 							</div>
 
 							
-							</ul>
-						</div>
+						</ul>
 					</div>
 				</div>
+			</div>

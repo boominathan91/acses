@@ -30,11 +30,11 @@ function search_user(){
 
 $(document).ready(function(){
 
-	$("#for_audio").hide();
-	$("#for_group_audio").hide();
-	$("#for_video").hide();
-	$("#for_group_video").hide();
-	$("#for_screen_share_group").hide();
+	// $("#for_audio").hide();
+	// $("#for_group_audio").hide();
+	// $("#for_video").hide();
+	// $("#for_group_video").hide();
+	// $("#for_screen_share_group").hide();
 	/* To make active group enable */
 	$("#other_video_group li.active").click();
 	$("#other_audio_group li.active").click();
@@ -180,24 +180,24 @@ function set_nav_bar_chat_user(login_id,element){
 			$('.chat-main-row,#task_window').removeClass('hidden');
 			$("#for_screen_share_group").hide();
 		}
-		else if(session_type == 'session_audio_user'){			
-			// $('#for_audio').show();			
-			$('#for_audio').attr('display','block');			
+		else if(session_type == 'session_audio_user'){									
+			$('#for_audio').show();			
 			$('#for_group_audio').hide();
 			$("#for_video").hide();
 			$("#for_group_video").hide();
 			$("#for_screen_share_group").hide();
-			$('button.start-call').attr('type', 'audio');
+//			$('button.start-call').attr('type', 'audio');
 			$("#for_screen_share_group").hide();
 		}
 		else if(session_type == 'session_video_user'){			
-			$('#for_audio').show();			
+			$('#for_audio').hide();
 			$('#for_group_audio').hide();		
 			$('#for_video').show();			
 			$('#for_group_video').hide();
 			$("#for_screen_share_group").hide();
-			$('button.start-call').attr('type', 'video');
+			// $('button.start-call').attr('type', 'video');
 			$("#for_screen_share_group").hide();
+			$('.group_members').html('');
 		}
 		var group_type_name = type.replace(/_/g, ' ');
 		var extra_add = 'Call';
@@ -281,7 +281,7 @@ function set_chat_user(login_id, element){
 			$("#for_video").hide();
 			$("#for_group_video").hide();
 			$("#for_screen_share_group").hide();
-			$('button.start-call').attr('type', 'audio');
+			// $('button.start-call').attr('type', 'audio');
 		}
 		else if(chat_user_type == 'video'){
 			$('#session_video_user').prepend(data);
@@ -291,7 +291,7 @@ function set_chat_user(login_id, element){
 			$("#for_video").show();
 			$("#for_group_video").hide();
 			$("#for_screen_share_group").hide();
-			$('button.start-call').attr('type', 'video');
+			// $('button.start-call').attr('type', 'video');
 		}
 		//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
 		$('.to_name').text(obj.first_name+' '+obj.last_name);

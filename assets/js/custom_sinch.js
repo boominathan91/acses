@@ -558,10 +558,10 @@ var contains = function(needle) {
 
           jQuery.each(obj, function(key, value) {
             if( value.is_active == "0") {
-              $("#" + value.members_id).hide();
+              $("#" + value.members_id).addClass('grayscale');
             }
             else {
-              $("#" + value.members_id).show(); 
+              $("#" + value.members_id).removeClass('grayscale'); 
             }
           });
         }
@@ -859,8 +859,9 @@ $('button.start-call').click(function(event) {
     call.addEventListener(callListeners);  
     break;
     case 'group_audio':
-
-    call = callClient.callConference($('.to_group_audio').text());
+    var room_hash = $('.to_group_audio').text();
+   var hash =room_hash.replace(/ /g, '_');
+    call = callClient.callConference(hash);
     $('.start-call').hide();
     call.addEventListener({
       onCallProgressing: function(call) {
@@ -940,23 +941,49 @@ $('button.start-call').click(function(event) {
       groupCall.addEventListener({
       onGroupLocalMediaAdded: function(stream) { // Called when the local media stream is ready (optional)
         console.log('------------------My stream----------------------'); 
-        $("#outgoing_video_initial").html("<video autoplay id='outgoing' class='img-responsive' src='" + window.URL.createObjectURL(stream) + "' muted></video>");    
+        $("#outgoing_video_initial").html("<video autoplay id='outgoing' class='img-responsive outgoing_video' src='" + window.URL.createObjectURL(stream) + "' muted></video>"+
+          "<img src='"+currentUserProfileImage+"' class='call-avatar img-responsive outgoing_image hidden' id='outgoing_image'>");    
         console.log(stream);
         $('.hangup,#group-video-footer').removeClass('hidden');  
         call_status = 'Joined in a group';
         $('.group_video_call_status').html('<div id="title">' + call_status + '</div>');
         my_stream_url = $('#for_group_video video#outgoing').attr('src');
-
         $('.loading').hide();
+
+
+
+        /*Muting options */
+
+        $('#group_video_mute').click(function(){         
+        if($(this).hasClass('active')){
+        $(this).removeClass('active');                
+        stream.getVideoTracks()[0].enabled = true; 
+        $('#outgoing_image').addClass('hidden');
+        $('.outgoing_video').removeClass('hidden');
+        }else{
+        $(this).addClass('active');        
+        stream.getVideoTracks()[0].enabled = false; 
+        $('#outgoing_image').removeClass('hidden');
+        $('.outgoing_video').addClass('hidden');
+        }
+        //console.log(stream);
+        });
+
+
       },
     onGroupRemoteCallAdded: function(call) { // Called when a remote participant stream is ready
       console.log('------------------remote stream----------------------');
+      console.log(call);
       callId = call.callId;
       group_video_members[call.callId] = call;
-      // console.log(group_video_members);
+       // console.log(group_video_members);
         // $('#incoming_call').modal('show');
         //$('video#incoming').attr('src', call.incomingStreamURL);   
-        call_status = call.toId + ' joined in a group';     
+        $.post(base_url+'chat/get_username',{sinch_username:call.toId},function(res){
+          var obj = jQuery.parseJSON(res);
+          call_status = obj.first_name +' '+obj.last_name+ ' joined in a group';       
+        })
+        
         if(call.toId === global_username){          
           call_status = 'You have joined in a group';
         }        

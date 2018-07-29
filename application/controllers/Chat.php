@@ -10,6 +10,8 @@ class Chat extends CI_Controller {
 			redirect('login');
 		}
 		$this->load->model('chat_model','chat');
+		$this->load->model('Profile_model','profile');
+		$this->load->model('Settings_model','settings');
 		$this->login_id = $this->session->userdata('login_id');
 		date_default_timezone_set($this->session->userdata('time_zone'));
 	}
@@ -17,6 +19,7 @@ class Chat extends CI_Controller {
 	{	
 
 		$page = $this->session->userdata('page');
+
 		$data['profile_class'] = "hidden";
 		$data['text_chat_class'] = "hidden";
 		$data['audio_class'] = "hidden";
@@ -48,7 +51,14 @@ class Chat extends CI_Controller {
 		}else{
 			$data['profile_class']  = "";
 		}
-		$data['title'] = 'Chat';		
+		$data['title'] = 'Chat';	
+
+
+		$records =  $this->settings->profile_details($this->login_id);	
+		$data['user_profile']  = $profile = $records['profile'];
+		$data['education_details'] = $records['education_details'];
+		$data['experience_informations'] = $records['experience_informations'];
+
 		$data['text_group'] = $this->chat->get_group_details('text');
 		$data['audio_group'] = $this->chat->get_group_details('audio');
 		$data['video_group'] = $this->chat->get_group_details('video');
@@ -59,7 +69,10 @@ class Chat extends CI_Controller {
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
-		// echo '<pre>';print_r($data);exit;
+		 //echo '<pre>';print_r($data); 
+		// echo '<pre>';
+		// print_r($this->session->all_userdata());
+		//  exit;
 		render_page('chat',$data);
 	}
 
@@ -240,6 +253,17 @@ class Chat extends CI_Controller {
 		$data['messages'] = $html;
 
 
+		echo json_encode($data);
+	}
+		Public function get_username(){
+		$data = array();
+		$data = $this->db->select('first_name,last_name')
+					->get_where('login_details',array('sinch_username' => $_POST['sinch_username']))
+					->row_array();
+		if(!empty($data)){
+			$data['first_name'] = ucfirst($data['first_name']);
+			$data['last_name'] = ucfirst($data['last_name']);
+		}
 		echo json_encode($data);
 	}
 	public function create_group(){

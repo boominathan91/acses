@@ -228,7 +228,7 @@ class Settings extends CI_Controller {
 			$record = $this->settings->update_profile($inputs);		
 			if($record){
 				$this->session->set_flashdata('message', 'The profile has been updated.');	
-				redirect(base_url().'profile');
+				redirect(base_url().'chat');
 			}else{
 				$this->session->set_flashdata('message', 'The profile update something went wrong.');	
 			}

@@ -1178,7 +1178,22 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 .my-video ul li img {border:3px solid #fff;border-radius:6px;}
 .end-call {position: absolute;top: 7px;right: 0;}
 .end-call a {color: #fff;border-radius: 50px;display: inline-block;background-color: #f06060;padding: 8px 25px;text-transform: uppercase;}
-.start-call{color: #fff;border-radius: 50px;display: inline-block;background-color: #4ab657;padding: 8px 25px;text-transform: uppercase;}
+.start-call{color: #fff;border-radius: 50px;display: inline-block;background-color: #4ab657;
+  /*padding: 4px 30px 23px 30px;*/
+  padding: 8px 25px;
+  text-transform: uppercase;}
+
+.thumb-title{
+      margin: 18px 0px 0px 0px;
+    position: absolute;
+    top: 84px;
+    font-size: 13px;
+    background: lightgrey;
+}
+  .grayscale{
+    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(100%);
+  }
 .call-users {position:absolute; z-index:99;bottom:20px;right:20px;}
 .call-users ul {margin: 0;padding: 0;list-style: none;}
 .call-users ul li {float: left;width: 80px;margin-left: 10px;}

@@ -154,7 +154,16 @@ class Chat_model extends CI_Model {
 
 	public function get_chated_users(){
 
+		if(!empty($this->session->userdata('session_chat_id'))){
+			$session_chat_id = $this->session->userdata('session_chat_id');
+
+
+			$query = "SELECT l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username FROM chat_details c JOIN login_details l ON l.login_id = c.sender_id WHERE (c.receiver_id = '$this->login_id' OR c.sender_id = '$this->login_id') AND l.login_id !='$this->login_id' AND l.login_id !='$session_chat_id' GROUP BY c.sender_id LIMIT 5";			
+
+		}else{
+
 		$query = "SELECT l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username FROM chat_details c JOIN login_details l ON l.login_id = c.sender_id WHERE (c.receiver_id = '$this->login_id' OR c.sender_id = '$this->login_id') AND l.login_id !='$this->login_id' GROUP BY c.sender_id LIMIT 5";			
+		}
 		return $this->db->query($query)->result_array();
 
 	}

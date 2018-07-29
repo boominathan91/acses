@@ -12,6 +12,7 @@
 	var defaultImageBasePath = base_url + 'assets/img/';
 	var imageBasePath = base_url + '/uploads/';
 	var currentUserProfileImage = '<?php echo $this->session->userdata("profile_img"); ?>';
+	var currentUserName = '<?php echo ucfirst($this->session->userdata("first_name")).' '.ucfirst($this->session->userdata("last_name")); ?>';
 
 	if(currentUserProfileImage != ''){
 		currentUserProfileImage = imageBasePath + currentUserProfileImage;
