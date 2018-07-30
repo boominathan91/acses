@@ -28,7 +28,7 @@ $session_data = $this->session->userdata();
 </div>
 <a id="mobile_btn" class="mobile_btn pull-left" href="#sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a>
 <ul class="nav navbar-nav navbar-right user-menu pull-right">
-	<li class="dropdown hidden-xs">
+	<!-- <li class="dropdown hidden-xs">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span class="badge bg-purple pull-right">3</span></a>
 		<div class="dropdown-menu notifications">
 			<div class="topnav-dropdown-header">
@@ -102,7 +102,7 @@ $session_data = $this->session->userdata();
 	</li>
 	<li class="dropdown hidden-xs">
 		<a href="javascript:;" id="open_msg_box" class="hasnotifications"><i class="fa fa-comment-o"></i> <span class="badge bg-purple pull-right">8</span></a>
-	</li>	
+	</li>-->	
 	<li class="dropdown">
 		<?php 
 		$profile_img = $this->session->userdata('profile_img');
@@ -118,7 +118,6 @@ $session_data = $this->session->userdata();
 				<?php if(strtolower($session_data['type']) == 'admin'){ ?>
 					<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
 				<?php }else{ ?>
-					<li><a href="<?php echo base_url(); ?>profile">Profile</a></li>
 					<li><a href="<?php echo base_url(); ?>edit-profile">Edit Profile</a></li>
 				<?php } ?>			
 				
@@ -134,7 +133,7 @@ $session_data = $this->session->userdata();
 							<?php if(strtolower($session_data['type']) == 'admin'){ ?>
 								<li><a href="<?php echo base_url(); ?>company-settings">Settings</a></li>
 							<?php }else{ ?>
-								<li><a href="<?php echo base_url(); ?>profile">Profile</a></li>
+								
 								<li><a href="<?php echo base_url(); ?>edit-profile">Edit Profile</a></li>
 							<?php } ?>			
 							<li><a href="<?php echo base_url(); ?>login">Logout</a></li>

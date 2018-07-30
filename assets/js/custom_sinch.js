@@ -251,7 +251,7 @@ function receive_message(message){
 
        }
        $('.no_message').html('');
-       $('#ajax').append(content);
+       $('#ajax,#ajax_audio').append(content);
      }else{ /*Hidden group and receiving msg group are different*/
 
 
@@ -324,7 +324,7 @@ function receive_message(message){
 
      }
      $('.no_message').html('');
-     $('#ajax').append(content);
+     $('#ajax,#ajax_audio').append(content);
 
 
 
@@ -420,7 +420,7 @@ function receive_message(message){
 
         }
         $('.no_message').html('');
-        $('#ajax').append(content);
+        $('#ajax,#ajax_audio').append(content);
 
       }else{ // Different group 
 

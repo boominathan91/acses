@@ -744,14 +744,15 @@
                     		<div class="chat-header">
                     			<ul class="nav nav-tabs nav-tabs-bottom">
                     				<li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
-                    		<!-- 		<li><a href="#chats_tab" data-toggle="tab">Chats</a></li>
-                    				<li><a href="#profile_tab" data-toggle="tab">Profile</a></li> -->
+                    				<li><a href="#chats_tab" data-toggle="tab">Chats</a></li>
+                    				<li><a href="#profile_tab" data-toggle="tab">Profile</a></li>
                     			</ul>
                     		</div>
                     		<div class="tab-content chat-contents">
                     			<div class="content-full tab-pane active" id="calls_tab">
                     				<div class="chat-wrap-inner">
                     					<div class="chat-box">
+                    						<div class="chats">
                     						<div  id="call_history">
                     						<!-- Call History  -->
                     						<?php
@@ -863,15 +864,103 @@
                     						 ?>
                     						</div>
                     					</div>
+                    					</div>
                     				</div>
                     			</div>
-                    			<div class="content-full tab-pane hidden"  id="chats_tab" >
+                    			<div class="content-full tab-pane"  id="chats_tab" >
                     				<div class="chat-window">
                     					<div class="chat-contents">
                     						<div class="chat-content-wrap">
                     							<div class="chat-wrap-inner">
                     								<div class="chat-box">
                     									<div class="chats">	
+                    										<?php 
+												if(!empty($latest_chats)){
+
+													if(count($latest_chats)>4){
+
+														echo '<div class="load-more-btn text-center" total="'.$page.'">
+														<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
+														</div><div id="ajax_old"></div>';      
+													}
+
+
+													foreach($latest_chats as $l){
+
+
+														$login_id = $this->session->userdata('login_id');
+
+														$sender_name = $l['sender_name'];
+														$sender_profile_img = (!empty($l['sender_profile_image']))?base_url().'uploads/'.$l['sender_profile_image'] : base_url().'assets/img/user.jpg';
+														$msg = $l['message'];
+														$type = $l['type'];
+														$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
+														$time = date('h:i A',strtotime($l['created_at']));
+														$up_file_name =$l['file_name'];
+
+														if($l['sender_id'] == $login_id){
+															$class_name = 'chat-right';
+															$img_avatar='';
+														}else{
+															$img_avatar = '<div class="chat-avatar">
+															<a href="#" class="avatar">
+															<img alt="'.$sender_name.'" title="'.$sender_name.'" src="'.$sender_profile_img.'" class="img-responsive img-circle">
+															</a>
+															</div>';
+															$class_name = 'chat-left';
+														}
+														if($msg == 'file' && $type == 'image'){
+
+															echo '<div class="chat '.$class_name.'">'.$img_avatar.'
+															<div class="chat-body">
+															<div class="chat-bubble">
+															<div class="chat-content img-content">
+															<div class="chat-img-group clearfix">
+															<a class="chat-img-attach" href="'.$file_name.'" target="_blank">
+															<img width="182" height="137" alt="" src="'.$file_name.'">
+															<div class="chat-placeholder">
+															<div class="chat-img-name">'.$up_file_name.'</div>
+															</div>
+															</a>
+															</div>
+															<span class="chat-time">'.$time.'</span>
+															</div>               
+															</div>
+															</div>
+															</div>';
+
+														}else if($msg == 'file' && $type == 'others'){
+
+															echo '<div class="chat '.$class_name.'">'.$img_avatar.'
+															<div class="chat-body">
+															<div class="chat-bubble">
+															<div class="chat-content "><ul class="attach-list">
+															<li><i class="fa fa-file"></i><a href="'.$file_name.'">'.$up_file_name.'</a></li>
+															</ul>
+															<span class="chat-time">'.$time.'</span>       
+															</div>
+															</div>
+															</div>
+															</div>';
+
+														}else{
+
+															echo '<div class="chat '.$class_name.'">'.$img_avatar.'
+															<div class="chat-body">
+															<div class="chat-bubble">
+															<div class="chat-content">
+															<p>'.$msg.'</p>         
+															<span class="chat-time">'.$time.'</span>
+															</div>
+															</div>
+															</div>
+															</div>';
+														}														
+													}
+
+												} ?>
+												<div id="ajax_audio"></div>
+                    								</div>
                     								</div>
                     							</div>
                     						</div>

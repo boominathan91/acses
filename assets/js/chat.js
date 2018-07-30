@@ -150,7 +150,7 @@ function set_nav_bar_chat_user(login_id,element){
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
 	$('#'+id).closest('bg-danger').empty();
-	$('.chats').html('');
+	$('.chat-box.chats').html('');
 	var type = $(element).attr('type');	
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
@@ -215,7 +215,7 @@ function set_nav_bar_chat_user(login_id,element){
 		$('.dob').text(obj.dob);
 		$('.receiver_email').text(obj.email);
 		$('.phone_number').text(obj.phone_number);
-		$('.chats').html(obj.messages);
+		$('.chat-box.chats').html(obj.messages);
 		$('#type').val('text');
 		$('#group_id').val('');
 
@@ -248,7 +248,7 @@ function set_nav_bar_chat_user(login_id,element){
 function set_chat_user(login_id, element){
 	var chat_user_type = $('#user_list').attr('data-type');	
 	$('li').removeClass('active');
-	$('.chats').html('');
+	$('.chat-box.chats').html('');
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);		
@@ -307,7 +307,7 @@ function set_chat_user(login_id, element){
 		$('.dob').text(obj.dob);
 		$('.receiver_email').text(obj.email);
 		$('.phone_number').text(obj.phone_number);
-		$('.chats').html(obj.messages);
+		$('.chat-box.chats').html(obj.messages);
 		$('#type').val('text');
 		$('#group_id').val('');
 
@@ -342,7 +342,7 @@ function delete_conversation()
 		var sender_id = $('#receiver_id').val();
 		$.post(base_url+'chat/delete_conversation',{sender_id:sender_id},function(response){
 			if(response == 1){
-				$('.chats').html('<div class="no_message">No Record Found</div><div id="ajax"></div><input type="hidden"  id="hidden_id">');
+				$('.chat-box.chats').html('<div class="no_message">No Record Found</div><div id="ajax"></div><input type="hidden"  id="hidden_id">');
 			}
 		});
 	}
