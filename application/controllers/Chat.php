@@ -76,6 +76,7 @@ class Chat extends CI_Controller {
 		render_page('chat',$data);
 	}
 
+
 	public function insert_call_type(){
 			$data = array(
 						'login_id' => $this->login_id,
@@ -166,7 +167,7 @@ class Chat extends CI_Controller {
 
 			$html ='<div class="load-more-btn text-center" total="'.$page.'">
 			<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
-			</div><div id="ajax_old"></div>';      
+			</div><div class="ajax_old"></div>';      
 		}else{
 			$html ='';
 		}
@@ -245,10 +246,10 @@ class Chat extends CI_Controller {
 
 		}
 
-		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+		$html .='<div class="ajax"></div><input type="hidden"  id="hidden_id">';
 
 		if($total_chat == 0){
-			$html .='<div class="no_message">No Record Found</div>';
+			$html .='<div class="no_message"></div>';
 		}
 		$data['messages'] = $html;
 
@@ -533,7 +534,7 @@ public function request_share() {
 					</div>';
 				}														
 			}
-			$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+			$html .='<div class="ajax"></div><input type="hidden"  id="hidden_id">';
 		}
 
 		echo $html;
@@ -560,7 +561,7 @@ public function request_share() {
 
 			$html ='<div class="load-more-btn text-center" total="'.$page.'">
 			<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
-			</div><div id="ajax_old"></div>';      
+			</div><div class="ajax_old"></div>';      
 		}else{
 			$html ='';
 		}
@@ -639,10 +640,10 @@ public function request_share() {
 
 		}
 
-		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+		$html .='<div class="ajax"></div><input type="hidden"  id="hidden_id">';
 
 		if($total_chat == 0){
-			$html .='<div class="no_message">No Record Found</div>';
+			$html .='<div class="no_message"></div>';
 		}
 
 
@@ -654,7 +655,7 @@ public function request_share() {
 		
 		$data = $this->db
 		->select('l.phone_number,l.email,l.dob,l.first_name,l.last_name,l.login_id,l.online_status,l.sinch_username,l.profile_img,d.department_name')
-		->join('department_details d','d.department_id = l.department_id')
+		->join('department_details d','d.department_id = l.department_id','left')
 		->get_where('login_details l',array('l.login_id'=>$_POST['login_id']))
 		->row_array();
 
@@ -668,6 +669,7 @@ public function request_share() {
 			$data['profile_img'] = base_url().'uploads/'.$data['profile_img'];
 		}
 		$data['messages'] = $html;
+		$data['call_history'] =$this->chat->get_call_history();
 		echo json_encode($data);
 	}
 
@@ -993,7 +995,7 @@ public function request_share() {
 
 			$html ='<div class="load-more-btn text-center" total="'.$page.'">
 			<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
-			</div><div id="ajax_old"></div>';      
+			</div><div class="ajax_old"></div>';      
 		}else{
 			$html ='';
 		}
@@ -1091,10 +1093,10 @@ public function request_share() {
 
 
 		}
-		$html .='<div id="ajax"></div><input type="hidden"  id="hidden_id">';
+		$html .='<div class="ajax"></div><input type="hidden"  id="hidden_id">';
 
 		if($total_chat == 0){
-			$html .='<div class="no_message">No Record Found</div>';
+			$html .='<div class="no_message"></div>';
 		}
 
 

@@ -477,7 +477,7 @@
 								<div class="chat-content-wrap">
 									<div class="chat-wrap-inner">
 										<div class="chat-box msg-list-scroll">
-											<div class="chats">
+											<div class="chats chat_messages">
 												<?php 
 												if(!empty($latest_chats)){
 
@@ -485,7 +485,7 @@
 
 														echo '<div class="load-more-btn text-center" total="'.$page.'">
 														<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
-														</div><div id="ajax_old"></div>';      
+														</div><div class="ajax_old"></div>';      
 													}
 
 
@@ -563,7 +563,7 @@
 													}
 
 												} ?>
-												<div id="ajax"></div>
+												<div class="ajax"></div>
 											</div>
 										</div>
 									</div>
@@ -743,13 +743,13 @@
                     	<div class="chat-window video-window">
                     		<div class="chat-header">
                     			<ul class="nav nav-tabs nav-tabs-bottom">
-                    				<li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
+                    				<li class="active"><a href="#call_tab" data-toggle="tab">Calls</a></li>
                     				<li><a href="#chats_tab" data-toggle="tab">Chats</a></li>
                     				<li><a href="#profile_tab" data-toggle="tab">Profile</a></li>
                     			</ul>
                     		</div>
                     		<div class="tab-content chat-contents">
-                    			<div class="content-full tab-pane active" id="calls_tab">
+                    			<div class="content-full tab-pane active" id="call_tab">
                     				<div class="chat-wrap-inner">
                     					<div class="chat-box">
                     						<div class="chats">
@@ -860,6 +860,8 @@
                     							</div>';
                     						 		}
                     						 	}
+                    						 }else{
+                    						 	echo 'No call records';
                     						 }
                     						 ?>
                     						</div>
@@ -867,13 +869,19 @@
                     					</div>
                     				</div>
                     			</div>
+
                     			<div class="content-full tab-pane"  id="chats_tab" >
+                    				<div class="progress upload-progress hidden">
+								<div class="progress-bar progress-bar-success active progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+									Uploading...  
+								</div>
+							</div>
                     				<div class="chat-window">
                     					<div class="chat-contents">
                     						<div class="chat-content-wrap">
                     							<div class="chat-wrap-inner">
                     								<div class="chat-box">
-                    									<div class="chats">	
+                    									<div class="chats chat_messages">	
                     										<?php 
 												if(!empty($latest_chats)){
 
@@ -881,7 +889,7 @@
 
 														echo '<div class="load-more-btn text-center" total="'.$page.'">
 														<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>
-														</div><div id="ajax_old"></div>';      
+														</div><div class="ajax_old"></div>';      
 													}
 
 
@@ -959,19 +967,20 @@
 													}
 
 												} ?>
-												<div id="ajax_audio"></div>
+												<div class="ajax"></div>
                     								</div>
                     								</div>
                     							</div>
                     						</div>
                     					</div>
+                    					<form method="post" id="audio_chat_form" enctype="multipart/formdata">
                     					<div class="chat-footer">
                     						<div class="message-bar">
                     							<div class="message-inner">
                     								<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
                     								<div class="message-area">
                     									<div class="input-group">
-                    										<textarea class="form-control" placeholder="Type message..."></textarea>
+                    										<input id="input_messages" class="form-control" placeholder="Type message...">
                     										<span class="input-group-btn">
                     											<button class="btn btn-primary" type="button"><i class="fa fa-send"></i></button>
                     										</span>
@@ -980,6 +989,7 @@
                     							</div>
                     						</div>
                     					</div>
+                    				</form>
                     				</div>
                     			</div>
                     			<div class="content-full tab-pane" id="profile_tab">
@@ -992,8 +1002,8 @@
                     										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="receiver_title_image">
                     										
                     									</div>
-                    									<h3 class="user-name m-t-10 m-b-0"><?php echo $name; ?></h3>
-                    									<small class="text-muted"><?php echo $department_name; ?></small>
+                    									<h3 class="user-name m-t-10 m-b-0 to_name"><?php echo $name; ?></h3>
+                    									<small class="text-muted department"><?php echo $department_name; ?></small>
                     									
                     								</div>
                     								<div class="chat-profile-info">
@@ -1170,7 +1180,7 @@
                     	<div class="chat-window video-window">
                     		<div class="chat-header">
                     			<ul class="nav nav-tabs nav-tabs-bottom">
-                    				<li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
+                    				<!-- <li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li> -->
                     		<!-- 		<li><a href="#chats_tab" data-toggle="tab">Chats</a></li>
                     				<li><a href="#profile_tab" data-toggle="tab">Profile</a></li> -->
                     			</ul>
@@ -1179,6 +1189,234 @@
                     			<div class="content-full tab-pane active" id="calls_tab">
                     				<div class="chat-wrap-inner">
                     					<div class="chat-box">
+                    						<div class="chats">                    						
+                    					</div>
+                    				</div>
+                    			</div>
+                    			<div class="content-full tab-pane hidden"  id="chats_tab" >
+                    				<div class="chat-window">
+                    					<div class="chat-contents">
+                    						<div class="chat-content-wrap">
+                    							<div class="chat-wrap-inner">
+                    								<div class="chat-box">
+                    									<div class="chats">	
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    					<div class="chat-footer">
+                    						<div class="message-bar">
+                    							<div class="message-inner">
+                    								<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
+                    								<div class="message-area">
+                    									<div class="input-group">
+                    										<textarea class="form-control" placeholder="Type message..."></textarea>
+                    										<span class="input-group-btn">
+                    											<button class="btn btn-primary" type="button"><i class="fa fa-send"></i></button>
+                    										</span>
+                    									</div>
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    			<div class="content-full tab-pane" id="profile_tab">
+                    				<div class="display-table">
+                    					<div class="table-row">
+                    						<div class="table-body">
+                    							<div class="table-content">
+                    								<div class="chat-profile-img">
+                    									<div class="edit-profile-img">
+                    										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="receiver_title_image">
+                    										
+                    									</div>
+                    									<h3 class="user-name m-t-10 m-b-0 to_name"><?php echo $name; ?></h3>
+                    									<small class="text-muted department"><?php echo $department_name; ?></small>
+                    									
+                    								</div>
+                    								<div class="chat-profile-info">
+                    									<ul class="user-det-list">													
+                    										<li>
+                    											<span>DOB:</span>
+                    											<span class="pull-right text-muted dob"><?php echo $dob; ?></span>
+                    										</li>
+                    										<li>
+                    											<span>Email:</span>
+                    											<span class="pull-right text-muted receiver_email"><?php echo $receiver_email; ?></span>
+                    										</li>
+                    										<li>
+                    											<span>Phone:</span>
+                    											<span class="pull-right text-muted phone_number"><?php echo $phone_number; ?></span>
+                    										</li>
+                    									</ul>
+                    								</div>
+                    							<!-- 	<div>
+                    									<ul class="nav nav-tabs nav-tabs-solid nav-justified m-b-0">
+                    										<li class="active"><a href="#all_files" data-toggle="tab">All Files</a></li>
+                    										<li><a href="#my_files" data-toggle="tab">My Files</a></li>
+                    									</ul>
+                    									<div class="tab-content">
+                    										<div class="tab-pane active" id="all_files">
+                    											<ul class="files-list">
+                    												<li>
+                    													<div class="files-cont">
+                    														<div class="file-type">
+                    															<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                    														</div>
+                    														<div class="files-info">
+                    															<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
+                    															<span class="file-author"><a href="#">Loren Gatlin</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+                    														</div>
+                    														<ul class="files-action">
+                    															<li class="dropdown">
+                    																<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
+                    																<ul class="dropdown-menu">
+                    																	<li><a href="javascript:void(0)">Download</a></li>
+                    																	<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
+                    																</ul>
+                    															</li>
+                    														</ul>
+                    													</div>
+                    												</li>
+                    											</ul>
+                    										</div>
+                    										<div class="tab-pane" id="my_files">
+                    											<ul class="files-list">
+                    												<li>
+                    													<div class="files-cont">
+                    														<div class="file-type">
+                    															<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
+                    														</div>
+                    														<div class="files-info">
+                    															<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
+                    															<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
+                    														</div>
+                    														<ul class="files-action">
+                    															<li class="dropdown">
+                    																<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
+                    																<ul class="dropdown-menu">
+                    																	<li><a href="javascript:void(0)">Download</a></li>
+                    																	<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
+                    																</ul>
+                    															</li>
+                    														</ul>
+                    													</div>
+                    												</li>
+                    											</ul>
+                    										</div>
+                    									</div> -->
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    		</div>
+                    	</div>
+                    </div>
+                </div>
+            </div>       
+        </div>
+        </div>
+        </div>
+
+
+        <!-- Audio Call Page Content ends  -->
+        <!-- Video Call Page Content Starts  -->
+	<div id="for_video">
+         <div class="page-wrapper video <?php echo $video_class; ?>">
+            <div class="chat-main-row <?php echo $class; ?>">
+                <div class="chat-main-wrapper">
+                    <div class="col-xs-9 message-view task-view">
+                        <div class="chat-window">
+                            <div class="chat-header">
+								<div class="navbar">
+									<div class="user-details">
+										<div class="pull-left user-img m-r-10">
+											<a href="#" title="<?php echo $name; ?>"><img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status online"></span></a>
+										</div>
+										<div class="user-info pull-left">
+											<a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
+										</div>
+									</div>
+									<ul class="nav navbar-nav pull-right chat-menu">
+										<li>
+											<a href="#chat_sidebars" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
+										</li>										
+									</ul>
+								</div>
+							</div>
+                            <div class="chat-contents">
+                                <div class="chat-content-wrap">
+                                    <div class="user-video voice-call-avatar">
+                                        <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar incoming_image receiver_title_image">
+                                        <button class="start-call" type="video">Call</button>
+                                        <div class="video_call_status"></div>                                        
+											<video id="incoming" autoplay class="img-responsive" ></video>
+                                    </div>
+                                    <div class="my-video">
+                                        <ul>
+                                            <li>
+                                            	<video id="outgoing" autoplay class="img-responsive" muted></video>
+                                                <img src="<?php echo $profile_img; ?>" class="img-responsive outgoing_image" alt="">
+                                            </li>
+                                            <div class="group_members"></div>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="chat-footer hidden" id="video-footer">
+                                <div class="call-icons">
+                                    <span class="call-duration" id="video_timer"></span>
+                                    <ul class="call-items">
+                                        <!-- <li class="call-item enable_video">
+                                            <a href="javascript:void(0)" title="Enable Video" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-video-camera camera" aria-hidden="true"></i>
+                                            </a>
+                                        </li> -->
+                                        <li class="call-item mute_icon">
+                                            <a href="javascript:void(0)" title="Mute Audio" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-microphone microphone" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                       <!--  <li class="call-item">
+                                            <a href="javascript:void(0)" title="Add User" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+                                        <li class="call-item">
+                                            <a href="javascript:void(0)" title="Full Screen" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-arrows-v full-screen" aria-hidden="true"></i>
+                                            </a>
+                                        </li>
+										<li class="call-item">
+                                            <a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip">
+                                                <i class="fa fa-desktop full-screen" aria-hidden="true"></i>
+                                            </a>
+                                        </li> -->
+                                    </ul>
+                                    <div class="end-call">
+                                        <a href="javascript:void(0)" class="hangup">
+												End Call
+											</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebars">
+                        <div class="chat-window video-window">
+                            <div class="chat-header">
+                                <ul class="nav nav-tabs nav-tabs-bottom">
+                                    <li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
+                                </ul>
+                            </div>
+                            <div class="tab-content chat-contents">
+                                <div class="content-full tab-pane active " id="calls_tab"> 
+                                	<div class="chat-wrap-inner">
+                                <div class="chat-box">
+                                	<div class="chats">
                     						<div  id="call_history">
                     						<!-- Call History  -->
                     						<?php
@@ -1286,235 +1524,14 @@
                     							</div>';
                     						 		}
                     						 	}
+                    						 }else{
+                    						 	echo 'No call records';
                     						 }
                     						 ?>
                     						</div>
-                    					</div>
-                    				</div>
-                    			</div>
-                    			<div class="content-full tab-pane hidden"  id="chats_tab" >
-                    				<div class="chat-window">
-                    					<div class="chat-contents">
-                    						<div class="chat-content-wrap">
-                    							<div class="chat-wrap-inner">
-                    								<div class="chat-box">
-                    									<div class="chats">	
-                    								</div>
-                    							</div>
-                    						</div>
-                    					</div>
-                    					<div class="chat-footer">
-                    						<div class="message-bar">
-                    							<div class="message-inner">
-                    								<a class="link attach-icon" href="#" data-toggle="modal" data-target="#drag_files"><img src="assets/img/attachment.png" alt=""></a>
-                    								<div class="message-area">
-                    									<div class="input-group">
-                    										<textarea class="form-control" placeholder="Type message..."></textarea>
-                    										<span class="input-group-btn">
-                    											<button class="btn btn-primary" type="button"><i class="fa fa-send"></i></button>
-                    										</span>
-                    									</div>
-                    								</div>
-                    							</div>
-                    						</div>
-                    					</div>
-                    				</div>
-                    			</div>
-                    			<div class="content-full tab-pane" id="profile_tab">
-                    				<div class="display-table">
-                    					<div class="table-row">
-                    						<div class="table-body">
-                    							<div class="table-content">
-                    								<div class="chat-profile-img">
-                    									<div class="edit-profile-img">
-                    										<img src="<?php echo $receiver_profile_img; ?>" alt="" class="receiver_title_image">
-                    										
-                    									</div>
-                    									<h3 class="user-name m-t-10 m-b-0"><?php echo $name; ?></h3>
-                    									<small class="text-muted"><?php echo $department_name; ?></small>
-                    									
-                    								</div>
-                    								<div class="chat-profile-info">
-                    									<ul class="user-det-list">													
-                    										<li>
-                    											<span>DOB:</span>
-                    											<span class="pull-right text-muted dob"><?php echo $dob; ?></span>
-                    										</li>
-                    										<li>
-                    											<span>Email:</span>
-                    											<span class="pull-right text-muted receiver_email"><?php echo $receiver_email; ?></span>
-                    										</li>
-                    										<li>
-                    											<span>Phone:</span>
-                    											<span class="pull-right text-muted phone_number"><?php echo $phone_number; ?></span>
-                    										</li>
-                    									</ul>
-                    								</div>
-                    							<!-- 	<div>
-                    									<ul class="nav nav-tabs nav-tabs-solid nav-justified m-b-0">
-                    										<li class="active"><a href="#all_files" data-toggle="tab">All Files</a></li>
-                    										<li><a href="#my_files" data-toggle="tab">My Files</a></li>
-                    									</ul>
-                    									<div class="tab-content">
-                    										<div class="tab-pane active" id="all_files">
-                    											<ul class="files-list">
-                    												<li>
-                    													<div class="files-cont">
-                    														<div class="file-type">
-                    															<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-                    														</div>
-                    														<div class="files-info">
-                    															<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-                    															<span class="file-author"><a href="#">Loren Gatlin</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-                    														</div>
-                    														<ul class="files-action">
-                    															<li class="dropdown">
-                    																<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-                    																<ul class="dropdown-menu">
-                    																	<li><a href="javascript:void(0)">Download</a></li>
-                    																	<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
-                    																</ul>
-                    															</li>
-                    														</ul>
-                    													</div>
-                    												</li>
-                    											</ul>
-                    										</div>
-                    										<div class="tab-pane" id="my_files">
-                    											<ul class="files-list">
-                    												<li>
-                    													<div class="files-cont">
-                    														<div class="file-type">
-                    															<span class="files-icon"><i class="fa fa-file-pdf-o"></i></span>
-                    														</div>
-                    														<div class="files-info">
-                    															<span class="file-name text-ellipsis">AHA Selfcare Mobile Application Test-Cases.xls</span>
-                    															<span class="file-author"><a href="#">John Doe</a></span> <span class="file-date">May 31st at 6:53 PM</span>
-                    														</div>
-                    														<ul class="files-action">
-                    															<li class="dropdown">
-                    																<a href="" class="dropdown-toggle btn btn-default btn-xs" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-ellipsis-h"></i></a>
-                    																<ul class="dropdown-menu">
-                    																	<li><a href="javascript:void(0)">Download</a></li>
-                    																	<li><a href="#" data-toggle="modal" data-target="#share_files">Share</a></li>
-                    																</ul>
-                    															</li>
-                    														</ul>
-                    													</div>
-                    												</li>
-                    											</ul>
-                    										</div>
-                    									</div> -->
-                    								</div>
-                    							</div>
-                    						</div>
-                    					</div>
-                    				</div>
-                    			</div>
-                    		</div>
-                    	</div>
-                    </div>
-                </div>
-            </div>       
-        </div>
-        </div>
-
-
-        <!-- Audio Call Page Content ends  -->
-        <!-- Video Call Page Content Starts  -->
-	<div id="for_video">
-         <div class="page-wrapper video <?php echo $video_class; ?>">
-            <div class="chat-main-row <?php echo $class; ?>">
-                <div class="chat-main-wrapper">
-                    <div class="col-xs-9 message-view task-view">
-                        <div class="chat-window">
-                            <div class="chat-header">
-								<div class="navbar">
-									<div class="user-details">
-										<div class="pull-left user-img m-r-10">
-											<a href="#" title="<?php echo $name; ?>"><img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status online"></span></a>
-										</div>
-										<div class="user-info pull-left">
-											<a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
-										</div>
-									</div>
-									<ul class="nav navbar-nav pull-right chat-menu">
-										<li>
-											<a href="#chat_sidebar" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
-										</li>										
-									</ul>
-								</div>
-							</div>
-                            <div class="chat-contents">
-                                <div class="chat-content-wrap">
-                                    <div class="user-video voice-call-avatar">
-                                        <img src="<?php echo $receiver_profile_img; ?>" class="call-avatar incoming_image receiver_title_image">
-                                        <button class="start-call" type="video">Call</button>
-                                        <div class="video_call_status"></div>
-                                        <div>
-											<video id="incoming" autoplay class="img-responsive" muted></video>
-										</div>
-
-                                    </div>
-                                    <div class="my-video">
-                                        <ul>
-                                            <li>
-                                            	<video id="outgoing" autoplay class="img-responsive"></video>
-                                                <img src="<?php echo $profile_img; ?>" class="img-responsive outgoing_image" alt="">
-                                            </li>
-                                            <div class="group_members"></div>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="chat-footer hidden" id="video-footer">
-                                <div class="call-icons">
-                                    <span class="call-duration" id="video_timer"></span>
-                                    <ul class="call-items">
-                                        <!-- <li class="call-item enable_video">
-                                            <a href="javascript:void(0)" title="Enable Video" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-video-camera camera" aria-hidden="true"></i>
-                                            </a>
-                                        </li> -->
-                                        <li class="call-item mute_icon">
-                                            <a href="javascript:void(0)" title="Mute Audio" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-microphone microphone" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                       <!--  <li class="call-item">
-                                            <a href="javascript:void(0)" title="Add User" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-user-plus" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-                                        <li class="call-item">
-                                            <a href="javascript:void(0)" title="Full Screen" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-arrows-v full-screen" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
-										<li class="call-item">
-                                            <a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip">
-                                                <i class="fa fa-desktop full-screen" aria-hidden="true"></i>
-                                            </a>
-                                        </li> -->
-                                    </ul>
-                                    <div class="end-call">
-                                        <a href="javascript:void(0)" class="hangup">
-												End Call
-											</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
-                        <div class="chat-window video-window">
-                            <div class="chat-header">
-                                <ul class="nav nav-tabs nav-tabs-bottom">
-                                    <li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
-                                </ul>
-                            </div>
-                            <div class="tab-content chat-contents">
-                                <div class="content-full tab-pane active hidden" id="calls_tab">                                
+                    					</div>                               
+                    					</div>                               
+                    					</div>                               
                                 </div>
                             </div>
                         </div>

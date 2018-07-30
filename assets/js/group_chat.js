@@ -77,8 +77,8 @@ $('#group_form').submit(function(){
 				updateNotification('Success  !',obj.success,'success');		
 				
 				$('li').removeClass('active');
-				$('.chats').html('');
-				$('#task_window').addClass('hidden');
+				$('.chat_messages').html('');
+				$('#task_window,#chat_sidebar').addClass('hidden');
 				$('#add_group').modal('hide');	
 				if(obj.group_type == 'text'){
 					var gtype = obj.group_type;
@@ -107,7 +107,7 @@ $('#group_form').submit(function(){
 				$('.to_name').text(obj.group_name);
 				$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');
 				$('#channel').val(channel);
-				$('.chats').html('<div id="ajax"></div>');
+				$('.chat_messages').html('<div class="ajax"></div>');
 				$('input[data-role=tagsinput]').tagsinput('removeAll');
 				message('NEW_GROUP_ADDED');
 			}
@@ -164,14 +164,14 @@ $('#screen_share_form').submit(function(){
 
 function set_nav_bar_group_user(group_id,element){
 
-	$('li').removeClass('active,hidden');
+	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	var id = $(element).attr('id');	
 	$('#'+id+'danger').empty();	
 	var type = $(element).attr('type');		
 	$("div[id^='for_']").hide();
 	$('#for_' + type).show();
-	$('.chats').html('');
+	$('.chat_messages').html('');
 	$('.chat-main-row').removeClass('hidden');
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
@@ -189,7 +189,7 @@ function set_nav_bar_group_user(group_id,element){
 					$('.to_name').text(group.group_name);
 					}
 					$('.to_' + type).text(group.group_name);
-					$('#task_window').addClass('hidden');
+					$('#task_window,#chat_sidebar').addClass('hidden');
 					var receivers = [];
 					var receiver_id = [];					
 					var group_members_thumbnail = '';;
@@ -230,7 +230,7 @@ function set_nav_bar_group_user(group_id,element){
 				$('#receiver_id').val(receiver_id);
 				$('#type').val('group');
 				$('.no_message').html('');
-				$('.chats').html(obj.messages);
+				$('.chat_messages').html(obj.messages);
 
 				$('.load-more-btn').click(function(){
 					$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');

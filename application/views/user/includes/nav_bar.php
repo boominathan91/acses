@@ -378,19 +378,24 @@ $session_data = $this->session->userdata();
 
 											if(!empty($this->session->userdata('session_chat_id'))){
 
+												$online_status = ($chat['online_status'] == 1)?'online':'offline';
+
 											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="audio">
 												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right"></span></a>
 												</li>';
 										}
 
 										 ?>
-										</div>	
-										<!-- Newly Messaged user  -->
-										<div id="new_audio_user" class="new_message_user"></div>
-										
 
-										<?php
+
+
+
+
+										 <?php
 										if(!empty($chat_users)){
+
+											// echo '<pre>'; print_r($chat_users);
+											// exit;
 
 											foreach($chat_users as $u){
 												$online_status = ($u['online_status'] == 1)?'online':'offline';
@@ -412,6 +417,14 @@ $session_data = $this->session->userdata();
 
 										}
 										?>
+
+
+										</div>	
+										<!-- Newly Messaged user  -->
+										<div id="new_audio_user" class="new_message_user"></div>
+										
+
+										
 									</ul>
 								</div>
 								<!-- Video Call  -->
@@ -451,6 +464,7 @@ $session_data = $this->session->userdata();
 											<?php 
 
 											if(!empty($this->session->userdata('session_chat_id'))){
+												$online_status = ($chat['online_status'] == 1)?'online':'offline';
 
 											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="video">
 												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right"></span></a>
@@ -458,11 +472,8 @@ $session_data = $this->session->userdata();
 										}
 
 										 ?>
-										</div>	
-										<!-- Newly Messaged user  -->
-										<div id="new_video_user" class="new_message_user"></div>
 
-										<?php
+										 <?php
 										if(!empty($chat_users)){
 
 											foreach($chat_users as $u){
@@ -485,6 +496,11 @@ $session_data = $this->session->userdata();
 
 										}
 										?>
+										</div>	
+										<!-- Newly Messaged user  -->
+										<div id="new_video_user" class="new_message_user"></div>
+
+										
 									</ul>
 
 

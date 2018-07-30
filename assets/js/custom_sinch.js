@@ -251,7 +251,7 @@ function receive_message(message){
 
        }
        $('.no_message').html('');
-       $('#ajax,#ajax_audio').append(content);
+       $('.ajax').append(content);
      }else{ /*Hidden group and receiving msg group are different*/
 
 
@@ -324,7 +324,7 @@ function receive_message(message){
 
      }
      $('.no_message').html('');
-     $('#ajax,#ajax_audio').append(content);
+     $('.ajax').append(content);
 
 
 

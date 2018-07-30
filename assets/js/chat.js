@@ -150,7 +150,7 @@ function set_nav_bar_chat_user(login_id,element){
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
 	$('#'+id).closest('bg-danger').empty();
-	$('.chat-box.chats').html('');
+	$('.chat_messages').html('');
 	var type = $(element).attr('type');	
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
@@ -170,14 +170,14 @@ function set_nav_bar_chat_user(login_id,element){
 		}else{
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
-		$('.chat-main-row,#task_window').removeClass('hidden');
+		$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
 
 		$('#user_list').html('');
 		$('#add_chat_user').modal('hide');
 		$('#search_user').val('');
 		var session_type = $(element).parent().attr('id');
 		if(session_type == 'session_chat_user'){
-			$('.chat-main-row,#task_window').removeClass('hidden');
+			$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
 			$("#for_screen_share_group").hide();
 		}
 		else if(session_type == 'session_audio_user'){									
@@ -188,6 +188,118 @@ function set_nav_bar_chat_user(login_id,element){
 			$("#for_screen_share_group").hide();
 //			$('button.start-call').attr('type', 'audio');
 			$("#for_screen_share_group").hide();
+
+
+
+			var history ='';
+			/*Call History for Audio */
+			if(obj.call_history.length!=0){
+				$(obj.call_history).each(function(){				
+
+                    	var end_cause = this.end_cause;
+                    	if(this.profile_img!=''){
+                    	var caller_img = base_url+'uploads/'+this.profile_img;		
+                    	}else{
+                    	var caller_img = base_url+'assets/img/user.jpg';	
+                    	}                     
+					 		if(this.login_id != currentUserId){
+					 			var caller_name = this.first_name+' '+this.last_name;	
+					 			var receiver_name = 'You';
+					 		}else{
+					 			var receiver_name =  this.first_name+' '+this.last_name;
+					 			var caller_name = 'You';                    						 		
+					 		}
+					 			var call_duration = this.call_duration;                    						 							 			
+					 			var call_ended_at = this.call_ended_at;
+                    						 		if(end_cause == 'HUNG_UP'){ 
+                    						 		// Call from others and answered 
+
+                    						 		history +='<div class="chat chat-left">'+
+                    								'<div class="chat-avatar">'+
+                    									'<a href="javascript.void(0);" class="avatar">'+
+                    									'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    									'</a>'+
+                    								'</div>'+
+                    								'<div class="chat-body">'+
+                    									'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">call_end</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">This call has ended</span>'+
+                    													'</div>'+
+                    													'<div class="call-timing">Duration: <strong>'+call_duration+'</strong></div>'+
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else if(end_cause == 'DENIED'){
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0);" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    												'</a>'+
+                    											'</div>'+
+                    											'<div class="chat-body">'+
+                    										'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">'+receiver_name+' rejected call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else{
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0)" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    													'</a>'+
+                    												'</div>'+
+                    											'<div class="chat-body">'+
+                    												'<div class="chat-bubble">'+
+                    													'<div class="chat-content">'+
+                    														'<span class="task-chat-user">'+caller_name+'</span> <span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    													'<span class="call-description">'+receiver_name+'&nbsp;missed the call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}
+                    						 	
+                    						 
+
+
+
+
+				});				
+				$('#call_history').html(history);
+
+			}else{
+				$('#call_history').html('No call records');
+			}			
 		}
 		else if(session_type == 'session_video_user'){			
 			$('#for_audio').hide();
@@ -215,7 +327,7 @@ function set_nav_bar_chat_user(login_id,element){
 		$('.dob').text(obj.dob);
 		$('.receiver_email').text(obj.email);
 		$('.phone_number').text(obj.phone_number);
-		$('.chat-box.chats').html(obj.messages);
+		$('.chat_messages').html(obj.messages);
 		$('#type').val('text');
 		$('#group_id').val('');
 
@@ -248,7 +360,7 @@ function set_nav_bar_chat_user(login_id,element){
 function set_chat_user(login_id, element){
 	var chat_user_type = $('#user_list').attr('data-type');	
 	$('li').removeClass('active');
-	$('.chat-box.chats').html('');
+	$('.chat_messages').html('');
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);		
@@ -270,7 +382,7 @@ function set_chat_user(login_id, element){
 		var extra_add = 'Call';
 		if(chat_user_type == 'text_chat'){
 			$('#session_chat_user').prepend(data);
-			$('.chat-main-row,#task_window').removeClass('hidden');
+			$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
 			extra_add = '';
 		}
 		else if(chat_user_type == 'audio'){
@@ -281,6 +393,112 @@ function set_chat_user(login_id, element){
 			$("#for_video").hide();
 			$("#for_group_video").hide();
 			$("#for_screen_share_group").hide();
+			var history ='';
+			/*Call History for Audio */
+			if(obj.call_history){
+				$(obj.call_history).each(function(){				
+
+                    	var end_cause = this.end_cause;
+                    	if(this.profile_img!=''){
+                    	var caller_img = base_url+'uploads/'+this.profile_img;		
+                    	}else{
+                    	var caller_img = base_url+'assets/img/user.jpg';	
+                    	}                     
+					 		if(this.login_id != currentUserId){
+					 			var caller_name = this.first_name+' '+this.last_name;	
+					 			var receiver_name = 'You';
+					 		}else{
+					 			var receiver_name =  this.first_name+' '+this.last_name;
+					 			var caller_name = 'You';                    						 		
+					 		}
+					 			var call_duration = this.call_duration;                    						 							 			
+					 			var call_ended_at = this.call_ended_at;
+                    						 		if(end_cause == 'HUNG_UP'){ 
+                    						 		// Call from others and answered 
+
+                    						 		history +='<div class="chat chat-left">'+
+                    								'<div class="chat-avatar">'+
+                    									'<a href="javascript.void(0);" class="avatar">'+
+                    									'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    									'</a>'+
+                    								'</div>'+
+                    								'<div class="chat-body">'+
+                    									'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">call_end</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">This call has ended</span>'+
+                    													'</div>'+
+                    													'<div class="call-timing">Duration: <strong>'+call_duration+'</strong></div>'+
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else if(end_cause == 'DENIED'){
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0);" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    												'</a>'+
+                    											'</div>'+
+                    											'<div class="chat-body">'+
+                    										'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">'+receiver_name+' rejected call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else{
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0)" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    													'</a>'+
+                    												'</div>'+
+                    											'<div class="chat-body">'+
+                    												'<div class="chat-bubble">'+
+                    													'<div class="chat-content">'+
+                    														'<span class="task-chat-user">'+caller_name+'</span> <span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    													'<span class="call-description">'+receiver_name+'&nbsp;missed the call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}
+                    						 	
+                    						 
+
+
+
+
+				});				
+				$('#call_history').html(history);		
+			}
 			// $('button.start-call').attr('type', 'audio');
 		}
 		else if(chat_user_type == 'video'){
@@ -307,7 +525,7 @@ function set_chat_user(login_id, element){
 		$('.dob').text(obj.dob);
 		$('.receiver_email').text(obj.email);
 		$('.phone_number').text(obj.phone_number);
-		$('.chat-box.chats').html(obj.messages);
+		$('.chat_messages').html(obj.messages);
 		$('#type').val('text');
 		$('#group_id').val('');
 
@@ -342,7 +560,7 @@ function delete_conversation()
 		var sender_id = $('#receiver_id').val();
 		$.post(base_url+'chat/delete_conversation',{sender_id:sender_id},function(response){
 			if(response == 1){
-				$('.chat-box.chats').html('<div class="no_message">No Record Found</div><div id="ajax"></div><input type="hidden"  id="hidden_id">');
+				$('.chat_messages').html('<div class="no_message"></div><div class="ajax"></div><input type="hidden"  id="hidden_id">');
 			}
 		});
 	}
@@ -385,7 +603,7 @@ $('#chat_form').submit(function(){
 		'</div>'+
 		'</div>'+
 		'</div>';
-		$('#ajax').append(content);     
+		$('.ajax').append(content);     
 		$('#input_message').val('');  
 		var message_type = $('#type').val();
 
@@ -399,6 +617,48 @@ $('#chat_form').submit(function(){
 	}
 	return false;
 });
+
+
+
+
+$('#audio_chat_form').submit(function(){
+	$('.no_message').html('');
+	var time = $('#time').val();
+	var img = $('#img').val();
+	var receiver_id = $('#receiver_id').val();
+
+	var input_message = $.trim($('#input_messages').val());
+	if(input_message == ''){
+		updateNotification('','Please enter message to send!','error');
+		return false;
+	}
+	if(input_message!=''){
+		var content ='<div class="chat chat-right">'+
+		'<div class="chat-body">'+
+		'<div class="chat-bubble">'+
+		'<div class="chat-content">'+
+		'<p>'+input_message+'</p>'+
+		'<span class="chat-time">'+time+'</span>'+
+		'</div>'+		
+		'</div>'+
+		'</div>'+
+		'</div>';
+		$('.ajax').append(content);     
+		$('#input_messages').val('');  
+		var message_type = $('#type').val();
+
+		var group_id = $('#group_id').val();
+		message(input_message);
+		$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
+
+		});                 
+		
+
+	}
+	return false;
+});
+
+
 
 $('.attach-icon').click(function(){
 	$('#user_file').click();
@@ -463,7 +723,7 @@ $('#user_file').change(function(e) {
             		'</div>'+
             		'</div>'+
             		'</div>';            		
-            		$('#ajax').append(content); 
+            		$('.ajax').append(content); 
             		$('#user_file').val('');
             		
             		$(".msg-list-scroll").slimscroll({ scrollBy: '400px' });
@@ -496,7 +756,7 @@ function load_more(total){
 	$.post(base_url+'chat/get_old_messages',{total:total},function(res){  
 		if(res){        
 			$('.load-more-btn').html('<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>');               
-			$('#ajax_old').prepend(res);
+			$('.ajax_old').prepend(res);
 		}else{
 			$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
 		}
