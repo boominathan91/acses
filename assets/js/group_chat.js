@@ -184,14 +184,17 @@ function set_nav_bar_group_user(group_id,element){
 				var type = obj.group.type;
 				var group_type_name =type.replace(/_/g, ' ');
 				var extra_add = 'Call';
+				var receivers = [];
+				var receiver_id = [];					
+
+
 				if(type == 'text'){
 					extra_add = '';
 					$('.to_name').text(group.group_name);
 					}
 					$('.to_' + type).text(group.group_name);
 					$('#task_window,#chat_sidebar').addClass('hidden');
-					var receivers = [];
-					var receiver_id = [];					
+					
 					var group_members_thumbnail = '';;
 					var i=0;
 					//if( obj.group_members && (type == 'audio' || type == 'video') ){
@@ -218,14 +221,17 @@ function set_nav_bar_group_user(group_id,element){
 						});
 						$('.group_members').append(group_members_thumbnail);
 
-					}else if( obj.group_members && type == 'text'){
+					}else if( obj.group_members && (type == 'text' || type =='video')){
 
 						$(obj.group_members).each(function(){
 							receivers.push(this.sinch_username);
 							receiver_id.push(this.login_id);
 						});
+
+
 					}
 				// console.log(receivers);
+				$('.to_group_video_name').text(group.group_name)
 				$('#receiver_sinchusername').val(receivers);
 				$('#receiver_id').val(receiver_id);
 				$('#type').val('group');

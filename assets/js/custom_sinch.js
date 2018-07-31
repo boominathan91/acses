@@ -93,11 +93,6 @@ function message(txt){
     var receiver_sinchusername = receiver_sinchusername.split(",");
     var receiver_sinchusername = receiver_sinchusername;
   }
-
-
-
-	 // console.log(receiver_sinchusername);
-  //  return false;
 	// Create a new Message
 	var message = messageClient.newMessage(receiver_sinchusername,txt);
 	// Send it
@@ -116,14 +111,7 @@ var myListenerObj = {
 };
 messageClient.addEventListener(myListenerObj);
 
-
-
-
-
 function receive_message(message){
-//	console.log(message);
-
-
 
        var receiver_sinchusername = $('#receiver_sinchusername').val();  // receiver username     
 	     var sender_sinchusername = $('#sender_sinchusername').val();  // sender username     
@@ -162,7 +150,7 @@ function receive_message(message){
     $.post(base_url+'chat/get_notification',{created_by:message.senderId},function(res){      
       if(res){
        var result = jQuery.parseJSON(res);
-       updateNotification(result.group_name,'New '+result.group_type+' group created by '+result.first_name+' '+result.last_name+'!','success');
+       updateNotification('Group : '+result.group_name,'New '+result.group_type+' group created by '+result.first_name+' '+result.last_name+'!','success');
      }
       // return false;
     });      
@@ -260,6 +248,7 @@ function receive_message(message){
       '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right"  id="'+obj.msg_data.new_group_name+'danger">'+obj.count+'</span></a>'+
       '</li>';
       $('#new_group_user').prepend(data);
+      updateNotification(obj.msg_data.new_group_name,message.textBody,'success');
 
     }
 
@@ -271,7 +260,12 @@ function receive_message(message){
 
       if(msg == 'file' && type == 'image'){
 
-        var content ='<div class="chat chat-right">'+
+        var content ='<div class="chat chat-left">'+
+        '<div class="chat-avatar">'+
+       '<a href="#" class="avatar">'+
+       '<img alt="'+receiver_name+'" title="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+       '</a>'+
+       '</div>'+
         '<div class="chat-body">'+
         '<div class="chat-bubble">'+
         '<div class="chat-content img-content">'+
@@ -292,7 +286,12 @@ function receive_message(message){
 
       }else if(msg == 'file' && type == 'others'){
 
-        var content ='<div class="chat chat-right">'+
+        var content ='<div class="chat chat-left">'+
+        '<div class="chat-avatar">'+
+       '<a href="#" class="avatar">'+
+       '<img alt="'+receiver_name+'" title="'+receiver_name+'" src="'+receiver_img+'" class="img-responsive img-circle">'+
+       '</a>'+
+       '</div>'+
         '<div class="chat-body">'+
         '<div class="chat-bubble">'+
         '<div class="chat-content "><ul class="attach-list">'+
@@ -476,9 +475,10 @@ function receive_message(message){
     $('#'+datas.sinch_username).remove();
     var receiver_name = datas.first_name+' '+datas.last_name; 
     var content = '<li  id="'+datas.sinch_username+'" onclick="set_chat_user('+datas.login_id+')">'+
-    '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right">'+count+'</span></a>'+
+    '<a href="#"><span class="status '+online_status+'"></span>'+receiver_name+ '<span class="badge bg-danger pull-right" id="'+datas.sinch_username+'danger">'+count+'</span></a>'+
     '</li>';       
     $('#new_message_user').prepend(content);
+    updateNotification(receiver_name+':',message.textBody,'success');
 
   }
 
@@ -548,7 +548,7 @@ var contains = function(needle) {
     timer();
   }
 
-  group_audio_members_status = setInterval(get_group_audio_member_status, 5000);
+ // group_audio_members_status = setInterval(get_group_audio_member_status, 5000);
 
   function get_group_audio_member_status() {
     if( $("#for_group_audio").is(":visible") && $("#group_id").val() ) {

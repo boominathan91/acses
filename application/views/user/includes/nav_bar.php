@@ -162,7 +162,7 @@ $session_data = $this->session->userdata();
 							<ul class="profile <?php echo $profile_class; ?>">		
 								<li id="profile"><a href="javascript:void(0)" page="profile">Profile</a></li>			
 								<li><a href="javascript:void(0)" page="text_chat" onclick="navigate(this)">Chat</a></li>
-								<li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li>
+								<!-- <li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li> -->
 								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>	
 								<li><a href="javascript:void(0)" page="screen_share" onclick="navigate(this)">Screen Share</a></li>							
 							</ul>
@@ -291,7 +291,7 @@ $session_data = $this->session->userdata();
 										if(!empty($this->session->userdata('session_chat_id'))){
 
 											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="text_chat">
-												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right"></span></a>
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right" id="'.$chat['sinch_username'].'danger" ></span></a>
 												</li>';
 										}
 
@@ -324,7 +324,7 @@ $session_data = $this->session->userdata();
 
 
 												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)" type="text_chat">
-												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right">'.$count.'</span></a>
+												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right" id="'.$u['sinch_username'].'danger">'.$count.'</span></a>
 												</li>';
 											}
 

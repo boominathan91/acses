@@ -150,6 +150,9 @@ function set_nav_bar_chat_user(login_id,element){
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
 	$('#'+id).closest('bg-danger').empty();
+	$('#'+id+'danger').empty();
+
+
 	$('.chat_messages').html('');
 	var type = $(element).attr('type');	
 
@@ -310,6 +313,117 @@ function set_nav_bar_chat_user(login_id,element){
 			// $('button.start-call').attr('type', 'video');
 			$("#for_screen_share_group").hide();
 			$('.group_members').html('');
+
+
+			var history ='';
+			/*Call History for Audio */
+			if(obj.call_history.length!=0){
+				$(obj.call_history).each(function(){				
+
+                    	var end_cause = this.end_cause;
+                    	if(this.profile_img!=''){
+                    	var caller_img = base_url+'uploads/'+this.profile_img;		
+                    	}else{
+                    	var caller_img = base_url+'assets/img/user.jpg';	
+                    	}                     
+					 		if(this.login_id != currentUserId){
+					 			var caller_name = this.first_name+' '+this.last_name;	
+					 			var receiver_name = 'You';
+					 		}else{
+					 			var receiver_name =  this.first_name+' '+this.last_name;
+					 			var caller_name = 'You';                    						 		
+					 		}
+					 			var call_duration = this.call_duration;                    						 							 			
+					 			var call_ended_at = this.call_ended_at;
+                    						 		if(end_cause == 'HUNG_UP'){ 
+                    						 		// Call from others and answered 
+
+                    						 		history +='<div class="chat chat-left">'+
+                    								'<div class="chat-avatar">'+
+                    									'<a href="javascript.void(0);" class="avatar">'+
+                    									'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    									'</a>'+
+                    								'</div>'+
+                    								'<div class="chat-body">'+
+                    									'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">call_end</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">This call has ended</span>'+
+                    													'</div>'+
+                    													'<div class="call-timing">Duration: <strong>'+call_duration+'</strong></div>'+
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else if(end_cause == 'DENIED'){
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0);" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    												'</a>'+
+                    											'</div>'+
+                    											'<div class="chat-body">'+
+                    										'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">'+receiver_name+' rejected call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else{
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0)" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    													'</a>'+
+                    												'</div>'+
+                    											'<div class="chat-body">'+
+                    												'<div class="chat-bubble">'+
+                    													'<div class="chat-content">'+
+                    														'<span class="task-chat-user">'+caller_name+'</span> <span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    													'<span class="call-description">'+receiver_name+'&nbsp;missed the call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}
+                    						 	
+                    						 
+
+
+
+
+				});				
+				$('#call_history').html(history);
+
+			}else{
+				$('#call_history').html('No call records');
+			}
 		}
 		var group_type_name = type.replace(/_/g, ' ');
 		var extra_add = 'Call';
@@ -509,6 +623,115 @@ function set_chat_user(login_id, element){
 			$("#for_video").show();
 			$("#for_group_video").hide();
 			$("#for_screen_share_group").hide();
+			var history ='';
+			/*Call History for Audio */
+			if(obj.call_history.length!=0){
+				$(obj.call_history).each(function(){				
+
+                    	var end_cause = this.end_cause;
+                    	if(this.profile_img!=''){
+                    	var caller_img = base_url+'uploads/'+this.profile_img;		
+                    	}else{
+                    	var caller_img = base_url+'assets/img/user.jpg';	
+                    	}                     
+					 		if(this.login_id != currentUserId){
+					 			var caller_name = this.first_name+' '+this.last_name;	
+					 			var receiver_name = 'You';
+					 		}else{
+					 			var receiver_name =  this.first_name+' '+this.last_name;
+					 			var caller_name = 'You';                    						 		
+					 		}
+					 			var call_duration = this.call_duration;                    						 							 			
+					 			var call_ended_at = this.call_ended_at;
+                    						 		if(end_cause == 'HUNG_UP'){ 
+                    						 		// Call from others and answered 
+
+                    						 		history +='<div class="chat chat-left">'+
+                    								'<div class="chat-avatar">'+
+                    									'<a href="javascript.void(0);" class="avatar">'+
+                    									'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    									'</a>'+
+                    								'</div>'+
+                    								'<div class="chat-body">'+
+                    									'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">call_end</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">This call has ended</span>'+
+                    													'</div>'+
+                    													'<div class="call-timing">Duration: <strong>'+call_duration+'</strong></div>'+
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else if(end_cause == 'DENIED'){
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0);" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    												'</a>'+
+                    											'</div>'+
+                    											'<div class="chat-body">'+
+                    										'<div class="chat-bubble">'+
+                    										'<div class="chat-content">'+
+                    											'<span class="task-chat-user">'+caller_name+'</span>'+
+                    											'<span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    														'<span class="call-description">'+receiver_name+' rejected call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}else{
+
+                    						 			history +='<div class="chat chat-left">'+
+                    												'<div class="chat-avatar">'+
+                    													'<a href="javascript:void(0)" class="avatar">'+
+                    													'<img alt="'+caller_name+'" src="'+caller_img+'" class="img-responsive img-circle">'+
+                    													'</a>'+
+                    												'</div>'+
+                    											'<div class="chat-body">'+
+                    												'<div class="chat-bubble">'+
+                    													'<div class="chat-content">'+
+                    														'<span class="task-chat-user">'+caller_name+'</span> <span class="chat-time">'+call_ended_at+'</span>'+
+                    											'<div class="call-details">'+
+                    												'<i class="material-icons">phone_missed</i>'+
+                    												'<div class="call-info">'+
+                    													'<div class="call-user-details">'+
+                    													'<span class="call-description">'+receiver_name+'&nbsp;missed the call</span>'+
+                    													'</div>'+						
+                    												'</div>'+
+                    											'</div>'+
+                    										'</div>'+
+                    									'</div>'+
+                    								'</div>'+
+                    							'</div>';
+                    						 		}
+                    						 	
+                    						 
+
+
+
+
+				});				
+				$('#call_history').html(history);
+
+			}else{
+				$('#call_history').html('No call records');
+			}
 			// $('button.start-call').attr('type', 'video');
 		}
 		//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
