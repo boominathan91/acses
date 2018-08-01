@@ -258,12 +258,13 @@ class Chat extends CI_Controller {
 	}
 		Public function get_username(){
 		$data = array();
-		$data = $this->db->select('first_name,last_name')
+		$data = $this->db->select('first_name,last_name,profile_img')
 					->get_where('login_details',array('sinch_username' => $_POST['sinch_username']))
 					->row_array();
 		if(!empty($data)){
 			$data['first_name'] = ucfirst($data['first_name']);
 			$data['last_name'] = ucfirst($data['last_name']);
+			$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
 		}
 		echo json_encode($data);
 	}

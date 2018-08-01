@@ -24,7 +24,7 @@
                 </div>
 				<a id="mobile_btn" class="mobile_btn pull-left" href="#sidebar"><i class="fa fa-bars" aria-hidden="true"></i></a>
 				<ul class="nav navbar-nav navbar-right user-menu pull-right">
-					<li class="dropdown hidden-xs">
+					<!-- <li class="dropdown hidden-xs">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bell-o"></i> <span class="badge bg-purple pull-right">3</span></a>
 						<div class="dropdown-menu notifications">
 							<div class="topnav-dropdown-header">
@@ -98,7 +98,7 @@
 					</li>
 					<li class="dropdown hidden-xs">
 						<a href="javascript:;" id="open_msg_box" class="hasnotifications"><i class="fa fa-comment-o"></i> <span class="badge bg-purple pull-right">8</span></a>
-					</li>	
+					</li>	 -->
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle user-link" data-toggle="dropdown" title="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
 							<span class="user-img"><img class="img-circle" src="<?php echo base_url(); ?>assets/img/user.jpg" width="40" alt="Admin">

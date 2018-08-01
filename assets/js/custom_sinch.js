@@ -419,7 +419,7 @@ function receive_message(message){
 
         }
         $('.no_message').html('');
-        $('#ajax,#ajax_audio').append(content);
+        $('.ajax').append(content);
 
       }else{ // Different group 
 
@@ -821,6 +821,7 @@ $('a#answer').click(function(event) {
     var caller_profile_img = $('.caller_profile_img').val();
     $('.to_name').text(caller_full_name);
     $('.receiver_title_image').attr('src',caller_profile_img);
+    $('#'+caller_sinchusername).click();
   }
   catch(error) {
     handleFail(error);
@@ -968,6 +969,21 @@ $('button.start-call').click(function(event) {
         }
         //console.log(stream);
         });
+
+
+
+        //   $('#outgoing_video_initial').click(function(){
+        //   if($('.outgoing_image').hasClass('hidden')){
+        //     $('.outgoing_image').removeClass('hidden');
+        //     $('.outgoing_video').addClass('hidden');
+        //       $('#for_group_video #incoming_group_video_div').html("<video id='incoming_group_video' autoplay class='img-responsive' src='" + my_stream_url + "'>");
+
+        //   }else{
+        //     $('.outgoing_image').addClass('hidden');
+        //     $('.outgoing_video').removeClass('hidden');
+        //     $('#for_group_video #incoming_group_video_div').html('');
+        //   }
+        // });
 
 
       },

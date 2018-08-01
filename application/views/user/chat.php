@@ -581,7 +581,7 @@
 													<input type="file" name="userfile" id="user_file" class="hidden">
 													<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 													<!-- sender sinch username  -->
-													<input type="text" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
+													<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
 													<!--  receiver sinch username  -->
 													<input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
 													<!--  receiver id  -->
@@ -1300,7 +1300,7 @@
                                         </div>
                                         <div class="user-info pull-left">
                                             <a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_group_video_name"><?php echo $name; ?></span></a>
-                                            <span class="font-bold to_group_video hidden"><?php echo $name; ?></span>
+                                            <span class="font-bold to_group_video"><?php echo $name; ?></span>
                                         </div>
                                     </div>
                                     <ul class="nav navbar-nav pull-right chat-menu">

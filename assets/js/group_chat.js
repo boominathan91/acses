@@ -231,7 +231,8 @@ function set_nav_bar_group_user(group_id,element){
 
 					}
 				// console.log(receivers);
-				$('.to_group_video_name').text(group.group_name)
+				$('.to_group_video_name').text(group.group_name);
+				$('.to_group_video').text(group.group_name);
 				$('#receiver_sinchusername').val(receivers);
 				$('#receiver_id').val(receiver_id);
 				$('#type').val('group');
