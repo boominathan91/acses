@@ -168,7 +168,9 @@ function set_nav_bar_group_user(group_id,element){
 	$(element).addClass('active');
 	var id = $(element).attr('id');	
 	$('#'+id+'danger').empty();	
-	var type = $(element).attr('type');		
+	var type = $(element).attr('type');	
+	$('.add_user').show();
+		
 	$("div[id^='for_']").hide();
 	$('#for_' + type).show();
 	$('.chat_messages').html('');

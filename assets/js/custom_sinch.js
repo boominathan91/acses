@@ -32,8 +32,9 @@ var register = function(data){
 
 /*Login  User in Sinch */
 var login = function(data){
-  updateNotification('', 'Please wait  redirecting...', 'success'); 	
+   	
   $('.loading').show();	
+   updateNotification('', 'Please wait  redirecting...', 'success');
   var credential = {};
   credential.username = data.sinch_username;
   credential.password = data.sinch_username;		
@@ -41,6 +42,7 @@ var login = function(data){
   global_username = sessionObj.userId;	
   sinchClient.start(credential).then(function() {
     localStorage[sessionName] = JSON.stringify(sinchClient.getSession());
+
     $('.loading').hide();
     window.location.href=base_url+"chat";			
   }).fail(function(error){			
@@ -150,7 +152,7 @@ function receive_message(message){
     $.post(base_url+'chat/get_notification',{created_by:message.senderId},function(res){      
       if(res){
        var result = jQuery.parseJSON(res);
-       updateNotification('Group : '+result.group_name,'New '+result.group_type+' group created by '+result.first_name+' '+result.last_name+'!','success');
+       updateNotification('Group :'+result.group_name,'New '+result.group_type+' group created by '+result.first_name+' '+result.last_name+'!','success');
      }
       // return false;
     });      
@@ -248,7 +250,7 @@ function receive_message(message){
       '<a href="#">#'+obj.msg_data.group_name+ '<span class="badge bg-danger pull-right"  id="'+obj.msg_data.new_group_name+'danger">'+obj.count+'</span></a>'+
       '</li>';
       $('#new_group_user').prepend(data);
-      updateNotification(obj.msg_data.new_group_name,message.textBody,'success');
+      updateNotification('Message From the Group : '+obj.msg_data.new_group_name+' ',message.textBody,'success');
 
     }
 

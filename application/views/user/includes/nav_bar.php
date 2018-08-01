@@ -162,9 +162,9 @@ $session_data = $this->session->userdata();
 							<ul class="profile <?php echo $profile_class; ?>">		
 								<li id="profile"><a href="javascript:void(0)" page="profile">Profile</a></li>			
 								<li><a href="javascript:void(0)" page="text_chat" onclick="navigate(this)">Chat</a></li>
-								<li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li>
+								<!-- <li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li>
 								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>	
-								<li><a href="javascript:void(0)" page="screen_share" onclick="navigate(this)">Screen Share</a></li>							
+								<li><a href="javascript:void(0)" page="screen_share" onclick="navigate(this)">Screen Share</a></li>		 -->					
 							</ul>
 
 							<ul>

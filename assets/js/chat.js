@@ -28,7 +28,28 @@ function search_user(){
 	});
 }
 
+
 $(document).ready(function(){
+
+
+
+		$(".vcfullscreen").click(function(){
+			$(".vcheader, .vcmsg, .vccolsmall, .message-bar").toggle();
+			$(".vccollarge").toggleClass("vccollargefull");
+			$(this).toggleClass("vcfullscreenalt");
+			if($(".vccollarge").hasClass("vccollargefull")){
+				$(".vccollarge").css('height',$(window).height());
+			} else{
+				$(".vccollarge").css('height','auto');
+			}
+		});
+		
+		$(".videoinner").click(function(){
+			$(this).toggleClass("videoinneralt");
+		});
+
+
+		
 
 	// $("#for_audio").hide();
 	// $("#for_group_audio").hide();
@@ -152,7 +173,7 @@ function set_nav_bar_chat_user(login_id,element){
 	$('#'+id).closest('bg-danger').empty();
 	$('#'+id+'danger').empty();
 
-
+	$('.add_user').hide();
 	$('.chat_messages').html('');
 	var type = $(element).attr('type');	
 

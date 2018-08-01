@@ -1039,8 +1039,8 @@ transform-origin: left top;transition: 240ms;left: 12px;top: -8px;z-index: 1;col
 	right: 10px;
 	width: 300px;
 	display: inline-block;
-	background: #1F8FEF;
-	border: 1px solid #1082e4;
+	background: #d9534f;
+	border: 1px solid #d9534f;
 	color: #fff;
 	padding: 20px;
 	opacity: .8;
@@ -1209,6 +1209,52 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 /*------------------------------------------------------------------
 [36. Video Call]
 */
+
+
+.vccontainer{ padding:0;}
+.vccontainer .vcheader{ background:#5c65be; height:50px; padding:5px 5px 5px 15px; color:#fff;}
+.vccontainer .vcheader .row{ margin:0;}
+.vccontainer .vcheader .row .col-sm-4{ padding:0;}
+.vccontainer .vcheader .vchtitle{ line-height:40px; font-size:18px; font-weight:600; text-transform:uppercase;}
+.vccontainer .vcheader .vchclose a{ display:inline-block; padding:10px 15px 12px; color:#fff; font-size:16px; line-height:16px;}
+.vccontainer .vcheader .vchclose a:hover{ background:#e30000;}
+.vccontainer .vcboardhrz{ background:#e9e9e9; height:50px; position:relative;}
+.vccontainer .vcboardhrz .nav{ padding-top:10px; padding-left:10px;}
+.vccontainer .vcboardhrz .nav > li > a{ padding:8px 15px; font-size:14px; font-weight:600; color:#616161;}
+.vccontainer .vcboardhrz .nav > li > a img{ margin-right:3px;}
+.vccontainer .vcboardhrz .vcbclose a{ display:block; padding:10px 15px 12px; color:#aaaaaa; font-size:16px; line-height:16px; position:absolute; right:0; top:6px;}
+.vccontainer .vcboardhrz .vcbclose a:hover{ background:#e30000; color:#fff;}
+
+.vccontainer .vcboardstage{ height:690px; padding:20px;}
+.vccontainer .brdrright{ border-right:1px solid #e9e9e9;}
+.vccontainer .vcrow{ width:100%; float:left; clear:both;}
+.vccontainer .vccol{ width:50%; float:left;}
+.vccontainer .vcvideo{ height:451px; background:#f7f7f7; position:relative; overflow:hidden;}
+.vccontainer .vcvideo .videoinner{ height:100%; position:relative; cursor:w-resize;}
+.vccontainer .vcvideo .videoinner img{ width:auto; height:100%; position:relative;}
+.vccontainer .vcvideo .videoinner.videoinneralt img{ width:100%; height:auto; top:-30%;}
+.vccontainer .vccollargefull .vcvideo .videoinner.videoinneralt img{ width:100%; height:auto; top:0;}
+.vccontainer .vcvideo .vcopponentvideo{ position:absolute; top:0; left:0; width:160px; height:120px;}
+.vccontainer .vcactions{ height:60px; text-align:center; position:absolute; width:100%; bottom:10px;}
+.vccontainer .vcactions a{ display:inline-block; width:50px; height:50px; background:#333333; border-radius:50%; margin:0 2px; padding:5px 0;}
+.vccontainer .vcactions a.vccall, .vccontainer .vcactions a.vcmike, .vccontainer .vcactions a.vcend{ background:#fff no-repeat; background-position:top center; box-shadow:0 2px 5px rgba(0,0,0,0.5); font-size:0;}
+.vccontainer .vcactions a.vccall{ background-image:url(../img/call-vc-icon.png);}
+.vccontainer .vcactions a.vcmike{ background-image:url(../img/mike-vc-icon.png);}
+.vccontainer .vcactions a.vcend{ background-color:#d9534f; background-image:url(../img/end-vc-icon.png);}
+.vccontainer .vcactions a.vccall:hover, .vccontainer .vcactions a.vcmike:hover{ background-color:#c23934; background-position:bottom center;}
+.vccontainer .vcactions a.vcend:hover{ background-color:#c23934; background-image:url(../img/end-vc-icon.png); background-position:bottom center;}
+.vccontainer .vcactions a img{ height:auto;}
+.vccontainer .vcmsg{ height:230px; border-bottom:1px solid #e9e9e9;}
+.vccontainer .vcmsg .chat-box{ max-height:229px;}
+.vccontainer .vcmsg .chat-box .chats{ padding:15px;}
+.vccontainer .vccolsmall{ width:5%; height:740px; background:#e9e9e9; padding-top:10px;}
+.vccontainer .vccolsmall a{ display:block; text-align:center; padding:10px;}
+.vccontainer .vccollarge{ width:95%;}
+.vccontainer .vccollargefull{ width:100%;}
+.vccontainer .vccollargefull .vcvideo{ height:100%;}
+.vccontainer .vcfullscreen{ position:absolute; top:8px; right:8px; width:32px; height:32px; background:url(../img/full-minimize-icon.png) no-repeat top center; font-size:0; cursor:pointer; z-index:9;}
+.vccontainer .vcfullscreenalt{ background-position:bottom center;}
+
 
 .content-full {height: 100%;position: relative;width: 100%;}
 .video-window .chat-header {padding: 0;border: 0;}

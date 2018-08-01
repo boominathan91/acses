@@ -664,6 +664,28 @@ $('input[data-role=tagsinput]').tagsinput({
 });
 
 
+
+
+$('#search_user').typeahead({
+  hint: true,
+  highlight: true,
+  minLength: 1
+},
+{
+  displayKey: 'name',
+  valueKey: 'name',
+  name: 'members',
+  source: members,
+});
+
+    $('#search_user').on(
+    {
+    'typeahead:selected': function(e, datum) {
+    search_user();
+    }      
+    });
+
+
   // $(function() {
   //   $("input[data-role=tagsinput], select[multiple][data-role=tagsinput]").tagsinput();
   // });

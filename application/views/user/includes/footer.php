@@ -48,12 +48,14 @@ if($uri == 'profile' && $this->uri->segment(2) == 'edit'){ ?>
 	<script src='<?php echo base_url()."assets/" ?>js/jquery.slimscroll.js'></script>
 	<script src="<?php echo base_url(); ?>assets/js/sinch.min.js"></script>
 <script src="<?php echo base_url(); ?>assets/js/custom_sinch.js"></script>
-<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/chat.js"></script>
+
 
 <!-- Group chat  -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/group_chat.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/typehead.bundle.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/bootstrap-tagsinput.js"></script>
+
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/chat.js"></script>
 <!-- Nav Bar chat  -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/nav_bar.js"></script>
 <script type="text/javascript" src="https://api.screenleap.com/js/screenleap.js"></script>
