@@ -1,3 +1,11 @@
+function handle_video_panel(){
+	if($('.vccontainer').hasClass('hidden')){
+		$('.vccontainer').removeClass('hidden');
+	}else{
+		$('.vccontainer').addClass('hidden');
+	}
+}
+
 function search_user(){
 	var user_name = $('#search_user').val();
 	$.post(base_url+'chat/get_users_by_name',{user_name:user_name},function(res){

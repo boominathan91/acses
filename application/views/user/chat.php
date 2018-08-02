@@ -442,7 +442,7 @@
 											</div>		
 
 											<ul class="nav navbar-nav pull-right chat-menu ">		
-												<li class="call-item enable_video">
+												<li class="call-item enable_video" onclick="handle_video_panel()">
 													<a href="javascript:void(0)" title="Video call" data-placement="top" data-toggle="tooltip">
 														<i class="fa fa-video-camera camera" aria-hidden="true"></i>
 													</a>
@@ -476,17 +476,21 @@
 											<div class="vccol vccollarge">
 												<div class="vcvideo">
 													<div class="videoinner">
-														 <video autoplay id="incoming" class="hidden"></video>
-														<img src="<?php echo $receiver_profile_img; ?>" class="img-circle img-responsive center-block receiver_title_image">
+														 <video autoplay id="incoming" class="hidden" style="display: inline;height: 98%;margin: auto;width: 100%;"></video>
+														<img src="<?php echo $receiver_profile_img; ?>" class="img-circle img-responsive center-block receiver_title_image" id="incoming_caller_image">
+														
 													</div>
 													<div class="vcopponentvideo">
-														<img src="<?php echo  $profile_img ?>" class="img-responsive">
+														<img src="<?php echo  $profile_img ?>" class="img-responsive" id="outgoing_caller_image">
+														<video  autoplay id="outgoing"  class="hidden" style="width:100%"></video>
+														<div class="video_call_status" id="video_timer"></div>
 													</div>
-													<video  autoplay id="outgoing"  class="hidden"></video>
+													
 													<div class="vcactions">
-														<a class="vccall" href="#">Call</a>
-														<a class="vcmike" href="#">Mike</a>     
-														<a class="vcend" href="#">Call End</a>
+														<a class="vccam hidden" href="javascript:void(0)">Video</a>     
+														<a class="vccall start-call" href="javascript:void(0)" type="video">Call</a>														
+														<a class="vcmike hidden" href="javascript:void(0)">Mike</a>     
+														<a class="vcend hidden" href="javascript:void(0)">Call End</a>
 													</div>
 												</div>
 											</div>
@@ -639,40 +643,22 @@
 									</form>
 								</div>
 							</div>
-							<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view <?php echo $task_class; ?>" id="task_window" >
+						<!-- 	<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view id="task_window" >
 								<div class="display-table profile-right-inner">
 									<div class="table-row">
 										<div class="table-body">
 											<div class="table-content">
 												<div class="chat-profile-img">
 													<div class="edit-profile-img">
-														<img class="avatar receiver_title_image" src="<?php echo $receiver_profile_img; ?>" alt="">
+														<img class="avatar receiver_title_image" src="<?php echo $receiver_profile_img; ?> hidden" alt="">
 													</div>
-													<h3 class="user-name m-t-10 m-b-0 to_name"><?php echo $name; ?></h3>
-													<small class="text-muted department"><?php echo $department_name; ?></small>
-
-												</div>
-												<div class="chat-profile-info">
-													<ul class="user-det-list">													
-														<li>
-															<span>DOB:</span>
-															<span class="pull-right text-muted dob"><?php echo $dob; ?></span>
-														</li>
-														<li>
-															<span>Email:</span>
-															<span class="pull-right text-muted receiver_email"><?php echo $receiver_email; ?></span>
-														</li>
-														<li>
-															<span>Phone:</span>
-															<span class="pull-right text-muted phone_number"><?php echo $phone_number; ?></span>
-														</li>
-													</ul>
-												</div>										
+													
+												</div>			
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							</div> -->
 						</div>
 					</div>
 				</div>
@@ -926,7 +912,7 @@
     						</div>
     						<div class="chat-footer hidden" id="video-footer">
     							<div class="call-icons">
-    								<span class="call-duration" id="video_timer"></span>
+    								<!-- <span class="call-duration" id="video_timer"></span> -->
     								<ul class="call-items">
                                         <!-- <li class="call-item enable_video">
                                             <a href="javascript:void(0)" title="Enable Video" data-placement="top" data-toggle="tooltip">
