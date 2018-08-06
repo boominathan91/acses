@@ -110,8 +110,14 @@ class Chat extends CI_Controller {
 				'call_ended_at' => $call_ended_at,
 				'end_cause' => $_POST['end_cause']
 			);
-			return  $this->db->insert('call_details',$data);
+			  $this->db->insert('call_details',$data);
+			 
+			  
 		}
+		 $datas['call_history'] =$this->chat->get_call_history_row();
+	     echo json_encode($datas);
+		
+		
 	}
 	public function set_nav_bar(){
 		$page = array();

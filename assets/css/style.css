@@ -1209,6 +1209,16 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 /*------------------------------------------------------------------
 [36. Video Call]
 */
+.vc_receiver_name{
+ position: fixed;
+    background: #667eea;
+    color: white;
+    font-size: 14px;
+    padding: 3px 11px 3px 9px;
+    box-shadow: 2px 2px 1px 1px grey;
+    right: 524px;
+    top: 121px;
+}
 .video_call_status{
   position: fixed;
     background: teal;

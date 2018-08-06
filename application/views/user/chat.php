@@ -468,6 +468,7 @@
 											<a href="#task_window" class="task-chat profile-rightbar pull-right"><i class="fa fa-user" aria-hidden="true"></i></a>
 										</div>
 									</div>
+									
 
 									<!-- Video call Contents here  -->
 									<div class="container-fluid vccontainer">
@@ -476,6 +477,7 @@
 											<div class="vccol vccollarge">
 												<div class="vcvideo">
 													<div class="videoinner">
+													<!-- 	<div class="vc_receiver_name to_name hidden"><?php echo $name; ?></div> -->
 														 <video autoplay id="incoming" class="hidden" style="display: inline;height: 98%;margin: auto;width: 100%;"></video>
 														<img src="<?php echo $receiver_profile_img; ?>" class="img-circle img-responsive center-block receiver_title_image" id="incoming_caller_image">
 														
@@ -498,9 +500,6 @@
 										</div>
 									
 									<!-- Video call Contents ends here  -->
-
-
-
 
 									<!-- Chat contents starts  -->
 									<div class="progress upload-progress hidden">
@@ -643,22 +642,172 @@
 									</form>
 								</div>
 							</div>
-						<!-- 	<div class="col-xs-3 profile-right fixed-sidebar-right chat-profile-view id="task_window" >
-								<div class="display-table profile-right-inner">
-									<div class="table-row">
-										<div class="table-body">
-											<div class="table-content">
-												<div class="chat-profile-img">
-													<div class="edit-profile-img">
-														<img class="avatar receiver_title_image" src="<?php echo $receiver_profile_img; ?> hidden" alt="">
-													</div>
-													
-												</div>			
-											</div>
-										</div>
-									</div>
-								</div>
-							</div> -->
+
+							<div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
+                    	<div class="chat-window video-window">
+                    		<div class="chat-header">
+                    			<ul class="nav nav-tabs nav-tabs-bottom">
+                    				<li class="active"><a href="#call_tab" data-toggle="tab">Calls</a></li>
+                    				<li><a href="#profile_tab" data-toggle="tab">Profile</a></li>
+                    			</ul>
+                    		</div>
+                    		<div class="tab-content chat-contents">
+                    			<div class="content-full tab-pane active" id="call_tab">
+                    				<div class="chat-wrap-inner">
+                    					<div class="chat-box">
+                    						<div class="chats">
+                    							<div  id="call_history">
+                    								<!-- Call History  -->
+                    								<?php
+                    								if(!empty($call_history)){
+                    									$login_id = $this->session->userdata('login_id');								
+
+                    									foreach($call_history as $c){
+                    										$end_cause = $c['end_cause'];
+                    										$caller_img = (!empty($c['profile_img']))?base_url().'uploads/'.$c['profile_img'] : base_url().'assets/img/user.jpg';
+                    										if($c['login_id'] != $login_id){
+                    											$caller_name = ucfirst($c['first_name']).' '.ucfirst($c['last_name']);	
+                    											$receiver_name = 'You';
+                    										}else{
+                    											$receiver_name =  ucfirst($c['first_name']).' '.ucfirst($c['last_name']);
+                    											$caller_name = 'You';                    						 		}
+                    											$call_duration = $c['call_duration'];                    						 			
+                    											if(date('Y-m-d') == date('Y-m-d',strtotime($c['call_ended_at']))){
+                    												$call_ended_at = date('h:i a',strtotime($c['call_ended_at']));
+                    											}else{
+                    												$call_ended_at = date('h:i a d-m-Y',strtotime($c['call_ended_at']));
+                    											}
+
+                    											if($end_cause == 'HUNG_UP'){ 
+                    						 		// Call from others and answered 
+
+
+
+                    												echo '<div class="chat chat-left">
+                    												<div class="chat-avatar">
+                    												<a href="profile.html" class="avatar">
+                    												<img alt="'.$caller_name.'" src="'.$caller_img.'" class="img-responsive img-circle">
+                    												</a>
+                    												</div>
+                    												<div class="chat-body">
+                    												<div class="chat-bubble">
+                    												<div class="chat-content">
+                    												<span class="task-chat-user">'.$caller_name.'</span> <span class="chat-time">'.$call_ended_at .'</span>
+                    												<div class="call-details">
+                    												<i class="material-icons">call_end</i>
+                    												<div class="call-info">
+                    												<div class="call-user-details">
+                    												<span class="call-description">This call has ended</span>
+                    												</div>
+                    												<div class="call-timing">Duration: <strong>'.$call_duration.'</strong></div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>';
+                    											}elseif($end_cause == 'DENIED'){                 						 		
+
+
+
+
+                    												echo '<div class="chat chat-left">
+                    												<div class="chat-avatar">
+                    												<a href="profile.html" class="avatar">
+                    												<img alt="'.$caller_name.'" src="'.$caller_img.'" class="img-responsive img-circle">
+                    												</a>
+                    												</div>
+                    												<div class="chat-body">
+                    												<div class="chat-bubble">
+                    												<div class="chat-content">
+                    												<span class="task-chat-user">'.$caller_name.'</span> <span class="chat-time">'.$call_ended_at .'</span>
+                    												<div class="call-details">
+                    												<i class="material-icons">phone_missed</i>
+                    												<div class="call-info">
+                    												<div class="call-user-details">
+                    												<span class="call-description">'.$receiver_name.' rejected call</span>
+                    												</div>
+
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>';
+                    											}else{
+
+                    												echo '<div class="chat chat-left">
+                    												<div class="chat-avatar">
+                    												<a href="profile.html" class="avatar">
+                    												<img alt="'.$caller_name.'" src="'.$caller_img.'" class="img-responsive img-circle">
+                    												</a>
+                    												</div>
+                    												<div class="chat-body">
+                    												<div class="chat-bubble">
+                    												<div class="chat-content">
+                    												<span class="task-chat-user">'.$caller_name.'</span> <span class="chat-time">'.$call_ended_at .'</span>
+                    												<div class="call-details">
+                    												<i class="material-icons">phone_missed</i>
+                    												<div class="call-info">
+                    												<div class="call-user-details">
+                    												<span class="call-description">'.$receiver_name.' missed the call</span>
+                    												</div>
+
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>
+                    												</div>';
+                    											}
+                    										}
+                    									}else{
+                    										echo 'No call records';
+                    									}
+                    									?>
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    				</div>                    				
+                    				<div class="content-full tab-pane" id="profile_tab">
+                    					<div class="display-table">
+                    						<div class="table-row">
+                    							<div class="table-body">
+                    								<div class="table-content">
+                    									<div class="chat-profile-img">
+                    										<div class="edit-profile-img">
+                    											<img src="<?php echo $receiver_profile_img; ?>" alt="" class="receiver_title_image">
+
+                    										</div>
+                    										<h3 class="user-name m-t-10 m-b-0 to_name"><?php echo $name; ?></h3>
+                    										<small class="text-muted department"><?php echo $department_name; ?></small>
+
+                    									</div>
+                    									<div class="chat-profile-info">
+                    										<ul class="user-det-list">													
+                    											<li>
+                    												<span>DOB:</span>
+                    												<span class="pull-right text-muted dob"><?php echo $dob; ?></span>
+                    											</li>
+                    											<li>
+                    												<span>Email:</span>
+                    												<span class="pull-right text-muted receiver_email"><?php echo $receiver_email; ?></span>
+                    											</li>
+                    											<li>
+                    												<span>Phone:</span>
+                    												<span class="pull-right text-muted phone_number"><?php echo $phone_number; ?></span>
+                    											</li>
+                    										</ul>
+                    									</div>                    						
+                    								</div>
+                    							</div>
+                    						</div>
+                    					</div>
+                    				</div>
+                    			</div>
+                    		</div>
+                    	</div>
 						</div>
 					</div>
 				</div>
@@ -1059,7 +1208,7 @@
                     												<i class="material-icons">phone_missed</i>
                     												<div class="call-info">
                     												<div class="call-user-details">
-                    												<span class="call-description">'.$receiver_name.'missed the call</span>
+                    												<span class="call-description">'.$receiver_name.' missed the call</span>
                     												</div>
 
                     												</div>
