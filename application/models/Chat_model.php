@@ -30,7 +30,7 @@ class Chat_model extends CI_Model {
 			$session_chat_id = $this->session->userdata('session_chat_id');
 			$sql = "SELECT l.login_id,l.profile_img,l.first_name,l.last_name,c.call_duration,c.end_cause,c.call_ended_at FROM call_details c 
 		JOIN login_details l ON l.login_id = c.call_from_id
-		WHERE c.call_type = 'video' AND c.group_id = 0 AND (c.call_from_id = $this->login_id AND c.call_to_id = $session_chat_id) OR (c.call_from_id = $session_chat_id AND c.call_to_id = $this->login_id)  ORDER BY c.call_id DESC LIMIT 1";
+		WHERE ( c.call_type = 'video' OR c.call_type = 'audio') AND c.group_id = 0 AND (c.call_from_id = $this->login_id AND c.call_to_id = $session_chat_id) OR (c.call_from_id = $session_chat_id AND c.call_to_id = $this->login_id)  ORDER BY c.call_id DESC LIMIT 1";
 		$data = $this->db->query($sql)->result_array();	
 		}	
 		
@@ -45,7 +45,7 @@ class Chat_model extends CI_Model {
 			$session_chat_id = $this->session->userdata('session_chat_id');
 			$sql = "SELECT l.login_id,l.profile_img,l.first_name,l.last_name,c.call_duration,c.end_cause,c.call_ended_at FROM call_details c 
 		JOIN login_details l ON l.login_id = c.call_from_id
-		WHERE c.call_type = 'video' AND c.group_id = 0 AND (c.call_from_id = $this->login_id AND c.call_to_id = $session_chat_id) OR (c.call_from_id = $session_chat_id AND c.call_to_id = $this->login_id)  ORDER BY c.call_id DESC  LIMIT 10 ";
+		WHERE ( c.call_type = 'video' OR c.call_type = 'audio') AND c.group_id = 0 AND (c.call_from_id = $this->login_id AND c.call_to_id = $session_chat_id) OR (c.call_from_id = $session_chat_id AND c.call_to_id = $this->login_id)  ORDER BY c.call_id DESC  LIMIT 10 ";
 		$data = $this->db->query($sql)->result_array();	
 		}	
 		

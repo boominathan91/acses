@@ -1,9 +1,17 @@
-					function handle_video_panel(){
-					if($('.vccontainer').hasClass('hidden')){
-					$('.vccontainer').removeClass('hidden');
-					}else{
-					$('.vccontainer').addClass('hidden');
-					}
+					function handle_video_panel(status){
+						if(status == 0){ /* Clicking Audio icon */
+							$('.vc_video').addClass('active');
+							$('.start-call').attr('type','audio');
+
+						}else{ /*Clicking Video icon */
+							$('.start-call').attr('type','video');
+						}	
+
+						if($('.vccontainer').hasClass('hidden')){
+							$('.vccontainer').removeClass('hidden');
+						}else{
+							$('.vccontainer').addClass('hidden');
+						}
 					}
 
 					function search_user(){
@@ -158,7 +166,8 @@
 					call_duration :call_duration,
 					call_started_at :call_started_at,
 					call_ended_at :call_ended_at,
-					end_cause :end_cause
+					end_cause :end_cause,
+					call_status:0
 					},function(res){
 					console.log(res);
 
@@ -328,7 +337,7 @@
 					$('#add_chat_user').modal('hide');
 					$('#search_user').val('');
 					var session_type = $(element).parent().attr('id');
-					if(session_type == 'session_chat_user'){
+					// if(session_type == 'session_chat_user'){
 					$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
 					$("#for_screen_share_group").hide();
 					var history ='';
@@ -440,7 +449,7 @@
 					}else{
 					$('#call_history').html('No call records');
 					}
-					}
+					//}
 					var group_type_name = type.replace(/_/g, ' ');
 					var extra_add = 'Call';
 					if(type == 'text_chat'){

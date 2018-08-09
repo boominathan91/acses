@@ -109,7 +109,7 @@ $session_data = $this->session->userdata();
 		$profile_img = !empty($profile_img)?'uploads/'.$profile_img:'assets/img/user.jpg';
 		?>
 		<a href="#" class="dropdown-toggle user-link" data-toggle="dropdown" title="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
-			<span class="user-img"><img class="img-circle" src="<?php echo base_url().$profile_img; ?>" width="40" alt="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
+			<span class="user-img"><img class="img-circle profile_img" src="<?php echo base_url().$profile_img; ?>" width="40" alt="<?php echo ucfirst($this->session->userdata('first_name')); ?>">
 				<span class="status online"></span></span>
 				<span><?php echo ucfirst($this->session->userdata('first_name')); ?></span>
 				<i class="caret"></i>

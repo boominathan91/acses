@@ -21,7 +21,7 @@ $("#profile_img").on("change", function() {
         success: function(res){
         	$('.text_profile').text('Edit');
         	var obj = jQuery.parseJSON(res);
-            $('#profile_image').attr('src',base_url+'uploads/'+obj.profile_img);
+            $('#profile_image,.profile_img').attr('src',base_url+'uploads/'+obj.profile_img);
         }
     });
 });

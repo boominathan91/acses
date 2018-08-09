@@ -276,6 +276,7 @@ if(isset($_POST["image"]))
 
 
 	file_put_contents($savepath, $data);
+	$this->session->set_userdata(array('profile_img' =>$imageName));
 	
 	$array['img']= '<img src="'.base_url().$savepath.'" class="img-thumbnail" />';
 	$array['name']=$imageName;

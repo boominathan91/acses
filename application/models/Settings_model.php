@@ -234,9 +234,15 @@ class Settings_model extends CI_Model {
 
 	public function profile_details($user_id='')
 	{
+
 		if(!empty($user_id)){
+			
 			$where = array('login_id'=>$user_id);
 			$where1 = array('user_id'=>$user_id);
+
+			$data = array('call_status'=>0)
+;			$this->db->update('login_details',$data,$where);
+
 			$this->db->select('LD.*,CD.city as cityname,SD.statename as statename,CUD.country as countryname');
 			$this->db->from('login_details LD');
 			$this->db->join('city_details CD', 'CD.city_id = LD.city', 'left');

@@ -48,6 +48,7 @@ class Profile extends CI_Controller {
 		}
 		$data = array('profile_img' => $file_name);
 		$this->db->update('login_details',$data,array('login_id'=>$this->session->userdata('login_id')));
+		
 		echo json_encode($data);
 
 	}
