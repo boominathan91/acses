@@ -78,7 +78,7 @@ $('#group_form').submit(function(){
 				
 				$('li').removeClass('active');
 				$('.chat_messages').html('');
-				$('#task_window,#chat_sidebar').addClass('hidden');
+				// $('#task_window,#chat_sidebar').addClass('hidden');
 				$('#add_group').modal('hide');	
 				if(obj.group_type == 'text'){
 					var gtype = obj.group_type;
@@ -170,11 +170,12 @@ function set_nav_bar_group_user(group_id,element){
 	$('#'+id+'danger').empty();	
 	var type = $(element).attr('type');	
 	$('.add_user').show();
+	$('#video_type').val('many');
 		
 	$("div[id^='for_']").hide();
 	$('#for_' + type).show();
 	$('.chat_messages').html('');
-	$('.chat-main-row').removeClass('hidden');
+	$('.chat-main-row,.group_vccontainer').removeClass('hidden');
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
 	$('.group_members').html('');
@@ -195,40 +196,53 @@ function set_nav_bar_group_user(group_id,element){
 					$('.to_name').text(group.group_name);
 					}
 					$('.to_' + type).text(group.group_name);
-					$('#task_window,#chat_sidebar').addClass('hidden');
+					// $('#task_window,#chat_sidebar').addClass('hidden');
 					
 					var group_members_thumbnail = '';;
 					var i=0;
 					//if( obj.group_members && (type == 'audio' || type == 'video') ){
-					if( obj.group_members && type == 'audio'){
-						i++;
-						$('.to_group_audio_name').text(group.group_name);
-						$('.to_group_audio').text(group.group_name);
-						group_members_thumbnail +='<li>'+
-						'<img src="'+ currentUserProfileImage +'" id="'+currentUserId+'" class="img-responsive outgoing_image" alt="" title="'+currentUserName+'">'+						
-						'</li>';
+					// if( obj.group_members && type == 'audio'){
+					// 	i++;
+					// 	$('.to_group_audio_name').text(group.group_name);
+					// 	$('.to_group_audio').text(group.group_name);
+					// 	group_members_thumbnail +='<li>'+
+					// 	'<img src="'+ currentUserProfileImage +'" id="'+currentUserId+'" class="img-responsive outgoing_image" alt="" title="'+currentUserName+'">'+						
+					// 	'</li>';
+
+					// 	$(obj.group_members).each(function(){
+					// 		receivers.push(this.sinch_username);
+					// 		receiver_id.push(this.login_id);
+					// 		if(this.profile_img != ''){
+					// 			var receiver_image = imageBasePath + this.profile_img;
+					// 		}else{
+					// 			var receiver_image = defaultImageBasePath +'user.jpg';
+					// 		}
+					// 		group_members_thumbnail +='<li id="' + this.members_id +'">'+
+					// 		'<img src="'+receiver_image+'" title ="'+this.first_name+' '+this.last_name+'"class="img-responsive outgoing_image" alt="">'+
+					// 		'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
+					// 		'</li>';
+					// 	});
+					// 	$('.group_members').append(group_members_thumbnail);
+
+					// }else 
+					if( obj.group_members){
 
 						$(obj.group_members).each(function(){
 							receivers.push(this.sinch_username);
-							receiver_id.push(this.login_id);
+							receiver_id.push(this.login_id);					
 							if(this.profile_img != ''){
 								var receiver_image = imageBasePath + this.profile_img;
 							}else{
 								var receiver_image = defaultImageBasePath +'user.jpg';
 							}
-							group_members_thumbnail +='<li id="' + this.members_id +'">'+
+							group_members_thumbnail +='<div class="test" id="image_' + this.members_id +'">'+
 							'<img src="'+receiver_image+'" title ="'+this.first_name+' '+this.last_name+'"class="img-responsive outgoing_image" alt="">'+
 							'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
-							'</li>';
+							'</div>';
 						});
-						$('.group_members').append(group_members_thumbnail);
+						$('#group_members').html(group_members_thumbnail);
 
-					}else if( obj.group_members && (type == 'text' || type =='video')){
 
-						$(obj.group_members).each(function(){
-							receivers.push(this.sinch_username);
-							receiver_id.push(this.login_id);
-						});
 
 
 					}

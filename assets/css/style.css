@@ -1184,11 +1184,10 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
   text-transform: uppercase;}
 
 .thumb-title{
-      margin: 18px 0px 0px 0px;
-    position: absolute;
-    top: 84px;
-    font-size: 13px;
+          font-size: 15px;
     background: lightgrey;
+    position: absolute;
+    margin: -20px 0px 0px 0px;
 }
   .grayscale{
     -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
@@ -1209,6 +1208,9 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 /*------------------------------------------------------------------
 [36. Video Call]
 */
+.test{
+  margin:0px 0px 10px 0px;
+}
 .vc_receiver_name{
  position: fixed;
     background: #667eea;
