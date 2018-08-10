@@ -481,15 +481,37 @@
 
 
 									<!-- Group call Contents starts  -->
-									<div class="group_vccontainer hidden">
-										Hello
+									<div class="container-fluid vccontainer group_vccontainer hidden">
+										<div class="vcrow">
+											<div class="vccol vccollarge">
+												<div class="vcvideo">
+													<div class="videoinner">
+														<div class="to_group_video hidden"></div>
+														<img src="<?php echo base_url().'assets/img/user.jpg'; ?>" class="img-circle img-responsive center-block receiver_title_image" id="inner_image">
+														<video autoplay id="inner_video"  class="hidden" style="display: inline;height: 98%;margin: auto;width: 100%;"></video>
+													</div>
+													<div class="vcopponentvideo">
+														<img src="<?php echo  $profile_img ?>" class="img-responsive" id="group_outgoing_caller_image">
+														<video  autoplay id="group_outgoing"  class="hidden" style="width:100%" muted></video>
+														<div class="video_call_status" id="video_timer"></div>
+													</div>
+													
+													<div class="vcactions">
+														<a class="vccam hidden" href="javascript:void(0)" id="group_video_mute">Video</a>     
+														<a class="vccall start-call" href="javascript:void(0)" type="video">Call</a>														
+														<a class="vcmike hidden" href="javascript:void(0)" id="group_audio_mute">Mike</a>     
+														<a class="vcend hidden" onclick="window.location.reload();">Call End</a>
+													</div>
+												</div>
+											</div>
+										</div>
 									</div>
 
 									<!-- Group call Contents ends  -->
 
 
 									<!-- Video call Contents here  -->
-									<div class="container-fluid vccontainer hidden">
+									<div class="container-fluid vccontainer single_video hidden">
 										<div class="vcfullscreen">1</div>    
 										<div class="vcrow">
 											<div class="vccol vccollarge">
@@ -629,7 +651,7 @@
 															<input type="file" name="userfile" id="user_file" class="hidden">
 															<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 															<!-- sender sinch username  -->
-															<input type="text" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
+															<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
 															<!--  receiver sinch username  -->
 															<input type="hidden" name="receiver_id" id="receiver_id" value="<?php echo $receiver_id; ?>">
 															<!--  receiver id  -->
@@ -656,9 +678,9 @@
 															<input type="hidden" id="end_cause" value="end_cause" >	
 															<?php if(!empty($this->session->userdata('session_group_id'))){ 
 																
-															echo '<input type="text" id="video_type" value="many" >';
+															echo '<input type="hidden" id="video_type" value="many" >';
 															 }else{
-															echo '<input type="text" id="video_type" value="one" >';
+															echo '<input type="hidden" id="video_type" value="one" >';
 
 														} ?>
 
@@ -679,10 +701,10 @@
 							</div>
 
 							<div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
-								<div class="chat-window video-window">
+								<div class="chat-window video-window hidden gr_tab">
 									<div class="chat-header">
 										<ul class="nav nav-tabs nav-tabs-bottom">
-											<li class="active"><a href="#member_tab" data-toggle="tab">Group Members</a></li>
+										<li class="active"><a href="#member_tab" data-toggle="tab">Group Members</a></li>
 										</ul>
 									</div>
 									<div class="tab-content chat-contents">
@@ -690,19 +712,13 @@
 											<div class="chat-wrap-inner">
 												<div class="chat-box">
 													<div class="chats" id="group_members">
-														<!-- <div class="test">
-															<img src="<?php echo base_url().'assets/img/user.jpg'; ?>">		
-														</div>			
-														<div class="test">
-															<img src="<?php echo base_url().'assets/img/user.jpg'; ?>">		
-														</div>															 -->
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="chat-window video-window hidden">
+								<div class="chat-window video-window vc_tab">
 									<div class="chat-header">
 										<ul class="nav nav-tabs nav-tabs-bottom">
 											<li class="active"><a href="#call_tab" data-toggle="tab">Calls</a></li>
@@ -869,110 +885,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- Text Chat Page Content ends  -->
-
-
-
-
-					<!-- Video Call Page Content Starts  -->
-					<div id="for_group_video">
-						<div class="page-wrapper video <?php echo $video_class; ?>">
-							<div class="chat-main-row <?php echo $class; ?>">
-								<div class="chat-main-wrapper">
-									<div class="col-xs-9 message-view task-view">
-										<div class="chat-window">
-											<div class="chat-header">
-												<div class="navbar">
-													<div class="user-details">
-														<div class="pull-left user-img m-r-10">
-															<a href="#" title="<?php echo $name; ?>"><img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status online"></span></a>
-														</div>
-														<div class="user-info pull-left">
-															<a href="javascript:void()" title="<?php echo $name; ?>"><span class="font-bold to_group_video_name"><?php echo $name; ?></span></a>
-															<span class="font-bold to_group_video"><?php echo $name; ?></span>
-														</div>
-													</div>
-													<ul class="nav navbar-nav pull-right chat-menu">
-														<li>
-															<a href="#chat_sidebar" class="task-chat profile-rightbar pull-right"><i class="fa fa-comments" aria-hidden="true"></i></a>
-														</li>	
-													</ul>
-												</div>
-											</div>
-
-											<div class="chat-contents">
-												<div class="chat-content-wrap">
-													<div class="user-video voice-call-avatar">
-														<img src="<?php echo $receiver_profile_img; ?>" class="call-avatar incoming_image receiver_title_image group_video_image">
-														<button class="start-call" type="group_video">Join</button>
-														<div class="group_video_call_status"></div>
-														<div id="incoming_group_video_div">
-															<!-- <video id='incoming_group_video' autoplay class='img-responsive' ></video> -->
-														</div>
-
-													</div>
-
-													<div class="my-video for-group-video">
-														<ul>
-															<li id="outgoing_video_initial">
-																<img src="<?php echo $profile_img; ?>" class="call-avatar img-responsive outgoing_image ">
-																<!-- <video id="outgoing" autoplay class="img-responsive" muted></video> -->
-															</li>
-															<div class="group_members"></div>
-														</ul>
-													</div>
-												</div>
-											</div>
-
-
-
-
-											<div class="chat-footer hidden" id="group-video-footer">
-												<div class="call-icons">
-													<ul class="call-items">        									
-														<li class="call-item enable_video" id="group_video_mute">
-															<a href="javascript:void(0)" title="Disable Video" data-placement="top" data-toggle="tooltip">
-																<i class="fa fa-video-camera camera" aria-hidden="true"></i>
-															</a>
-														</li>
-
-														<li class="call-item mute_icon">
-															<a href="javascript:void(0)" title="Mute Audio" data-placement="top" data-toggle="tooltip">
-																<i class="fa fa-microphone microphone" aria-hidden="true"></i>
-															</a>
-														</li>
-													</ul>
-													<div class="end-call">
-														<a href="javascript:void(0)" class="hangup">
-															End Call
-														</a>
-													</div>
-												</div>
-											</div>
-
-
-
-
-										</div>
-									</div>
-									<div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
-										<div class="chat-window video-window">
-											<div class="chat-header">
-												<ul class="nav nav-tabs nav-tabs-bottom">
-													<li class="active"><a href="#calls_tab" data-toggle="tab">Calls</a></li>
-												</ul>
-											</div>
-											<div class="tab-content chat-contents">
-												<div class="content-full tab-pane active hidden" id="calls_tab">                                
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- Video Call  ends  -->
+					<!-- Text Chat Page Content ends  -->		
 
 
 

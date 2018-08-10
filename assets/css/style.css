@@ -1210,6 +1210,7 @@ li.call-item.active{color: #f06060;background: #f06060; border: 1px solid #f0606
 */
 .test{
   margin:0px 0px 10px 0px;
+  width: 145px;
 }
 .vc_receiver_name{
  position: fixed;

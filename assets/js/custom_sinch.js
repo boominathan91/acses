@@ -6,7 +6,10 @@ var sinchClient = new SinchClient({
 	supportActiveConnection: true,
   startActiveConnection: true,
   onLogMessage: function(message) {
-    console.log(message.message);    
+    console.log(message.message);   
+    if(message.message == 'Was disconnected!'){
+      window.location.href=base_url+"login";
+    } 
     if(message.message == 'Call DENIED Received' || message.message == 'Call HANGUP Received' || message.message == 'Call CANCEL Received' ){
       $('.video_call_status').html('Call Rejected!');
       setTimeout(function() {
@@ -120,6 +123,8 @@ var myListenerObj = {
 messageClient.addEventListener(myListenerObj);
 
 function receive_message(message){
+
+  console.log(message);
 
        var receiver_sinchusername = $('#receiver_sinchusername').val();  // receiver username     
 	     var sender_sinchusername = $('#sender_sinchusername').val();  // sender username     
@@ -693,18 +698,20 @@ var callListeners = {
   /*** Set up callClient and define how to handle incoming calls ***/
 
   var callClient = sinchClient.getCallClient();
-// callClient.initStream().then(function() { // Directly init streams, in order to force user to accept use of media sources at a time we choose
-//   $('div.frame').not('#chromeFileWarning').show();
-// }); 
-
-var call;
-
-var groupCall;
-callClient.addEventListener({
-
-
+  var call;
+  var groupCall;
+  callClient.addEventListener({
 
   onIncomingCall: function(incomingCall) {
+    
+
+    // group_vccontainer to be hide here 
+     // if(incomingCall.callState == 3){
+     //   return false;
+     // }
+
+    console.log(incomingCall.callState);
+    console.log(incomingCall);
     console.log('-----------------------incomingCall----------------------------');
   //Play some groovy tunes 
 
@@ -842,7 +849,10 @@ $('.start-call').click(function(event) {
   var type = $('.start-call').attr('type');
   $('#call_type').val(type);
   var sinch_username = $('input#receiver_sinchusername').val();
-  $.post(base_url+'chat/get_call_status',{sinch_username:sinch_username,type:type},function(res){
+  var video_type = $('#video_type').val();
+  if(video_type == 'one'){ /*One to One */
+
+    $.post(base_url+'chat/get_call_status',{sinch_username:sinch_username,type:type},function(res){
     if(res!='[]'){
       var obj = jQuery.parseJSON(res);
       updateNotification('',obj.name,'error');
@@ -858,165 +868,176 @@ $('.start-call').click(function(event) {
     }
   });
 
+  }else{ /*Group Call*/
+
+
+
+
+        call_status = 'Joining in a group..';
+   var  groupName = $('.to_group_video').text();
+   console.log(groupName);
+    groupName = groupName.replace(" ","_");
+    var groupCall = callClient.callGroup( groupName );
+
+       // console.log(groupCall);
+      groupCall.addEventListener({
+      onGroupLocalMediaAdded: function(stream) { // Called when the local media stream is ready (optional)
+        console.log('------------------My stream----------------------'); 
+
+        $('.start-call').addClass('hidden');
+        $('.vcend').removeClass('hidden');
+        $('.vccam').removeClass('hidden');
+        $('.vcmike').removeClass('hidden');
+        $('#group_outgoing_caller_image').addClass('hidden');        
+         var my_stream_url = window.URL.createObjectURL(stream);
+        $('#group_outgoing').attr('src',my_stream_url);
+        $('#group_outgoing').removeClass('hidden');    
+        console.log(stream);       
+        call_status = 'Joined in a group';
+        $('.video_call_status').html(call_status);
+
+        /*Muting options */
+
+        $('#group_audio_mute').click(function(){         
+          if($(this).hasClass('active')){
+            $(this).removeClass('active');                
+            stream.getAudioTracks()[0].enabled = true; 
+          }else{
+            $(this).addClass('active');        
+            stream.getAudioTracks()[0].enabled = false;             
+          }
+        //console.log(stream);
+      });    
+
+  $('#group_video_mute').click(function(){         
+          if($(this).hasClass('active')){
+            $(this).removeClass('active');                
+            stream.getVideoTracks()[0].enabled = true; 
+            $('#group_outgoing').addClass('hidden');
+            $('#group_outgoing_caller_image').removeClass('hidden');
+            message('ENABLE_STREAM');
+          }else{
+            $(this).addClass('active');        
+            stream.getVideoTracks()[0].enabled = false; 
+            $('#group_outgoing').removeClass('hidden');
+            $('#group_outgoing_caller_image').addClass('hidden');
+            message('DISABLE_STREAM');
+          }
+        //console.log(stream);
+      });      
+
+
+
+        $.post(base_url+'chat/set_call_status',{call_status:1},function(res){
+            //console.log(res);
+          }); 
+
+
+
+      },
+    onGroupRemoteCallAdded: function(call) { // Called when a remote participant stream is ready
+      console.log('------------------remote stream----------------------');
+      console.log(call);  
+      console.log(call.outgoingStream.getVideoTracks());  
+
+
+
+      callId = call.callId;
+      group_video_members[call.callId] = call;
+      
+        $.post(base_url+'chat/get_username',{sinch_username:call.toId},function(res){
+          var obj = jQuery.parseJSON(res);
+          call_status = obj.first_name +' '+obj.last_name+ ' joined in a group';       
+        });
+        if(call.toId === global_username){          
+          call_status = 'You have joined in a group';
+        }        
+        $('.video_call_status').html(call_status);    
+
+       // console.log(call);
+        if(currentSinchUserName == call.fromId){
+          var Id = call.toId;
+        }else{
+          var Id = call.fromId;
+        }
+       // console.log(Id);
+        $('#image_'+Id).addClass('hidden');
+        $('video#video_'+Id).attr('src',call.incomingStreamURL);
+        $('video#video_'+Id).removeClass('hidden');
+
+
+        $('video#video_'+Id).click(function(){
+          var video_url = $(this).attr('src');
+          if($('#inner_image').hasClass('hidden')){
+            $('#inner_image').removeClass('hidden');
+            $('#inner_video').attr('src','');
+            $('#inner_video').addClass('hidden');
+          }else{
+            $('#inner_image').addClass('hidden');
+            $('#inner_video').attr('src',video_url);
+            $('#inner_video').removeClass('hidden');
+          }
+
+        });
+      
+        call.addEventListener({
+            onGroupRemoteCallRemoved: function(call) { // Called when a remote participant has left and the stream needs to be removed from the HTML element
+              $('video#other').attr('src', (remoteCalls[index] || {}).incomingStreamURL || '');
+              console.log('---------------------Remove Call------------------------');
+              console.log(call);
+
+              if(currentSinchUserName == call.fromId){
+                var Id = call.toId;
+                }else{
+                var Id = call.fromId;
+                }
+                // console.log(Id);
+                $('#image_'+Id).removeClass('hidden');
+                $('video#video_'+Id).attr('src','');
+                $('video#video_'+Id).addClass('hidden');
+
+
+
+
+            },
+            onCallEnded: function(call) {
+              console.log('---------------------Call Hangup-----------------');
+              console.log(call);
+
+                if(currentSinchUserName == call.fromId){
+                var Id = call.toId;
+                }else{
+                var Id = call.fromId;
+                }
+                // console.log(Id);
+                $('#image_'+Id).removeClass('hidden');
+                $('video#video_'+Id).attr('src','');
+                $('video#video_'+Id).addClass('hidden');
+
+
+              delete group_video_members[call.callId];             
+
+             }
+           });
+
+
+
+      }
+    });
+
+
+
+  } 
+  
+
+
   return false;
 
   
-//   switch(type){   
-//     case 'group_video':
-//     call_status = 'Joining in a group..';
-//     groupName = $('.to_group_video').text();
-//     groupName = groupName.replace(" ","_");
-//     groupCall = callClient.callGroup( groupName );
-
-//       // console.log(groupCall);
-//       groupCall.addEventListener({
-//       onGroupLocalMediaAdded: function(stream) { // Called when the local media stream is ready (optional)
-//         console.log('------------------My stream----------------------'); 
-//         $("#outgoing_video_initial").html("<video autoplay id='outgoing' class='img-responsive outgoing_video' src='" + window.URL.createObjectURL(stream) + "' muted></video>"+
-//           "<img src='"+currentUserProfileImage+"' class='call-avatar img-responsive outgoing_image hidden' id='outgoing_image'>");    
-//         console.log(stream);
-//         $('.hangup,#group-video-footer').removeClass('hidden');  
-//         call_status = 'Joined in a group';
-//         $('.group_video_call_status').html('<div id="title">' + call_status + '</div>');
-//         my_stream_url = $('#for_group_video video#outgoing').attr('src');
-//         $('.loading').hide();
 
 
 
-//         /*Muting options */
 
-//         $('#group_video_mute').click(function(){         
-//           if($(this).hasClass('active')){
-//             $(this).removeClass('active');                
-//             stream.getVideoTracks()[0].enabled = true; 
-//             $('#outgoing_image').addClass('hidden');
-//             $('.outgoing_video').removeClass('hidden');
-//           }else{
-//             $(this).addClass('active');        
-//             stream.getVideoTracks()[0].enabled = false; 
-//             $('#outgoing_image').removeClass('hidden');
-//             $('.outgoing_video').addClass('hidden');
-//           }
-//         //console.log(stream);
-//       });      
-
-//       },
-//     onGroupRemoteCallAdded: function(call) { // Called when a remote participant stream is ready
-//       console.log('------------------remote stream----------------------');
-//       console.log(call);
-//       callId = call.callId;
-//       group_video_members[call.callId] = call;
-//        // console.log(group_video_members);
-//         // $('#incoming_call').modal('show');
-//         //$('video#incoming').attr('src', call.incomingStreamURL);   
-//         $.post(base_url+'chat/get_username',{sinch_username:call.toId},function(res){
-//           var obj = jQuery.parseJSON(res);
-//           call_status = obj.first_name +' '+obj.last_name+ ' joined in a group';       
-//         })
-
-//         if(call.toId === global_username){          
-//           call_status = 'You have joined in a group';
-//         }        
-//         $('#for_group_video .group_video_call_status').html('<div id="title">' + call_status + '</div>');
-//         var is_mute = "";
-//         if(my_stream_url === call.incomingStreamURL){
-//           is_mute = "muted";
-//         }
-//         else{
-//           is_mute = "";
-//         }
-//         $("#for_group_video .my-video ul").append("<li memberId='" + call.callId + "'><video id='incoming" + call.callId + "' autoplay class='img-responsive' title='" + call.callId + "' src='" + call.incomingStreamURL + "' " + is_mute +"></video></li>");
-//         // $("#incoming_group_video").append("<video autoplay class="+ call.callId +" class='img-responsive' src='" + call.incomingStreamURL + "'muted></video>");
-//         // $("#incoming_group_video ." + call.callId).hide();
-
-//         $("#for_group_video .my-video ul li").click(function(){
-//           $('#for_group_video span.call-timing-count,.group_video_call_status').html('');
-//           $("#for_group_video .group_video_image").addClass("hidden");  
-//           var active_video = $(".my-video ul li.active");
-//           if(active_video.length){
-//             var current_src = $('#for_group_video #incoming_group_video').attr("src");
-
-//             if(my_stream_url === current_src){
-//               is_mute = "muted";
-//             }
-//             else{
-//               is_mute = "";
-//             }
-//             $("#for_group_video .my-video ul li.active").html("<video autoplay class='img-responsive' src='" + current_src + "' " + is_mute +"></video>").removeClass("active");
-//             $(this).addClass("active");
-
-//             var clicked_src = $('#for_group_video .my-video ul li.active video').attr("src");
-
-
-//             if(my_stream_url === clicked_src){
-//               is_mute = "muted";
-//             }
-//             else{
-//               is_mute = "";
-//             }
-//               // $('#incoming_group_video').attr('src', clicked_src);
-//               $('#for_group_video #incoming_group_video_div').html("<video id='incoming_group_video' autoplay class='img-responsive' src='" + clicked_src + "' " + is_mute +">");
-//               $(this).html("<img src='"+base_url+"assets/img/user.jpg' class='img-responsive'>");
-//             }
-//             else{
-//               $(this).addClass("active");
-//               var final_src = $('#for_group_video .my-video ul li.active video').attr("src");
-//               if(my_stream_url === final_src){
-//                 is_mute = "muted";
-//               }
-//               else{
-//                 is_mute = "";
-//               }
-//               // $('#incoming_group_video').attr("src", $('.my-video ul li.active video').attr("src"));
-//               $('#for_group_video #incoming_group_video_div').html("<video id='incoming_group_video' autoplay class='img-responsive' src='" + final_src + "' " + is_mute +">");
-//               $(this).html("<img src='"+base_url+"assets/img/user.jpg' class='img-responsive'>");
-//             }
-
-//           });
-
-//         call.addEventListener({
-//             onGroupRemoteCallRemoved: function(call) { // Called when a remote participant has left and the stream needs to be removed from the HTML element
-//               $('video#other').attr('src', (remoteCalls[index] || {}).incomingStreamURL || '');
-//               console.log('---------------------Remove Call------------------------');
-//               console.log(call);
-//             },
-//             onCallEnded: function(call) {
-//               console.log('---------------------Call Hangup-----------------');
-//               console.log(call);
-//               delete group_video_members[call.callId];
-//               $("#for_group_video .my-video ul li[memberId='" + call.callId + "']").remove();
-
-//               /* For displaying self video if ended call id is active */
-//               if( $("#for_group_video .my-video ul li.active").attr("memberId") == call.callId ) {
-//                 $("#for_group_video .my-video ul li#outgoing_video_initial").click();
-//               }
-
-
-//               /* If no one is active in room */
-//                /*if( $("#for_group_video .my-video ul li").length == 1 ) {
-//                  $('#for_group_video #incoming_group_video_div').hide();  
-//                  $('#for_group_video #outgoing_video_initial').hide();  
-//                  $('#for_group_video #group-video-footer').hide();
-//                  $('#for_group_video .start-call').show();  
-//                  $('#for_group_video .group_video_image').removeClass('hidden');
-//                }*/
-
-//                // window.location = <?php echo $base_url()."chat"; ?>
-//                // $('video#outgoing').attr('src', '');
-//                // $('video#incoming').attr('src', '');
-//                // $('.hangup,#audio-footer,#video-footer').addClass('hidden');   
-//                // $('span.call-timing-count,.video_call_status').html('');
-//              }
-//            });
-
-
-
-//       }
-//     });
-
-// break;
-
-// }
 
 
 });

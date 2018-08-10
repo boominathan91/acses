@@ -10,16 +10,16 @@
 								$('.start-call').attr('type','video');
 							}	
 
-							if($('.vccontainer').hasClass('hidden')){
-								$('.vccontainer').removeClass('hidden');
+							if($('.single_video').hasClass('hidden')){
+								$('.single_video').removeClass('hidden');
 							}else{
-								$('.vccontainer').addClass('hidden');
+								$('.single_video').addClass('hidden');
 							}
 
 
 						}else{ /*Group video */
 
-
+							$('.single_video').addClass('hidden');
 							if(status == 0){ /* Clicking Audio icon */
 								$('.vc_video').addClass('active');
 								$('.start-call').attr('type','audio');
@@ -28,10 +28,10 @@
 								$('.start-call').attr('type','video');
 							}	
 
-							if($('.vccontainer').hasClass('hidden')){
-								$('.vccontainer').removeClass('hidden');
+							if($('.group_vccontainer').hasClass('hidden')){
+								$('.group_vccontainer').removeClass('hidden');								
 							}else{
-								$('.vccontainer').addClass('hidden');
+								$('.group_vccontainer').addClass('hidden');								
 							}
 
 						}
@@ -302,31 +302,16 @@
 
 
 			});				
-								$('#call_history').prepend(history);
-
-							}
-							/*Call History */
-
-
-
-
-
-
-
-
-						});
+				$('#call_history').prepend(history);
 				}
-
-
-
-
-
-
-
-
-				/*Set Current */
+				/*Call History */
+			});
+		}
+			/*Set Current */
 				function set_nav_bar_chat_user(login_id,element){
 
+					$('.gr_tab').addClass('hidden');
+					$('.vc_tab').removeClass('hidden');
 					$('li').removeClass('active').removeClass('hidden');
 					$(element).addClass('active');
 					$(element).next('span').next('span').empty();
@@ -338,10 +323,10 @@
 					$('#video_type').val('one');
 					$('.chat_messages').html('');
 					var type = $(element).attr('type');	
+					$('.group_vccontainer').addClass('hidden');
 
 					$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 						var obj = jQuery.parseJSON(res);
-
 						if(obj.online_status == 1){
 							var online_status = 'online';
 							$('.title_status').removeClass('offline');
@@ -362,7 +347,7 @@
 						$('#add_chat_user').modal('hide');
 						$('#search_user').val('');
 						var session_type = $(element).parent().attr('id');
-					// if(session_type == 'session_chat_user'){
+
 						$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
 						$("#for_screen_share_group").hide();
 						var history ='';
@@ -463,59 +448,51 @@
 					'</div>';
 				}
 
-
-
-
-
-
 			});				
 							$('#call_history').html(history);
-
 						}else{
 							$('#call_history').html('No call records');
+						}					
+						var group_type_name = type.replace(/_/g, ' ');
+						var extra_add = 'Call';
+						if(type == 'text_chat'){
+							extra_add = '';					
+							$('.to_name').text(obj.first_name+' '+obj.last_name);
 						}
-					//}
-					var group_type_name = type.replace(/_/g, ' ');
-					var extra_add = 'Call';
-					if(type == 'text_chat'){
-						extra_add = '';
-					//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
-					$('.to_name').text(obj.first_name+' '+obj.last_name);
-				}
-					//$('.to_name').text(obj.first_name+' '+obj.last_name + ' ( ' + group_type_name + ' ' + extra_add +' )');
-					$('.to_name').text(obj.first_name+' '+obj.last_name);
-					$('#receiver_sinchusername').val(obj.sinch_username);
-					$('#receiver_id').val(obj.login_id);
-					$('#receiver_image').val(receiver_image);
-					$('.receiver_title_image').attr('src',receiver_image);
-					$('.dob').text(obj.dob);
-					$('.receiver_email').text(obj.email);
-					$('.phone_number').text(obj.phone_number);
-					$('.chat_messages').html(obj.messages);
-					$('#type').val('text');
-					$('#group_id').val('');
+
+						$('.to_name').text(obj.first_name+' '+obj.last_name);
+						$('#receiver_sinchusername').val(obj.sinch_username);
+						$('#receiver_id').val(obj.login_id);
+						$('#receiver_image').val(receiver_image);
+						$('.receiver_title_image').attr('src',receiver_image);
+						$('.dob').text(obj.dob);
+						$('.receiver_email').text(obj.email);
+						$('.phone_number').text(obj.phone_number);
+						$('.chat_messages').html(obj.messages);
+						$('#type').val('text');
+						$('#group_id').val('');
 
 
-					$('.load-more-btn').click(function(){
-						$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-						var total = parseInt($(this).attr('total'));
-						if(total>0){                        
-							load_more(total);   
-							var total = total - 1;
-							$(this).attr('total',total); 
-							if(total == 0){
+						$('.load-more-btn').click(function(){
+							$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+							var total = parseInt($(this).attr('total'));
+							if(total>0){                        
+								load_more(total);   
+								var total = total - 1;
+								$(this).attr('total',total); 
+								if(total == 0){
+									$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+								}
+							}else{
 								$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
 							}
-						}else{
-							$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-						}
+
+						});
+
+
+
 
 					});
-
-
-
-
-				});
 
 				}
 
@@ -526,6 +503,8 @@
 					$('li').removeClass('active');
 					$('.chat_messages').html('');
 					$('#video_type').val('one');
+					$('.group_vccontainer,.gr_tab').addClass('hidden');
+
 
 					$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 						var obj = jQuery.parseJSON(res);		

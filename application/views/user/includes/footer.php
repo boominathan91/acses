@@ -13,6 +13,7 @@
 	var imageBasePath = base_url + '/uploads/';
 	var currentUserProfileImage = '<?php echo $this->session->userdata("profile_img"); ?>';
 	var currentUserName = '<?php echo ucfirst($this->session->userdata("first_name")).' '.ucfirst($this->session->userdata("last_name")); ?>';
+	var currentSinchUserName = '<?php echo $this->session->userdata('sinch_username'); ?>';
 
 	if(currentUserProfileImage != ''){
 		currentUserProfileImage = imageBasePath + currentUserProfileImage;

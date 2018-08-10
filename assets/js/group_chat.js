@@ -109,6 +109,7 @@ $('#group_form').submit(function(){
 				$('#channel').val(channel);
 				$('.chat_messages').html('<div class="ajax"></div>');
 				$('input[data-role=tagsinput]').tagsinput('removeAll');
+				$('.single_video').addClass('hidden');
 				message('NEW_GROUP_ADDED');
 			}
 		}
@@ -164,6 +165,8 @@ $('#screen_share_form').submit(function(){
 
 function set_nav_bar_group_user(group_id,element){
 
+	$('.gr_tab').removeClass('hidden');
+	$('.single_video,.vc_tab').addClass('hidden');
 	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	var id = $(element).attr('id');	
@@ -175,7 +178,7 @@ function set_nav_bar_group_user(group_id,element){
 	$("div[id^='for_']").hide();
 	$('#for_' + type).show();
 	$('.chat_messages').html('');
-	$('.chat-main-row,.group_vccontainer').removeClass('hidden');
+	$('.chat-main-row').removeClass('hidden');
 	$('#group_id').val(group_id);
 	$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');	
 	$('.group_members').html('');
@@ -199,34 +202,8 @@ function set_nav_bar_group_user(group_id,element){
 					// $('#task_window,#chat_sidebar').addClass('hidden');
 					
 					var group_members_thumbnail = '';;
-					var i=0;
-					//if( obj.group_members && (type == 'audio' || type == 'video') ){
-					// if( obj.group_members && type == 'audio'){
-					// 	i++;
-					// 	$('.to_group_audio_name').text(group.group_name);
-					// 	$('.to_group_audio').text(group.group_name);
-					// 	group_members_thumbnail +='<li>'+
-					// 	'<img src="'+ currentUserProfileImage +'" id="'+currentUserId+'" class="img-responsive outgoing_image" alt="" title="'+currentUserName+'">'+						
-					// 	'</li>';
-
-					// 	$(obj.group_members).each(function(){
-					// 		receivers.push(this.sinch_username);
-					// 		receiver_id.push(this.login_id);
-					// 		if(this.profile_img != ''){
-					// 			var receiver_image = imageBasePath + this.profile_img;
-					// 		}else{
-					// 			var receiver_image = defaultImageBasePath +'user.jpg';
-					// 		}
-					// 		group_members_thumbnail +='<li id="' + this.members_id +'">'+
-					// 		'<img src="'+receiver_image+'" title ="'+this.first_name+' '+this.last_name+'"class="img-responsive outgoing_image" alt="">'+
-					// 		'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
-					// 		'</li>';
-					// 	});
-					// 	$('.group_members').append(group_members_thumbnail);
-
-					// }else 
+					var i=0;			
 					if( obj.group_members){
-
 						$(obj.group_members).each(function(){
 							receivers.push(this.sinch_username);
 							receiver_id.push(this.login_id);					
@@ -235,16 +212,13 @@ function set_nav_bar_group_user(group_id,element){
 							}else{
 								var receiver_image = defaultImageBasePath +'user.jpg';
 							}
-							group_members_thumbnail +='<div class="test" id="image_' + this.members_id +'">'+
-							'<img src="'+receiver_image+'" title ="'+this.first_name+' '+this.last_name+'"class="img-responsive outgoing_image" alt="">'+
+							group_members_thumbnail +='<div class="test" >'+
+							'<img src="'+receiver_image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_' + this.sinch_username +'" >'+
+							'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
 							'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
 							'</div>';
 						});
 						$('#group_members').html(group_members_thumbnail);
-
-
-
-
 					}
 				// console.log(receivers);
 				$('.to_group_video_name').text(group.group_name);

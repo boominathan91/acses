@@ -170,13 +170,16 @@ class Chat extends CI_Controller {
 		
 	}
 	public function get_caller_details(){
+
 		$where = array('sinch_username' => $_POST['sinch_username']);
+
 		$data = $this->db
 		->select('l.first_name,l.last_name,l.login_id as call_from_id,l.sinch_username,l.profile_img,c.type')
 		->join('call_type c','l.login_id = c.login_id')
 		->order_by('c.date_created','desc')
 		->get_where('login_details l',$where)
 		->row_array();
+		
 		$data['name'] = ucfirst($data['first_name']).' '.ucfirst($data['last_name']);
 		$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
 		$data['call_to_id'] = $this->login_id;
