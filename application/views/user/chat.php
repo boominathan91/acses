@@ -479,6 +479,28 @@
 										</div>
 									</div>
 
+									<?php 
+
+									$group_name ='';
+									$group_id = $this->session->userdata('session_group_id');
+									if(!empty($group_id)){
+
+										$group_name = $this->db
+										->select('group_name')
+										->get_where('chat_group_details',array('group_id'=>$group_id))
+										->row_array();
+
+										$group_name =$group_name['group_name'];
+
+
+										$group_class = "";
+										$one_class="hidden";
+									}else{
+										$group_class = "hidden";
+										$one_class="";
+										$group_name ='';
+									} 
+									?>
 
 									<!-- Group call Contents starts  -->
 									<div class="container-fluid vccontainer group_vccontainer hidden">
@@ -486,7 +508,7 @@
 											<div class="vccol vccollarge">
 												<div class="vcvideo">
 													<div class="videoinner">
-														<div class="to_group_video hidden"></div>
+														<div class="to_group_video hidden"><?php echo $group_name; ?></div>
 														<img src="<?php echo base_url().'assets/img/user.jpg'; ?>" class="img-circle img-responsive center-block receiver_title_image" id="inner_image">
 														<video autoplay id="inner_video"  class="hidden" style="display: inline;height: 98%;margin: auto;width: 100%;"></video>
 													</div>
@@ -498,7 +520,7 @@
 													
 													<div class="vcactions">
 														<a class="vccam hidden" href="javascript:void(0)" id="group_video_mute">Video</a>     
-														<a class="vccall start-call" href="javascript:void(0)" type="video">Call</a>														
+														<a class="vccall start-call" href="javascript:void(0)" type="group_video">Call</a>														
 														<a class="vcmike hidden" href="javascript:void(0)" id="group_audio_mute">Mike</a>     
 														<a class="vcend hidden" onclick="window.location.reload();">Call End</a>
 													</div>
@@ -678,11 +700,11 @@
 															<input type="hidden" id="end_cause" value="end_cause" >	
 															<?php if(!empty($this->session->userdata('session_group_id'))){ 
 																
-															echo '<input type="hidden" id="video_type" value="many" >';
-															 }else{
-															echo '<input type="hidden" id="video_type" value="one" >';
+																echo '<input type="hidden" id="video_type" value="many" >';
+															}else{
+																echo '<input type="hidden" id="video_type" value="one" >';
 
-														} ?>
+															} ?>
 
 
 
@@ -701,10 +723,10 @@
 							</div>
 
 							<div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
-								<div class="chat-window video-window hidden gr_tab">
+								<div class="chat-window video-window <?php echo $group_class; ?> gr_tab">
 									<div class="chat-header">
 										<ul class="nav nav-tabs nav-tabs-bottom">
-										<li class="active"><a href="#member_tab" data-toggle="tab">Group Members</a></li>
+											<li class="active"><a href="#member_tab" data-toggle="tab">Group Members</a></li>
 										</ul>
 									</div>
 									<div class="tab-content chat-contents">
@@ -712,13 +734,57 @@
 											<div class="chat-wrap-inner">
 												<div class="chat-box">
 													<div class="chats" id="group_members">
+														<?php 
+														$group_name='';
+														$group_id = $this->session->userdata('session_group_id');
+														if(!empty($group_id)){
+
+															$group_name = $this->db
+															->select('group_name')
+															->get_where('chat_group_details',array('group_id'=>$group_id))
+															->row_array();
+
+															$this->db->select('l.sinch_username,l.login_id,l.profile_img,l.first_name,l.last_name, cg.members_id');
+															$this->db->where('cg.group_id',$group_id);
+															$this->db->where('cg.login_id !=',$this->login_id);
+															$this->db->join('login_details l','l.login_id = cg.login_id');
+															$group_members= $this->db->get('chat_group_members cg')->result_array();	
+
+
+															if(!empty($group_members)){
+
+
+																foreach ($group_members as  $g) {
+
+																	if(!empty($g['profile_img'])){
+																		$receivers_image = $g['profile_img'];
+																		$file_to_check = FCPATH . '/uploads/' . $receivers_image;
+																		if (file_exists($file_to_check)) {
+																			$receivers_image = base_url() . 'uploads/'.$receivers_image;
+																		}
+																	}
+																	$receivers_image = (!empty($receivers_image))?$receivers_image : base_url().'assets/img/user.jpg';	
+
+
+
+
+																	echo '<div class="test" >
+																	<img src="'.$receivers_image.'" title ="'.$g['first_name'].' '.$g['last_name'].'" class="img-responsive outgoing_image" alt="" id="image_'.$g['sinch_username'].'" >
+																	<video id="video_'.$g['sinch_username'].'" autoplay unmute class="hidden"></video>
+																	<span class="thumb-title">'.$g['first_name'].' '.$g['last_name'].'</span>
+																	</div>';
+																}
+															}
+														}
+														
+														?>
 													</div>
 												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="chat-window video-window vc_tab">
+								<div class="chat-window video-window vc_tab <?php echo $one_class; ?>">
 									<div class="chat-header">
 										<ul class="nav nav-tabs nav-tabs-bottom">
 											<li class="active"><a href="#call_tab" data-toggle="tab">Calls</a></li>

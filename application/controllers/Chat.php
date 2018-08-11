@@ -77,9 +77,14 @@ class Chat extends CI_Controller {
 		render_page('chat',$data);
 	}
 	public function set_call_status(){
+
 		$where = array('login_id' =>$this->login_id);
 		$data = array('call_status' =>$_POST['call_status']);
-		return $this->db->update('login_details',$data,$where);
+		$this->db->update('login_details',$data,$where);
+		if(!empty($_POST['type'])){
+			echo $this->db->insert('call_type',array('login_id'=>$this->login_id,'type'=>$_POST['type']));
+		}
+
 	}
 
 
