@@ -224,7 +224,7 @@ class Chat extends CI_Controller {
 				$msg = $l['message'];
 				$type = $l['type'];
 				$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
-				$time = date('h:i A',strtotime($l['created_at']));
+				$time = date('h:i A',strtotime($l['chatdate']));
 				$up_file_name =$l['file_name'];
 
 				if($l['sender_id'] == $this->login_id){
@@ -310,6 +310,48 @@ class Chat extends CI_Controller {
 			$data['profile_img'] = (!empty($data['profile_img']))?base_url().'uploads/'.$data['profile_img'] : base_url().'assets/img/user.jpg';
 		}
 		echo json_encode($data);
+	}
+
+	public function add_group_user(){
+		$group_id = $_POST['group_id'];
+		$member = explode(',',$_POST['members']);
+			for ($i=0; $i <count($member) ; $i++) { 
+				$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
+				if(!empty($user)){
+					$sinch_usernames[]=$user['sinch_username'];
+					$datas = array(
+						'group_id' => $group_id,
+						'login_id' => $user['login_id']
+					);
+
+					$where = array('group_id' => $group_id,'login_id'=>$user['login_id']);
+					$check  = $this->db->get_where('chat_group_members',$where)->num_rows();
+					if($check == 0){
+						$this->db->insert('chat_group_members',$datas);
+					 	$this->db->insert('chat_seen_details',$datas);							
+					}
+					
+				}
+				
+			}
+
+
+			$result = $this->db->select('login_id')
+							->get_where('chat_group_members',array('group_id' => $_POST['group_id']))
+							->result_array();
+
+			
+			foreach($result as $r){
+				$sinch_users[] =$this->db->select('sinch_username')
+										->get_where('login_details',array('login_id' => $r['login_id']))
+										->row()->sinch_username;
+				
+			}
+
+			
+			$sinch_users_name = implode(',',$sinch_users);
+			echo json_encode($sinch_users_name);
+
 	}
 	public function create_group(){
 

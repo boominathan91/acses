@@ -49,6 +49,41 @@ var getUuid = function() {
 
 var channel= getUuid();//random channel name
 
+
+
+
+
+
+
+$('#group_user_form').submit(function(){
+
+	var members = $('#members1').val();
+	var group_id = $('#group_id').val();
+	if(members == ''){
+		updateNotification('Warning !','Select members!','error');
+		return false
+	}
+
+	$.post(base_url+'chat/add_group_user',{group_id:group_id,members:members},function(res){
+		var obj = jQuery.parseJSON(res);
+		if(obj){
+			$('#add_group_user').val(obj);
+		}
+		$('#add_group_user').modal('hide');
+		var group_name = $('#hidden_group_name').val();
+		$('#'+group_name).click();	
+		$('#group_user_form')[0].reset();
+		message('NEW_USER_ADDED');
+
+	});
+	return false;
+
+
+
+
+
+});
+
 $('#group_form').submit(function(){
 	var group_name = $('#group_name').val();
 	var members = $('#members').val();
@@ -158,7 +193,14 @@ $('#screen_share_form').submit(function(){
 
 
 
+function add_user(){
+	var group_name = $('.to_group_video').text();
+	var group_id = $('#group_id').val();
+	$('#add_group_user').modal('show');
+	$('#group_name1').val(group_name);
+	$('#group_id1').val(group_id);
 
+}
 
 
 
@@ -176,6 +218,7 @@ function set_nav_bar_group_user(group_id,element){
 	$('#video_type').val('many');
 		
 	$("div[id^='for_']").hide();
+	$(".audio_call_icon").hide();
 	$('#for_' + type).show();
 	$('.chat_messages').html('');
 	$('.chat-main-row').removeClass('hidden');
@@ -268,6 +311,7 @@ function set_nav_bar_share_group_user(element){
 		$("#group_screen_btn").html("Click to view the shared screen");
 	}
 	$(".screen-share-window").removeClass("hidden");
+	$(".audio_call_icon").hide();
 	$("#for_audio").hide();
 	$("#for_group_audio").hide();
 	$("#for_video").hide();

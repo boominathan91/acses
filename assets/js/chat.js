@@ -320,6 +320,7 @@
 					$('#'+id+'danger').empty();
 
 					$('.add_user').hide();
+					$('.audio_call_icon').show();
 					$('#video_type').val('one');
 					$('.chat_messages').html('');
 					var type = $(element).attr('type');	

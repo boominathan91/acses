@@ -1,3 +1,33 @@
+<!-- ADD NEW USER For GROUP POPUP  -->
+
+<div id="add_group_user" class="modal custom-modal fade center-modal" role="dialog">
+	<div class="modal-dialog">
+		<button type="button" class="close" data-dismiss="modal">&times;</button>
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="modal-title">Create a group</h3>
+			</div>
+			<div class="modal-body">
+				<p>Groups are where your team communicates. They’re best when organized around a topic — #leads, for example.</p>
+				<form id="group_user_form" method="post">
+					<div class="form-group">
+						<label>Group Name <span class="text-danger">*</span></label>
+						<input class="form-control"  type="text" name="group_name" id="group_name1" readonly>
+						<input class="form-control"  type="hidden" name="group_type" id="group_type1">
+					</div>
+					<div class="form-group">
+						<label>Send invites to: <span class="text-muted-light"></span></label>
+						<input class="form-control"  type="text" name="members" id="members1" placeholder="e.g: username1,username2" data-role="tagsinput">
+					</div>
+					<div class="m-t-50 text-center">
+						<button class="btn btn-primary btn-lg" type="submit" >Add User</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
 <!-- ADD NEW GROUP POPUP  -->
 
 <div id="add_group" class="modal custom-modal fade center-modal" role="dialog">

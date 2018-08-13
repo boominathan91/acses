@@ -152,6 +152,11 @@ function receive_message(message){
             // return false;
           });      
           }
+
+
+          
+
+
           /*Message From highlighting User */
           var receiver = message.recipientIds;
           /*If selected receiver and incoming recivers are equal */
@@ -598,7 +603,7 @@ var callListeners = {
 
       var call_type = $('#call_type').val();
       if(call_type == 'video'){
-        call.outgoingStream.getVideoTracks()[0].enabled = true;
+        //call.outgoingStream.getVideoTracks()[0].enabled = true;
         $('.video_call_status').html('');  
         $('video#outgoing').attr('src', call.outgoingStreamURL);
         $('video#incoming').attr('src', call.incomingStreamURL);
@@ -607,7 +612,7 @@ var callListeners = {
         $('.outgoing_image,.incoming_image').hide();
         $('.camera').css('color','#55ce63');        
       }else{
-        call.outgoingStream.getVideoTracks()[0].enabled = false;
+       // call.outgoingStream.getVideoTracks()[0].enabled = false;
         $('.video_call_status').html('');          
          $('video#outgoing').attr('src', call.outgoingStreamURL);
         $('video#incoming').attr('src', call.incomingStreamURL);      
@@ -617,16 +622,14 @@ var callListeners = {
       }         
 
       /*Mute the mike */
-      $('a.vcmike').click(function(){
-        console.log('clicked');
+      $('a.vcmike').click(function(){        
         if($(this).hasClass('active')){
           $(this).removeClass('active')
           call.unmute();          
-          call.outgoingStream.getAudioTracks()[0].enabled = true;  
+          
         }else{
           $(this).addClass('active')
-          call.mute();
-          call.outgoingStream.getAudioTracks()[0].enabled = false;  
+          call.mute();          
         }
       }); 
 
@@ -884,7 +887,7 @@ $('.start-call').click(function(event) {
 
         call_status = 'Joining in a group..';
    var  groupName = $('.to_group_video').text();
-   console.log(groupName);
+   // console.log(groupName);
     groupName = groupName.replace(" ","_");
     var groupCall = callClient.callGroup( groupName );
 

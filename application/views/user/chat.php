@@ -423,63 +423,7 @@
 
 
 
-			<!-- Text Chat Page Content  -->
-			<div class="page-wrapper text_chat <?php echo $text_chat_class; ?>" id="text_chat_panel">
-				<div class="chat-main-row <?php echo $class; ?>">
-					<div class="chat-main-wrapper">
-						<div class="col-xs-9 message-view task-view">
-							<div class="chat-window">
-								<div class="chat-header">
-									<div class="navbar">
-										<div class="user-details">
-											<div class="pull-left user-img m-r-10">
-												<a href="#" title="<?php echo $name; ?>">
-													<img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status <?php echo $online_status; ?> title_status"></span></a>
-												</div>
-												<div class="user-info pull-left">
-													<a href="#" title="<?php $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
-												</div>												
-											</div>		
-
-											<ul class="nav navbar-nav pull-right chat-menu ">	
-												<li class="call-item">
-													<a href="javascript:void(0)" title="Audio" data-placement="top" data-toggle="tooltip" onclick="handle_video_panel(0)">
-														<i class="fa fa-phone phone" aria-hidden="true"></i>
-													</a>
-												</li>	
-												<li class="call-item enable_video" onclick="handle_video_panel(1)">
-													<a href="javascript:void(0)" title="Video" data-placement="top" data-toggle="tooltip">
-														<i class="fa fa-video-camera camera" aria-hidden="true"></i>
-													</a>
-												</li>                                        
-												<li class="call-item add_user hidden">
-													<a href="javascript:void(0)" title="Add User" data-placement="top" data-toggle="tooltip">
-														<i class="fa fa-user-plus" aria-hidden="true"></i>
-													</a>
-												</li>                                        
-												<li class="call-item">
-													<a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip">
-														<i class="fa fa-desktop full-screen" aria-hidden="true"></i>
-													</a>
-												</li>
-												<li class="dropdown">
-													<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
-													<ul class="dropdown-menu">
-														<li><a href="javascript:void(0)" onclick="delete_conversation();">Delete Conversations</a></li>
-													</ul>
-												</li>
-
-											</ul>
-											<a href="#task_window" class="task-chat profile-rightbar pull-right"><i class="fa fa-user" aria-hidden="true"></i></a>
-										</div>
-									</div>
-									<div class="progress upload-progress hidden">
-										<div class="progress-bar progress-bar-success active progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
-											Uploading...  
-										</div>
-									</div>
-
-									<?php 
+			<?php 
 
 									$group_name ='';
 									$group_id = $this->session->userdata('session_group_id');
@@ -501,6 +445,66 @@
 										$group_name ='';
 									} 
 									?>
+
+
+
+			<!-- Text Chat Page Content  -->
+			<div class="page-wrapper text_chat <?php echo $text_chat_class; ?>" id="text_chat_panel">
+				<div class="chat-main-row <?php echo $class; ?>">
+					<div class="chat-main-wrapper">
+						<div class="col-xs-9 message-view task-view">
+							<div class="chat-window">
+								<div class="chat-header">
+									<div class="navbar">
+										<div class="user-details">
+											<div class="pull-left user-img m-r-10">
+												<a href="#" title="<?php echo $name; ?>">
+													<img src="<?php echo $receiver_profile_img; ?>" alt="" class="w-40 img-circle receiver_title_image"><span class="status <?php echo $online_status; ?> title_status"></span></a>
+												</div>
+												<div class="user-info pull-left">
+													<a href="#" title="<?php $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
+												</div>												
+											</div>		
+
+											<ul class="nav navbar-nav pull-right chat-menu ">	
+												<li class="call-item <?php echo $one_class; ?> audio_call_icon">
+													<a href="javascript:void(0)" title="Audio" data-placement="top" data-toggle="tooltip" onclick="handle_video_panel(0)">
+														<i class="fa fa-phone phone" aria-hidden="true"></i>
+													</a>
+												</li>	
+												<li class="call-item enable_video" onclick="handle_video_panel(1)">
+													<a href="javascript:void(0)" title="Video" data-placement="top" data-toggle="tooltip">
+														<i class="fa fa-video-camera camera" aria-hidden="true"></i>
+													</a>
+												</li>                                        
+												<li class="call-item add_user <?php echo $group_class; ?> ">
+													<a href="javascript:void(0)" title="Add User" data-placement="top" data-toggle="tooltip" onclick="add_user()">
+														<i class="fa fa-user-plus" aria-hidden="true"></i>
+													</a>
+												</li>                                        
+										<!-- 		<li class="call-item">
+													<a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip">
+														<i class="fa fa-desktop full-screen" aria-hidden="true"></i>
+													</a>
+												</li> -->
+												<li class="dropdown">
+													<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
+													<ul class="dropdown-menu">
+														<li><a href="javascript:void(0)" onclick="delete_conversation();">Delete Conversations</a></li>
+													</ul>
+												</li>
+
+											</ul>
+											<a href="#task_window" class="task-chat profile-rightbar pull-right"><i class="fa fa-user" aria-hidden="true"></i></a>
+										</div>
+									</div>
+									<div class="progress upload-progress hidden">
+										<div class="progress-bar progress-bar-success active progress-bar-striped" role="progressbar" aria-valuenow="100" aria-valuemin="100" aria-valuemax="100" style="width: 100%;">
+											Uploading...  
+										</div>
+									</div>
+
+									
 
 									<!-- Group call Contents starts  -->
 									<div class="container-fluid vccontainer group_vccontainer hidden">
@@ -591,7 +595,7 @@
 																$msg = $l['message'];
 																$type = $l['type'];
 																$file_name = base_url().$l['file_path'].'/'.$l['file_name'];
-																$time = date('h:i A',strtotime($l['created_at']));
+																$time = date('h:i A',strtotime($l['chatdate']));
 																$up_file_name =$l['file_name'];
 
 																if($l['sender_id'] == $login_id){
@@ -671,6 +675,7 @@
 
 															<input class="form-control" placeholder="Type message..." id="input_message" type="text">
 															<input type="file" name="userfile" id="user_file" class="hidden">
+															<input type="hidden" name="" value="<?php echo ucfirst($group_name); ?>" id="hidden_group_name">
 															<input type="hidden" name="sender_sinchusername" id="sender_sinchusername" value="<?php echo $this->session->userdata('sinch_username'); ?>">
 															<!-- sender sinch username  -->
 															<input type="hidden" name="receiver_sinchusername" id="receiver_sinchusername" value="<?php echo $receiver_sinchusername; ?>">
