@@ -678,8 +678,7 @@ $('#search_user').typeahead({
   source: members,
 });
 
-    $('#search_user').on(
-    {
+    $('#search_user').on({
     'typeahead:selected': function(e, datum) {
     search_user();
     }      

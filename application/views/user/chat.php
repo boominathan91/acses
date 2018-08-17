@@ -465,6 +465,7 @@
 													<a href="#" title="<?php $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
 												</div>												
 											</div>		
+											<div class="video_call_status" id="video_timer"></div>
 
 											<ul class="nav navbar-nav pull-right chat-menu ">	
 												<li class="call-item <?php echo $one_class; ?> audio_call_icon">
@@ -519,7 +520,7 @@
 													<div class="vcopponentvideo">
 														<img src="<?php echo  $profile_img ?>" class="img-responsive" id="group_outgoing_caller_image">
 														<video  autoplay id="group_outgoing"  class="hidden" style="width:100%" muted></video>
-														<div class="video_call_status" id="video_timer"></div>
+														
 													</div>
 													
 													<div class="vcactions">
@@ -550,7 +551,7 @@
 													</div>
 													<div class="vcopponentvideo">
 														<img src="<?php echo  $profile_img ?>" class="img-responsive" id="outgoing_caller_image">
-														<video  autoplay id="outgoing"  class="hidden" style="width:100%"></video>
+														<video  autoplay id="outgoing"  class="hidden" style="width:100%" muted></video>
 														<div class="video_call_status" id="video_timer"></div>
 													</div>
 													
@@ -768,7 +769,7 @@
 																			$receivers_image = base_url() . 'uploads/'.$receivers_image;
 																		}
 																	}
-																	$receivers_image = (!empty($receivers_image))?$receivers_image : base_url().'assets/img/user.jpg';	
+																	$receivers_image = (!empty($g['profile_img']))?$receivers_image : base_url().'assets/img/user.jpg';	
 
 
 
@@ -907,7 +908,7 @@
 																		}
 																	}
 																}else{
-																	echo 'No call records';
+																	echo '';
 																}
 																?>
 															</div>

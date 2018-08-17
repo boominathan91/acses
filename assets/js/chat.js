@@ -452,7 +452,7 @@
 			});				
 							$('#call_history').html(history);
 						}else{
-							$('#call_history').html('No call records');
+							$('#call_history').html('');
 						}					
 						var group_type_name = type.replace(/_/g, ' ');
 						var extra_add = 'Call';
@@ -636,7 +636,7 @@
 								$('#call_history').html(history);
 
 							}else{
-								$('#call_history').html('No call records');
+								$('#call_history').html('');
 							}
 						}		
 

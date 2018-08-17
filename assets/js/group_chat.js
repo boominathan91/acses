@@ -50,11 +50,6 @@ var getUuid = function() {
 var channel= getUuid();//random channel name
 
 
-
-
-
-
-
 $('#group_user_form').submit(function(){
 
 	var members = $('#members1').val();
@@ -65,15 +60,37 @@ $('#group_user_form').submit(function(){
 	}
 
 	$.post(base_url+'chat/add_group_user',{group_id:group_id,members:members},function(res){
-		var obj = jQuery.parseJSON(res);
-		if(obj){
-			$('#add_group_user').val(obj);
-		}
-		$('#add_group_user').modal('hide');
-		var group_name = $('#hidden_group_name').val();
-		$('#'+group_name).click();	
+		var obj = jQuery.parseJSON(res);		
+		$('#add_group_user').modal('hide');	
 		$('#group_user_form')[0].reset();
-		message('NEW_USER_ADDED');
+		updateNotification('Success  !','New user added','success');	
+
+		var data ='';
+		var receivers =[];
+		receivers.push($('#receiver_sinchusername').val());
+		$(obj).each(function(){
+			receivers.push(this.sinch_username);
+			send_new_msg('NEW_GROUP_ADDED',this.sinch_username);
+
+			if(this.profile_img != ''){
+				var image = base_url+'uploads/'+this.profile_img;
+			}else{
+				var image = base_url+'assets/img/user.jpg';
+			}
+
+			 data +='<div class="test" >'+
+			 	'<img src="'+image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+this.sinch_username+'" >'+
+				'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
+				'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
+				'</div>';
+
+		});
+
+		$('#receiver_sinchusername').val(receivers);
+
+
+		$('#group_members').prepend(data);
+		 message('NEW_USER_ADDED');
 
 	});
 	return false;
@@ -137,9 +154,32 @@ $('#group_form').submit(function(){
 				}else if(obj.group_type == 'video'){
 					$('#session_group_video').prepend(data);
 				}
-				$('#receiver_sinchusername').val(obj.sinch_username);
+		var data ='';
+		var receivers =[];		
+		$(obj.group_members).each(function(){
+			receivers.push(this.sinch_username);
+
+			if(this.profile_img != ''){
+				var image = base_url+'uploads/'+this.profile_img;
+			}else{
+				var image = base_url+'assets/img/user.jpg';
+			}
+
+			 data +='<div class="test" >'+
+			 	'<img src="'+image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+this.sinch_username+'" >'+
+				'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
+				'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
+				'</div>';
+
+		});		
+		$('#receiver_sinchusername').val(receivers);
+		$('#group_members').prepend(data);
+		$('.gr_tab,.add_user').removeClass('hidden');
+		$('.add_user').show();
+		$('.single_video,.vc_tab').addClass('hidden');
 				$('.chat-main-row').removeClass('hidden');				
 				$('.to_name').text(obj.group_name);
+				$('.to_group_video').text(obj.group_name);
 				$('.receiver_title_image').attr('src',base_url+'assets/img/user.jpg');
 				$('#channel').val(channel);
 				$('.chat_messages').html('<div class="ajax"></div>');
@@ -283,14 +323,7 @@ function set_nav_bar_group_user(group_id,element){
 						$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
 					}
 
-				});
-
-
-
-
-
-
-				
+				});			
 
 			}		
 

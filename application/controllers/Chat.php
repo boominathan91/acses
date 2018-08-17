@@ -168,7 +168,7 @@ class Chat extends CI_Controller {
 				$result['name'] = ucfirst($data['first_name']).'  '.ucfirst($data['last_name']).' already in Call';
 			}else{
 			$this->db->insert('call_type',array('login_id' => $this->login_id,'type' => $_POST['type']));
-		
+			$this->db->update('login_details',array('call_status'=>1),array('login_id' =>$this->login_id));		
 			}			
 			echo json_encode($result);
 		
@@ -190,6 +190,13 @@ class Chat extends CI_Controller {
 		$data['call_to_id'] = $this->login_id;
 		echo json_encode($data);
 	}
+
+	public function get_new_group_datas(){
+		$group_id = $this->session->userdata('session_group_id');
+		$data = $this->chat->get_group_datas($group_id);
+		echo json_encode($data);
+	}
+	
 	public function get_group_datas(){
 		$group_id = $_POST['group_id'];
 		$this->session->set_userdata(array('session_chat_id'=>''));		
@@ -315,18 +322,24 @@ class Chat extends CI_Controller {
 	public function add_group_user(){
 		$group_id = $_POST['group_id'];
 		$member = explode(',',$_POST['members']);
+		$new_users = array();
+
+			$this->db->update('chat_group_members',array('new_user'=>0),array('group_id'=>$group_id));
+
 			for ($i=0; $i <count($member) ; $i++) { 
 				$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
 				if(!empty($user)){
 					$sinch_usernames[]=$user['sinch_username'];
 					$datas = array(
 						'group_id' => $group_id,
-						'login_id' => $user['login_id']
+						'login_id' => $user['login_id'],
+						'new_user' => 1
 					);
 
 					$where = array('group_id' => $group_id,'login_id'=>$user['login_id']);
 					$check  = $this->db->get_where('chat_group_members',$where)->num_rows();
 					if($check == 0){
+						$new_users[]=$datas['login_id'];
 						$this->db->insert('chat_group_members',$datas);
 					 	$this->db->insert('chat_seen_details',$datas);							
 					}
@@ -334,23 +347,16 @@ class Chat extends CI_Controller {
 				}
 				
 			}
-
-
-			$result = $this->db->select('login_id')
-							->get_where('chat_group_members',array('group_id' => $_POST['group_id']))
-							->result_array();
-
-			
-			foreach($result as $r){
-				$sinch_users[] =$this->db->select('sinch_username')
-										->get_where('login_details',array('login_id' => $r['login_id']))
-										->row()->sinch_username;
-				
-			}
-
-			
-			$sinch_users_name = implode(',',$sinch_users);
-			echo json_encode($sinch_users_name);
+	
+			$sinch_users=array();
+				if(!empty($new_users)){			
+					$sinch_users=$this->db
+					->select('sinch_username,first_name,last_name,login_id,profile_img')
+					->where_in('login_id',$new_users)
+					->get('login_details')
+					->result_array();
+				}									
+			echo json_encode($sinch_users);
 
 	}
 	public function create_group(){
@@ -370,7 +376,12 @@ class Chat extends CI_Controller {
 
 			$member = explode(',',$_POST['members']);
 			for ($i=0; $i <count($member) ; $i++) { 
-				$user = $this->db->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))->row_array();
+
+				$user = $this->db
+								->select('sinch_username,login_id,profile_img,first_name,last_name')
+								->get_where('login_details',array('user_name'=>$member[$i],'status'=>1))
+								->row_array();
+								$group_members[]=$user;
 				if(!empty($user)){
 					$sinch_usernames[]=$user['sinch_username'];
 					$datas = array(
@@ -382,7 +393,7 @@ class Chat extends CI_Controller {
 				}
 				
 			}
-			$sinch_usernames = implode(',',$sinch_usernames);
+			@$sinch_usernames = implode(',',$sinch_usernames);
 			$datas = array(
 				'group_id' => $group_id,
 				'login_id' => $this->login_id
@@ -417,7 +428,8 @@ class Chat extends CI_Controller {
 				'group_name' => ucfirst($_POST['group_name']),
 				'group_id'=>$group_id,
 				'group_type'=>$group_type,
-				'sinch_username' => $sinch_usernames
+				'sinch_username' => $sinch_usernames,
+				'group_members' => $group_members
 			);
 			
 		}	
@@ -934,13 +946,27 @@ Public function get_user_details(){
 
 		$data['message']['group_name'] = ucfirst($data['message']['group_name']);
 		$data['message']['new_group_name'] = str_replace(' ','_',$data['message']['group_name']);
+		$group_id = $data['message']['group_id'];
 
+		// echo '<pre>';
+		// print_r($data['message']);
+
+
+		$sinch_users=array();
+				
+		$wheres = array('g.new_user' => 1 ,'g.group_id' => $group_id);
+		$sinch_users=$this->db
+		->select('l.sinch_username,l.first_name,l.last_name,l.login_id,l.profile_img')
+		->join('login_details l','l.login_id = g.login_id')
+		->get_where('chat_group_members g',$wheres)
+		->result_array();
+		$data['message']['new_group_members']=$sinch_users;
 
 
 
 		$where = array(
 			'login_id'=>$this->login_id ,
-			'group_id' =>$data['message']['group_id'],
+			'group_id' =>$group_id,
 			'read_status'=>'0'				
 		);
 		$data['count'] = $this->db
