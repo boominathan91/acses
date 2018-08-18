@@ -141,12 +141,16 @@ function receive_message(message){
 
         if(message.direction==false){
           if(message.textBody == 'ENABLE_STREAM'){
-            $('#incoming_caller_image').addClass('hidden');
-            $('#incoming').removeClass('hidden');
+            $('#incoming_caller_image,#inner_image').addClass('hidden');
+            $('#incoming,#inner_video').removeClass('hidden');
+            $('#video_'+message.senderId).removeClass('hidden');
+            $('#image_'+message.senderId).addClass('hidden');
             return false;
           }else if(message.textBody == 'DISABLE_STREAM'){
-            $('#incoming_caller_image').removeClass('hidden');
-            $('#incoming').addClass('hidden');
+            $('#incoming_caller_image,#inner_image').removeClass('hidden');
+            $('#incoming,#inner_video').addClass('hidden');
+            $('#video_'+message.senderId).addClass('hidden');            
+            $('#image_'+message.senderId).removeClass('hidden');
             return false;
           }
           /*Notify members for creating new group */
@@ -491,7 +495,7 @@ function receive_message(message){
           '<div class="chat-body">'+
           '<div class="chat-bubble">'+
           '<div class="chat-content">'+
-          '<p>'+msg+'</p>'+            
+          '<p>'+message.textBody+'</p>'+            
           '<span class="chat-time">'+time+'</span>'+
           '</div>'+
           '</div>'+
@@ -997,6 +1001,18 @@ var callListeners = {
         console.log(stream);       
         call_status = 'Joined in a group';
         $('.video_call_status').html(call_status);
+
+        var call_type = $('#call_type').val();
+        if(call_type == 'video'){
+           stream.getVideoTracks()[0].enabled = true; 
+
+        }else if(call_type == 'audio'){
+          stream.getVideoTracks()[0].enabled = false; 
+           $('#group_outgoing').addClass('hidden');
+            $('#group_outgoing_caller_image').removeClass('hidden');
+             $('#group_video_mute').addClass('active');
+        }
+
 
         /*Muting options */
 

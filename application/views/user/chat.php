@@ -468,7 +468,7 @@
 											<div class="video_call_status" id="video_timer"></div>
 
 											<ul class="nav navbar-nav pull-right chat-menu ">	
-												<li class="call-item <?php echo $one_class; ?> audio_call_icon">
+												<li class="call-item audio_call_icon">
 													<a href="javascript:void(0)" title="Audio" data-placement="top" data-toggle="tooltip" onclick="handle_video_panel(0)">
 														<i class="fa fa-phone phone" aria-hidden="true"></i>
 													</a>
@@ -483,11 +483,11 @@
 														<i class="fa fa-user-plus" aria-hidden="true"></i>
 													</a>
 												</li>                                        
-										<!-- 		<li class="call-item">
-													<a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip">
+												<li class="call-item">
+													<a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip" onclick="set_screen_share_url()">
 														<i class="fa fa-desktop full-screen" aria-hidden="true"></i>
 													</a>
-												</li> -->
+												</li>
 												<li class="dropdown">
 													<a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-cog"></i></a>
 													<ul class="dropdown-menu">
@@ -957,45 +957,7 @@
 							</div>
 						</div>
 					</div>
-					<!-- Text Chat Page Content ends  -->		
-
-
-
-					<!-- Screen Share Page Content Starts  -->
-					<div id="for_screen_share_group">
-						<div class="page-wrapper screen-share-window <?php echo $screen_share_class; ?>">
-							<div class="chat-main-row <?php echo $class; ?>">
-								<div class="chat-main-wrapper">
-									<div class="col-xs-9 message-view task-view">
-										<div class="chat-window">
-
-
-											<div class="chat-contents">
-												<div class="chat-content-wrap">
-													<div class="user-video voice-call-avatar">
-														<button id="group_screen_btn" data-name="" data-id="" class="start-call" type="group_screen">Screen Share</button>
-													</div>
-												</div>
-												<a id="shareIframe" href="" target="_blank" style="display: none;">view</a>
-											</div>
-
-
-
-
-
-
-
-
-
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-					<!-- Video Call Starts ends  -->
-
-
+					<!-- Text Chat Page Content ends  -->
 
 
 					<!-- POPUPS  -->

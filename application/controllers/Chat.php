@@ -514,21 +514,71 @@ class Chat extends CI_Controller {
 	public function request_share() {
 
 		/* Url to stop : POST https://api.screenleap.com/v2/screen-shares/{screenShareCode}/stop */
-
+		
 		$url = 'https://api.screenleap.com/v2/screen-shares';
 		$ch = curl_init($url); curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array('authtoken:LkoSIriJbW'));
 		curl_setopt($ch, CURLOPT_POSTFIELDS, 'accountid=dreamguys_technologies');
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Whether you need the following line depends on your curl configuration.
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-	$screenShareData = curl_exec($ch);
-	curl_close($ch);
-
-	echo json_encode($screenShareData);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // Whether you need the following line depends on your curl configuration.
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$screenShareData = curl_exec($ch);
+		curl_close($ch);
+		echo json_encode($screenShareData);
 }
 
 public function update_share(){
-	$result = $this->db->update('screen_share_details',array('is_active'=>1,'status'=>'invited','url'=> $_POST["url"]),array('group_name'=>$_POST["group_name"],'from_id'=>$_POST["from_id"]));
+
+
+		$data['sender_id'] = $this->login_id;
+		$data['time_zone'] = $this->session->userdata('time_zone');
+		$data['chatdate'] = date('Y-m-d H:i:s');
+		$data['message'] = 'Click the link to view the  Sharing screen <br><a data-src="'.$_POST["url"].'" href="'.$_POST["url"].'" target="blank">'.$_POST["url"].'</a>';
+
+	
+		if(!empty($_POST['group_id'])){
+
+		// Saving the URL 
+		$dt = array('screen_share_url'=> $_POST["url"]);
+		$where = array('group_id'=> $_POST["group_id"]);
+		$result = $this->db->update('chat_group_details',$dt,$where);
+
+		$data['receiver_id'] = 0;		
+		// $data['message_type'] = (!empty($_POST['group_id']))?'group':'text';
+		$data['message_type'] = 'group';
+		$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
+		$result = $this->db->insert('chat_details',$data);
+		$chat_id = $this->db->insert_id();
+
+		$users = array($data['receiver_id'],$data['sender_id']);
+		$wher = array('login_id !='=>$this->login_id ,'group_id'=>$data['group_id']);
+		$userid_list = $this->db->select('login_id')->get_where('chat_group_members',$wher)->result_array();
+		if(!empty($userid_list)){
+			foreach($userid_list as $u){
+				$insert_data = array('group_id'=>$data['group_id'],'login_id'=>$u['login_id']);
+				$this->db->insert('chat_seen_details',$insert_data);
+			}
+		}
+	}else{
+
+
+		$data['receiver_id'] =$_POST['receiver_id'];		
+		$data['message_type'] = 'text';
+		$data['group_id'] = '';
+		$result = $this->db->insert('chat_details',$data);
+		$chat_id = $this->db->insert_id();
+		$users = array($data['receiver_id'],$data['sender_id']);
+		for ($i=0; $i <2 ; $i++) { 
+			$datas = array('chat_id' =>$chat_id ,'can_view'=>$users[$i]);
+			$this->db->insert('chat_deleted_details',$datas);
+		}
+
+
+
+	}
+
+		
+		
+		
 	echo json_encode($result);
 }
 public function get_users_by_name(){

@@ -78,11 +78,11 @@ $('#group_user_form').submit(function(){
 				var image = base_url+'assets/img/user.jpg';
 			}
 
-			 data +='<div class="test" >'+
-			 	'<img src="'+image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+this.sinch_username+'" >'+
-				'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
-				'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
-				'</div>';
+			data +='<div class="test" >'+
+			'<img src="'+image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+this.sinch_username+'" >'+
+			'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
+			'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
+			'</div>';
 
 		});
 
@@ -90,7 +90,7 @@ $('#group_user_form').submit(function(){
 
 
 		$('#group_members').prepend(data);
-		 message('NEW_USER_ADDED');
+		message('NEW_USER_ADDED');
 
 	});
 	return false;
@@ -154,29 +154,29 @@ $('#group_form').submit(function(){
 				}else if(obj.group_type == 'video'){
 					$('#session_group_video').prepend(data);
 				}
-		var data ='';
-		var receivers =[];		
-		$(obj.group_members).each(function(){
-			receivers.push(this.sinch_username);
+				var data ='';
+				var receivers =[];		
+				$(obj.group_members).each(function(){
+					receivers.push(this.sinch_username);
 
-			if(this.profile_img != ''){
-				var image = base_url+'uploads/'+this.profile_img;
-			}else{
-				var image = base_url+'assets/img/user.jpg';
-			}
+					if(this.profile_img != ''){
+						var image = base_url+'uploads/'+this.profile_img;
+					}else{
+						var image = base_url+'assets/img/user.jpg';
+					}
 
-			 data +='<div class="test" >'+
-			 	'<img src="'+image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+this.sinch_username+'" >'+
-				'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
-				'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
-				'</div>';
+					data +='<div class="test" >'+
+					'<img src="'+image+'" title ="'+this.first_name+' '+this.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+this.sinch_username+'" >'+
+					'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
+					'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
+					'</div>';
 
-		});		
-		$('#receiver_sinchusername').val(receivers);
-		$('#group_members').prepend(data);
-		$('.gr_tab,.add_user').removeClass('hidden');
-		$('.add_user').show();
-		$('.single_video,.vc_tab').addClass('hidden');
+				});		
+				$('#receiver_sinchusername').val(receivers);
+				$('#group_members').prepend(data);
+				$('.gr_tab,.add_user').removeClass('hidden');
+				$('.add_user').show();
+				$('.single_video,.vc_tab').addClass('hidden');
 				$('.chat-main-row').removeClass('hidden');				
 				$('.to_name').text(obj.group_name);
 				$('.to_group_video').text(obj.group_name);
@@ -256,7 +256,7 @@ function set_nav_bar_group_user(group_id,element){
 	var type = $(element).attr('type');	
 	$('.add_user').show();
 	$('#video_type').val('many');
-		
+
 	$("div[id^='for_']").hide();
 	$(".audio_call_icon").hide();
 	$('#for_' + type).show();
@@ -280,8 +280,8 @@ function set_nav_bar_group_user(group_id,element){
 				if(type == 'text'){
 					extra_add = '';
 					$('.to_name').text(group.group_name);
-					}
-					$('.to_' + type).text(group.group_name);
+				}
+				$('.to_' + type).text(group.group_name);
 					// $('#task_window,#chat_sidebar').addClass('hidden');
 					
 					var group_members_thumbnail = '';;
@@ -356,68 +356,110 @@ function set_nav_bar_share_group_user(element){
 }
 
 
-$("#group_screen_btn").click(function(){
-	var url = $(this).attr("data-src");
-	if(url) {
-		$("#shareIframe").attr("href", url);
-		$("#shareIframe")[0].click();
-	}
-	else {
-		var group_name = $(this).attr("data-name");
-		var from_id = $(this).attr("data-id");
-		$.post(base_url+'chat/request_share', function(res){
-			if(res){
-				console.log(res);
+function set_screen_share_url(){
+	$('.loading').show();
+	var group_id = $('#group_id').val();
+	var receiver_id = $('#receiver_id').val();
+	$.post(base_url+'chat/request_share', function(res){
+		if(res){
+				// console.log(res);
 				var obj = jQuery.parseJSON(res);
 
 				screenShareData = jQuery.parseJSON(obj);
 
 				if( screenleap.isBrowserSupportedForExtension() ) {
 					console.log("Browser supported");
-					screenleap.checkIsExtensionEnabled(
-						function() {
-							console.log("Extension enabled");
-							console.log(screenShareData);
-							screenleap.startSharing('IN_BROWSER', screenShareData);
-						}, 
-						function() {
-							screenleap.checkIsExtensionInstalled(
-								function() {
-									console.log("Extension already installed but not enabled.");
-								},
-								function() {
-									console.log("Extension not installed");
-									screenleap.installExtension(
-										function(){
-											console.log('Extension installation success.');
-										}, 
-										function(){
-											console.log('Extension installation failed.');
-										}
-										);
-								}
-								);
-						}
-						);
+
+					screenleap.checkIsExtensionEnabled(function(){ // If Extension installed 						 
+						updateNotification('','Extension enabled.', 'success');
+						console.log(screenShareData);
+						screenleap.startSharing('IN_BROWSER', screenShareData);
+
+						screenleap.checkIsExtensionInstalled(
+							function() {									
+								$('.loading').hide();
+								console.log("Extension already installed but not enabled.");
+								updateNotification('',"Extension already installed but not enabled.", 'error');
+							},
+							function() {
+								$('.loading').hide();
+								console.log("Extension not installed");
+								screenleap.installExtension(
+									function(){
+										$('.loading').hide();
+										console.log('Extension installation success.');
+										updateNotification('','Extension installation success.', 'success');
+									}, 
+									function(){
+										$('.loading').hide();
+										console.log('Extension installation failed.');
+										updateNotification('','Extension installation failed.', 'error');
+									}
+									);
+							}
+							);
+
+
+
+					},function(){ // If Extension not installed 	
+						$('.loading').hide();									
+						updateNotification('',"Screen leap Extension should be  installed to screenshare.", 'error');
+					}					
+					);
 				}
 				else {
 					console.log('Browser not supported for screen leap extension.');
+					updateNotification('','Browser not supported for screen leap extension.', 'error');
+
 				}
+
+
 
 				screenleap.onScreenShareStart = function() { 
 					var code = screenleap.getScreenShareCode();
 					var viewerUrl = screenleap.getViewerUrl();
 					console.log('Screen is now shared using the code ' + code);
 					console.log('Screen is now shared with the url ' + viewerUrl); 
-					$.post(base_url+'chat/update_share',{'group_name': group_name,'from_id': from_id,'url':viewerUrl }, function(res){
-						updateNotification('Members are invited successfully!', 'success');
+
+
+					$.post(base_url+'chat/update_share',{'group_id': group_id,'receiver_id': receiver_id,'url':viewerUrl }, function(res){
+						$('.loading').hide();
+						updateNotification('','Screen Share started successfully!', 'success');
+						var receiver_sinchusername = $('#receiver_sinchusername').val();
+						var viewerUrl = screenleap.getViewerUrl();
+						viewerUrl = viewerUrl.replace(/'/g, "\\'")
+						var txt  = 'Click the link to see the Screen share <br> <a href="'+viewerUrl+'" data-src="'+viewerUrl+'"  target="blank">'+viewerUrl+'</a>';					
+						txt = txt.link(viewerUrl);
+						var time = $('#time').val();
+						var content ='<div class="chat chat-right">'+
+						'<div class="chat-body">'+
+						'<div class="chat-bubble">'+
+						'<div class="chat-content">'+
+						'<p>'+txt+'</p>'+
+						'<span class="chat-time">'+time+'</span>'+
+						'</div>'+		
+						'</div>'+
+						'</div>'+
+						'</div>';
+						$('.ajax').append(content);
+							// Create a new Message
+							var receiver_sinchusername = $('#receiver_sinchusername').val();
+							var receiver_sinchusername = receiver_sinchusername.split(",");
+							var receiver_sinchusername = receiver_sinchusername;
+							var message = messageClient.newMessage(receiver_sinchusername,txt);
+						// Send it
+						messageClient.send(message);
+						return false;
+
+
 					});
 
 
 				} 
 
 				screenleap.onScreenShareEnd = function() { 
-					console.log('Screen sharing has ended'); 
+					updateNotification('','Screen sharing has ended!', 'success');
+					
 				}
 
 				screenleap.error = function(action, errorMessage, xhr) { 
@@ -426,26 +468,35 @@ $("#group_screen_btn").click(function(){
 						msg += ' (' + xhr.status + ')'; 
 					} 
 					console.log('Error in ' + msg); 
+					updateNotification('','Error in ' + msg, 'error');
+
 				}
 
 				screenleap.onViewerConnect = function( screenShareData ) { 
 					console.log('viewer ' + screenShareData.participantId + ' connected'); 
+					updateNotification('','viewer ' + screenShareData.participantId + ' connected', 'success');
 				}
 
 				screenleap.onViewerDisconnect = function( screenShareData ) { 
 					console.log('viewer ' + screenShareData.participantId + ' disconnected'); 
+					updateNotification('','viewer ' + screenShareData.participantId + ' disconnected', 'success');
 				} 
 
 				screenleap.onPause = function() { 
+					updateNotification('','Screen sharing paused', 'success');
 					console.log('Screen sharing paused'); 
 				}
 
 				screenleap.onResume = function() { 
+					updateNotification('','Screen sharing resumed', 'success');
 					console.log('Screen sharing resumed'); 
 				}
 
 			}
 		});
-	}
+}
 
-});
+function redirect_url(element){
+	console.log(element);
+}
+
