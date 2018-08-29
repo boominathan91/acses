@@ -257,8 +257,7 @@ function set_nav_bar_group_user(group_id,element){
 	$('.add_user').show();
 	$('#video_type').val('many');
 
-	$("div[id^='for_']").hide();
-	$(".audio_call_icon").hide();
+	$("div[id^='for_']").hide();	
 	$('#for_' + type).show();
 	$('.chat_messages').html('');
 	$('.chat-main-row').removeClass('hidden');

@@ -6,6 +6,17 @@
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/app.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/js/notify.js"></script>
 
+<!-- Tok Box  -->
+<script src="https://static.opentok.com/v2/js/opentok.min.js"></script>
+<!-- Polyfill for fetch API so that we can fetch the sessionId and token in IE11 -->
+<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@7/dist/polyfill.min.js" charset="utf-8"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js" charset="utf-8"></script>
+
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/tok_box.js"></script>
+
+<!-- Tok Box ends  -->
+<script type="text/javascript" src="<?php echo base_url(); ?>assets/js/notify.js"></script>
+
 <script type="text/javascript">
 	var base_url = '<?php echo base_url(); ?>';	
 	var currentUserId = '<?php echo $this->session->userdata("login_id"); ?>';

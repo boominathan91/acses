@@ -1,4 +1,9 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+require_once(APPPATH . '../vendor/autoload.php');
+
+use OpenTok\OpenTok;
+use OpenTok\MediaMode;
+use OpenTok\ArchiveMode;
 
 class Chat extends CI_Controller {
 
@@ -14,6 +19,9 @@ class Chat extends CI_Controller {
 		$this->load->model('Settings_model','settings');
 		$this->login_id = $this->session->userdata('login_id');
 		date_default_timezone_set($this->session->userdata('time_zone'));
+		$this->apiKey = '46145352';
+		$this->apiSecret = 'ba588dc2fd5ff997c82add14f3d32778566ffc7f';
+
 	}
 	public function index()
 	{	
@@ -689,7 +697,50 @@ public function get_old_messages(){
 
 
 }
+public function get_chat_token(){
+	
+	$session_chat_id  = $this->session->userdata('session_chat_id');
+	$opentok = new OpenTok($this->apiKey, $this->apiSecret);
+	$data = array();
+	 /* Get count of group table */
+	$data = $this->db
+				   ->order_by('group_id','desc')
+	      		   ->get('chat_group_details')->row_array();
+		
+		$group_id  = (!empty($data)? $data['group_id'] : 0 ); 
+	    $group_id++;
+
+	    $group_name = 'dummy'.$group_id;
+
+	      	/* Insert Dummy entry in Group Table */
+	      	$datas = array(
+	      		'group_name' => $group_name,
+	      		'type' => 'video',
+	      		'session_id' => $session_id,
+	      		'created_by' => $this->login_id
+	      		);
+	      	$this->db->insert('chat_group_details',$datas);
+	      	$group_id = $this->db->insert_id();
+
+	      	/* Insert Group members */
+	      	$dat = array('group_id' => $group_id,'login_id' => $this->login_id,'token' => $token);
+			$this->db->insert('chat_group_members',$dat);
+
+			$dats = array('group_id' => $group_id,'login_id' => $session_chat_id,'token' => $token);
+			$this->db->insert('chat_group_members',$dats);
+
+
+
+
+	      
+
+	
+	echo json_encode($result);
+}
 public function set_chat_user(){
+
+	// $where = array(''=>$_POST['login_id']);
+	// $this->db->get_where('chat_group_members',$where)->num_rows();
 
 	$this->session->set_userdata(array('session_group_id'=>''));
 	$this->session->set_userdata(array('session_chat_id'=>$_POST['login_id']));
@@ -846,6 +897,11 @@ Public function insert_chat()
 			foreach($userid_list as $u){
 				$insert_data = array('group_id'=>$data['group_id'],'login_id'=>$u['login_id']);
 				$this->db->insert('chat_seen_details',$insert_data);
+
+				$datas = array('chat_id' =>$chat_id ,'can_view'=>$u['login_id'],'group_id'=>$_POST['group_id']);
+				$this->db->insert('chat_deleted_details',$datas);
+
+
 			}
 		}	
 		exit;	
@@ -874,16 +930,24 @@ Public function insert_chat()
 public function delete_conversation()
 {
 
+	// echo '<pre>'; print_r($_POST);
 
 	$selected_user = $_POST['sender_id'];
 
+	if(!empty($_POST['group_id'])){
 
-	$data = $this->chat->deletable_chats();
-	if(!empty($data)){
-		foreach ($data as $d) {
-			$this->db->delete('chat_deleted_details',array('chat_id'=>$d['chat_id'],'can_view'=>$this->login_id)); 
-		}  
+			$this->db->delete('chat_seen_details',array('login_id'=>$this->login_id,'group_id' => $_POST['group_id'])); 
+	}else{
+
+		$data = $this->chat->deletable_chats();
+			if(!empty($data)){
+				foreach ($data as $d) {
+					$this->db->delete('chat_deleted_details',array('chat_id'=>$d['chat_id'],'can_view'=>$this->login_id)); 
+				}  
+			}
+
 	}
+	
     // echo $this->db->last_query();
 	echo '1';
 }
@@ -982,6 +1046,8 @@ Public function get_user_details(){
 	if($_POST['message_type'] == 'group'){
 
 
+
+
 		$where = array(
 			'c.sender_id'=>$data['login_id'],
 			'receiver_id' =>0,
@@ -994,9 +1060,10 @@ Public function get_user_details(){
 		->get_where('chat_details c',$where)
 		->row_array();
 
+
 		$data['message']['group_name'] = ucfirst($data['message']['group_name']);
 		$data['message']['new_group_name'] = str_replace(' ','_',$data['message']['group_name']);
-		$group_id = $data['message']['group_id'];
+		$group_id = $_POST['group_id'];
 
 		// echo '<pre>';
 		// print_r($data['message']);
@@ -1012,7 +1079,9 @@ Public function get_user_details(){
 		->result_array();
 		$data['message']['new_group_members']=$sinch_users;
 
-
+		// echo '<pre>';
+		// print_r($data);
+		// exit;
 
 		$where = array(
 			'login_id'=>$this->login_id ,

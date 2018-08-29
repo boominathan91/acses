@@ -162,9 +162,6 @@ $session_data = $this->session->userdata();
 							<ul class="profile <?php echo $profile_class; ?>">		
 								<li id="profile"><a href="javascript:void(0)" page="profile">Profile</a></li>			
 								<li><a href="javascript:void(0)" page="text_chat" onclick="navigate(this)">Chat</a></li>
-								<!-- <li><a href="javascript:void(0)" page="audio" onclick="navigate(this)">Audio Call</a></li>
-								<li><a href="javascript:void(0)" page="video" onclick="navigate(this)">Video Call</a></li>	
-								<li><a href="javascript:void(0)" page="screen_share" onclick="navigate(this)">Screen Share</a></li>		 -->					
 							</ul>
 
 							<ul>
@@ -174,13 +171,14 @@ $session_data = $this->session->userdata();
 										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
 									</li>
 
-									<li class="menu-title" id="text_chat" onclick="set_group_type(1)">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+									<li class="menu-title">New Conversation<a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
+									<!-- <li class="menu-title" id="text_chat" onclick="set_group_type(1)">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li> -->
 									<!-- Session selected user  -->
 									<div id="session_group_text"></div>	
 									<!-- Newly Messaged user  -->
 									<div id="new_group_user"></div>
 
-									<div id="other_groups">
+									 <div id="other_groups">
 
 										<?php if(!empty($text_group)){ 
 											foreach($text_group['groups'] as $t){
@@ -204,9 +202,10 @@ $session_data = $this->session->userdata();
 												echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'<span class="badge bg-danger pull-right" id="'.ucfirst($new_group_name).'danger">'.$count.'</span></a></li>';
 											}
 										} ?>
-									</div>
+									</div> 
 
-									<li class="menu-title">Direct Chats <a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
+									<!-- Group text ends here  -->
+
 									<!-- Session selected user  -->
 									<div id="session_chat_user" class="session_chat_user">
 
