@@ -16,6 +16,25 @@
 CREATE DATABASE IF NOT EXISTS `acses_new` /*!40100 DEFAULT CHARACTER SET latin1 */;
 USE `acses_new`;
 
+
+CREATE TABLE `call_notification` (
+	`call_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`from_id` INT(11) NOT NULL,
+	`to_id` INT(11) NOT NULL,
+	`group_id` INT(11) NOT NULL,
+	`type` ENUM('one','group') NOT NULL DEFAULT 'one',
+	`status` INT(11) NOT NULL DEFAULT '1',
+	`last_updated` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	PRIMARY KEY (`call_id`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+AUTO_INCREMENT=1
+;
+
+
+
+
 -- Dumping structure for table acses_new.call_details
 CREATE TABLE IF NOT EXISTS `call_details` (
   `call_id` int(11) NOT NULL AUTO_INCREMENT,

@@ -1,5 +1,3 @@
-var apiKey='46145352';
-var sessionId='1_MX40NjE0NTM1Mn5udWxsfjE1MzU0NTE0NTY4MTJ-YldudWM0T004TW5yWVFBOXF6YkN5QWxQfn4';
 var token;
 var subscribers = {};
 
@@ -9,36 +7,46 @@ function handleError(error) {
   }
 }
 
+
 function initializeSession() {
 
   $.post(base_url+'chat/get_chat_token',function(res){
-    
     // console.log(res);
-  });
+  var obj = jQuery.parseJSON(res);
+  if(obj.error){
+    updateNotification('',obj.error,'error');
+    return false;
+  }
+  var apiKey = obj.apiKey;    
+  var sessionId = obj.sessionId;   
+  var token = obj.token;
 
-
-  return false;
-  var session = OT.initSession(apiKey, sessionId);
-  // initialize the publisher
-  var publisherOptions = {
+    var session = OT.initSession(apiKey, sessionId);
+    // initialize the publisher
+    var publisherOptions = {
     showControls: true,
     insertMode: 'append',
     width: '100%',
     height: '100%'
-  };
-  var publisher = OT.initPublisher('publisher', publisherOptions, handleError);
+    };
+    var publisher = OT.initPublisher('outgoing', publisherOptions, handleError);
 
-  var token = $('#token').val();
-  // Connect to the session
-  session.connect(token, function callback(error) {
+    // Connect to the session
+    session.connect(token, function callback(error) {
     if (error) {
-      handleError(error);
+    handleError(error);
     } else {
-      // If the connection is successful, publish the publisher to the session
-      session.publish(publisher, handleError);
+    // If the connection is successful, publish the publisher to the session
+    session.publish(publisher, handleError);
     }
+
+    });
   });
 
+
+
+
+  return false;
 
 
 

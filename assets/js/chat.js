@@ -1,3 +1,11 @@
+	
+
+	function get_call_notification(){
+		$.get(base_url+'chat/get_call_notification',function(res){
+
+		});
+	}
+	
 					
 					function handle_video_panel(status){
 						var video_type = $('#video_type').val();
