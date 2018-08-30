@@ -478,7 +478,7 @@
 														<i class="fa fa-video-camera camera" aria-hidden="true"></i>
 													</a>
 												</li>                                        
-												<li class="call-item add_user <?php echo $group_class; ?> ">
+												<li class="call-item add_user ">
 													<a href="javascript:void(0)" title="Add User" data-placement="top" data-toggle="tooltip" onclick="add_user()">
 														<i class="fa fa-user-plus" aria-hidden="true"></i>
 													</a>
@@ -550,15 +550,20 @@
 													</div>
 													<div class="vcopponentvideo">
 														<img src="<?php echo  $profile_img ?>" class="img-responsive" id="outgoing_caller_image">
-														<div  id="outgoing"  class="hidden" style="width:100%" ></div>
+														<div  id="outgoing"  style="width: 282px;height: 209px;"></div>
 														<div class="video_call_status" id="video_timer"></div>
-													</div>												
+
+													</div>	
+													<div class="vcactions">
+														<a class="vcend" onclick="window.location.reload();">Call End</a>
+													</div>											
 												</div>
 											</div>
 										</div>
 									</div>
 									
 									<!-- Video call Contents ends here  -->
+									<!-- <input type="text" id="connectionCountField" value="0"></input> -->
 
 									<!-- Chat contents starts  -->
 									

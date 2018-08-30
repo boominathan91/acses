@@ -917,31 +917,31 @@ var callListeners = {
 
 
 
-  $('a#answer').click(function(event) {
-    event.preventDefault();
-    try {    
-      call.answer();    
-      var caller_login_id = $('.caller_login_id').val();
-      var caller_sinchusername = $('.caller_sinchusername').val();
-      var caller_full_name = $('.caller_full_name').val();
-      var caller_profile_img = $('.caller_profile_img').val();
-      $('.to_name').text(caller_full_name);
-      $('.receiver_title_image').attr('src',caller_profile_img);
-      $('#'+caller_sinchusername).click();
-      $('#receiver_sinchusername').val(caller_sinchusername);
-      $('audio#ringback').trigger("pause");
-      $('audio#ringtone').trigger("pause");
-      $('#incoming_call').modal('hide');
-      $('.loading').show();
-      $('.add_user').hide();
-      $('.gr_tab').addClass('hidden');
-      $('.vc_tab,.audio_call_icon').removeClass('hidden');
-    }
-    catch(error) {
-      handleFail(error);
-    }
+  // $('a#answer').click(function(event) {
+  //   event.preventDefault();
+  //   try {    
+  //     call.answer();    
+  //     var caller_login_id = $('.caller_login_id').val();
+  //     var caller_sinchusername = $('.caller_sinchusername').val();
+  //     var caller_full_name = $('.caller_full_name').val();
+  //     var caller_profile_img = $('.caller_profile_img').val();
+  //     $('.to_name').text(caller_full_name);
+  //     $('.receiver_title_image').attr('src',caller_profile_img);
+  //     $('#'+caller_sinchusername).click();
+  //     $('#receiver_sinchusername').val(caller_sinchusername);
+  //     $('audio#ringback').trigger("pause");
+  //     $('audio#ringtone').trigger("pause");
+  //     $('#incoming_call').modal('hide');
+  //     $('.loading').show();
+  //     $('.add_user').hide();
+  //     $('.gr_tab').addClass('hidden');
+  //     $('.vc_tab,.audio_call_icon').removeClass('hidden');
+  //   }
+  //   catch(error) {
+  //     handleFail(error);
+  //   }
 
-  });
+  // });
 
 
 
@@ -1195,20 +1195,6 @@ return false;
 
 });
 
-/*** Hang up a call ***/
-
-$('.vcend,#hangup').click(function(event) {
-  event.preventDefault();
-  var communicating_obj;
-
-  var type = $('#call_type').val();
-  var call_status = 'calling..';
-  $('.vccall').removeClass('hidden').show();
-  $('.vcend,.vcmike,.vccam').addClass('hidden');
-  communicating_obj = call;
-  communicating_obj && communicating_obj.hangup(); 
-  window.location.reload();
-});
 
 
 

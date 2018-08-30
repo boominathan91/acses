@@ -79,10 +79,8 @@ class Chat extends CI_Controller {
 		$data['latest_chats'] = $this->chat->get_latest_chat();
 		$data['profile'] = $this->chat->get_profile_data();
 		$data['chat_users'] = $this->chat->get_chated_users();
-		 //echo '<pre>';print_r($data); 
-		//  echo '<pre>';
-		// print_r($this->session->all_userdata());
-		//  exit;
+		$session_values = array('dummy_group_id' => '','dummy_group_name' => '','dummy_session_id' => '','dummy_session' => '','dummy_token' => '');
+		$this->session->set_userdata($session_values);
 
 		render_page('chat',$data);
 	}
@@ -707,63 +705,136 @@ class Chat extends CI_Controller {
 
 		$wh = array('login_id'=>$this->login_id);
 		$data = $this->db->get_where('login_details',$wh)->row_array();
-			if($data['call_status'] == 1){
-				echo json_encode($result);
-				exit;
-			}
+		if($data['call_status'] == 1){
+			echo json_encode($result);
+			exit;
+		}
 
-			/* Get call notification */
+		/* Get call notification */
 
 		$where = array('to_id'=>$this->login_id);
 		$data = $this->db->get_where('call_notification',$where)->row_array();
 		if(!empty($data)){
 
 			/* Make currently in a call */
-			$this->db->update('login_details',array('call_status'=>1),$wh);
+			//$this->db->update('login_details',array('call_status'=>1),$wh);
 
 			/* If one to one call */
-				if($data['type'] == 'one'){
+			if($data['type'] == 'one'){
 
-					$wheres = array('login_id'=>$data['from_id']);
-					$reponse = $this->db->select('first_name,last_name,profile_img,sinch_username')
-								  ->get_where('login_details',$wheres)->row_array();
-				}else{
-					$wheres = array('group_id'=>$data['group_id']);
-					$reponse = $this->db->get_where('chat_group_details',$wheres)
-							   ->row_array();
-				}
+				$wheres = array('login_id'=>$data['from_id']);
+				$response = $this->db->select('login_id,first_name,last_name,profile_img,sinch_username')
+				->get_where('login_details',$wheres)->row_array();
+				$response['group_id'] = $data['group_id'];			  
+			}else{
+				$wheres = array('group_id'=>$data['group_id']);
+				$response = $this->db->get_where('chat_group_details',$wheres)
+				->row_array();
+			}
 			
-			//$result=array('status'=>true,'')
+			$result=array('status'=>true,'data'=>$response);
 		}
 		echo json_encode($result);
 	}
 
+	public function get_dummy_datas(){
+
+
+		$result = array();
+		$data = array();	
+
+		// $session_values = array(
+		// 	'dummy_group_id' => '',
+		// 	'dummy_group_name' => '',
+		// 	'dummy_session_id' => '',
+		// 	'dummy_session' => '',
+		// 	'dummy_token' => ''
+		// );
+
+		// $this->session->set_userdata($session_values);
+
+
+
+
+		if(!empty($this->session->userdata('dummy_session_id'))){
+			$my_token = $this->session->userdata('dummy_token');
+			$sessionId = $this->session->userdata('dummy_session_id');
+			$group_id = $this->session->userdata('dummy_group_id');
+		}else{
+
+			$opentok = new OpenTok($this->apiKey, $this->apiSecret);
+
+			/* Update the user is in call */				
+
+			$this->db->update('login_details',array('call_status'=>1),array('login_id'=>$this->login_id));
+
+			$where = array('g.group_id' => $_POST['group_id'],'m.login_id'=>$this->login_id);
+			$data = $this->db->select('g.session_id,m.token,g.group_id')
+			->join('chat_group_members m','m.group_id = g.group_id')
+			->get_where('chat_group_details g',$where)
+			->row_array();
+		// echo '<pre>'; print_r($data); exit;
+
+			if(!empty($data)){
+
+				$sessionId = $data['session_id'];
+				$name = $this->session->userdata('first_name').' '.$this->session->userdata('last_name');
+
+				$responses['first_name'] = $this->session->userdata('first_name');
+				$responses['last_name'] = $this->session->userdata('last_name');
+				$responses['sinch_username'] = $this->session->userdata('sinch_username');
+				$responses['login_id'] = $this->session->userdata('login_id');
+				
+									// Replace with meaningful metadata for the connection:
+				$connectionMetaData = json_encode($responses);
+
+					// Replace with the correct session ID:
+				$my_token = $opentok->generateToken($sessionId,array('expireTime' => time()+(7 * 24 * 60 * 60), 'data' =>  $connectionMetaData));
+				$where = array('group_id' => $data['group_id'],'login_id'=>$this->login_id);
+				$this->db->update('chat_group_members',array('token'=>$my_token),$where);					
+				$session_values = array('dummy_session_id' => $sessionId,'dummy_token'=>$my_token ,'dummy_group_id' =>$_POST['group_id']);
+				$this->session->set_userdata($session_values);				
+			}
+		}
+
+		$this->db->delete('call_notification',array('group_id' => $_POST['group_id']));
+
+		$result = array('apiKey' => $this->apiKey,'sessionId' =>$sessionId , 'token' => $my_token,'dummy_group_id' =>$_POST['group_id']);
+		echo json_encode($result);
+
+		
+	}
+	public function discard_notify(){
+		echo $this->db->delete('call_notification',array('group_id' => $_POST['group_id']));
+	}
+
+
 	public function get_chat_token(){
 		$session_chat_id = $this->session->userdata('session_chat_id');
 
-			$user = $this->db
-						 ->get_where('login_details',array('login_id'=>$session_chat_id))
-						 ->row_array();
+		$user = $this->db
+		->get_where('login_details',array('login_id'=>$session_chat_id))
+		->row_array();
 
-						 if($user['online_status']==0){
-						 	echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' is offline'));
-						 	exit;
-						 }elseif($user['call_status']==1){
-						 	echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' already in a call'));
-						 	exit;
-						 }
-	
+		if($user['online_status']==0){
+			echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' is offline'));
+			exit;
+		}elseif($user['call_status']==1){
+			echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' already in a call'));
+			exit;
+		}
 
-			// $session_values = array(
-		// 		'dummy_group_id' => '',
-		// 		'dummy_group_name' => '',
-		// 		'dummy_session_id' => '',
-		// 		'dummy_session' => '',
-		// 		'dummy_token' => ''
-		// 	);
 
-		// 	$this->session->set_userdata($session_values);
-			
+		// $session_values = array(
+		// 	'dummy_group_id' => '',
+		// 	'dummy_group_name' => '',
+		// 	'dummy_session_id' => '',
+		// 	'dummy_session' => '',
+		// 	'dummy_token' => ''
+		// );
+
+		// $this->session->set_userdata($session_values);
+
 
 		// echo '<pre>';
 		// print_r($this->session->userdata('session_chat_id'));exit;
@@ -771,6 +842,7 @@ class Chat extends CI_Controller {
 		if(!empty($this->session->userdata('dummy_session_id'))){
 			$my_token = $this->session->userdata('dummy_token');
 			$sessionId = $this->session->userdata('dummy_session_id');
+			$group_id =  $this->session->userdata('dummy_group_id');
 		}else{
 
 			
@@ -783,7 +855,7 @@ class Chat extends CI_Controller {
 			$opentok = new OpenTok($this->apiKey, $this->apiSecret);
 				// An automatically archived session:
 			$sessionOptions = array(
-				'archiveMode' => ArchiveMode::ALWAYS,
+				// 'archiveMode' => ArchiveMode::ALWAYS,
 				'mediaMode' => MediaMode::ROUTED
 			);
 			$session = $opentok->createSession($sessionOptions);
@@ -845,21 +917,24 @@ class Chat extends CI_Controller {
 
 			$this->session->set_userdata($session_values);
 
-
-
-			
-			// Set some options in a token
-			$token = $session->generateToken(array(
-				'role'       => Role::MODERATOR,
-			'expireTime' => time()+(7 * 24 * 60 * 60), // in one week
-			'data'       => $login
-		));
-
-			$dats = array('group_id' => $group_id,'login_id' => $session_chat_id,'token' => $token);
+			$dats = array('group_id' => $group_id,'login_id' => $session_chat_id);
 			$this->db->insert('chat_group_members',$dats);
+
+
 		}    
 
-		$result = array('apiKey' => $this->apiKey,'sessionId' =>$sessionId , 'token' => $my_token);
+		$notify = array(
+
+			'group_id' => $group_id,
+			'from_id' => $this->login_id,
+			'to_id' => $session_chat_id,
+			'type' => 'one',
+			'call_type' => 'video'
+		);
+
+		$this->db->insert('call_notification',$notify);
+
+		$result = array('apiKey' => $this->apiKey,'sessionId' =>$sessionId , 'token' => $my_token ,'dummy_group_id' => $group_id);
 		echo json_encode($result);
 	}
 

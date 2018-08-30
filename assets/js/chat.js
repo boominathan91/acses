@@ -1,14 +1,187 @@
 	
 
-	function get_call_notification(){
-		$.get(base_url+'chat/get_call_notification',function(res){
+function get_call_notification(){
+	$.get(base_url+'chat/get_call_notification',function(res){
+		var obj = jQuery.parseJSON(res);
+		var data = obj.data;
+		if(obj.status == true){
 
-		});
-	}
-	
-					
-					function handle_video_panel(status){
-						var video_type = $('#video_type').val();
+			if(data.profile_img!=''){
+				var caller_img = base_url+'uploads/'+data.profile_img;		
+			}else{
+				var caller_img = base_url+'assets/img/user.jpg';	
+			} 
+
+			$('audio#ringtone').prop("currentTime", 0);
+			$('audio#ringtone').trigger("play");
+			$('.caller_image').attr('src',caller_img);
+			$('.caller_name').text(data.first_name+' '+data.last_name);
+			$('.caller_login_id').val(data.login_id);      
+			$('#call_from_id').val(data.login_id);      
+			$('#call_to_id').val(data.call_to_id);
+			$('.caller_sinchusername').val(data.sinch_username);      
+			$('.caller_full_name').val(data.first_name+' '+data.last_name);      
+			$('.caller_profile_img').val(caller_img);      
+			$('#call_type').val(data.call_type);    
+			$('#group_id').val(data.group_id);    
+			$('#incoming_call').modal('show');				
+
+		}else{
+			$('audio#ringback').trigger("pause");
+			$('audio#ringtone').trigger("pause");
+			$('#incoming_call').modal('hide');
+
+		}
+
+	});
+} 
+setInterval(get_call_notification, 5000);
+
+
+
+$('a#answer').click(function(event) {
+	event.preventDefault();
+	var group_id = $('#group_id').val();
+	var caller_login_id = $('.caller_login_id').val();
+	var caller_sinchusername = $('.caller_sinchusername').val();
+	var caller_full_name = $('.caller_full_name').val();
+	var caller_profile_img = $('.caller_profile_img').val();
+	$('.to_name').text(caller_full_name);
+	$('.receiver_title_image').attr('src',caller_profile_img);
+	$('#'+caller_sinchusername).click();
+	$('#receiver_sinchusername').val(caller_sinchusername);
+	$('audio#ringback').trigger("pause");
+	$('audio#ringtone').trigger("pause");
+	$('#incoming_call').modal('hide');
+	$('.loading').hide();      
+	$('.gr_tab').addClass('hidden');
+	$('.vc_tab,.audio_call_icon').removeClass('hidden'); 
+
+
+	$.post(base_url+'chat/get_dummy_datas',{group_id,group_id},function(res){
+
+
+
+		/* New Incoming  Call  */
+		var token;
+		var subscribers = {};
+		var obj = jQuery.parseJSON(res);
+		var apiKey = obj.apiKey;    
+		var sessionId = obj.sessionId;   
+		var token = obj.token;
+		var group_id = obj.dummy_group_id;
+		var session = OT.initSession(apiKey, sessionId);
+		/*Initialize the publisher*/
+		var publisherOptions = {
+			showControls: true,
+			insertMode: 'append',
+			width: '100%',
+			height: '100%'
+		};
+		var publisher = OT.initPublisher('outgoing', publisherOptions, handleError);
+		$('.single_video,.vcend').removeClass('hidden');
+		$('#outgoing_caller_image,.audio_call_icon,.enable_video').addClass('hidden');
+
+    // Connect to the session
+    session.connect(token, function callback(error) {
+    	if (error) {
+    		handleError(error);
+    	} else {
+    // If the connection is successful, publish the publisher to the session
+    session.publish(publisher, handleError);
+}
+});
+
+     // Subscribe to a newly created stream
+     session.on('streamCreated', function streamCreated(event) {
+     	var subscriberOptions = {
+     		insertMode: 'append',
+     		width: '30%',
+     		height: '50%'
+     	};
+
+     	console.log('--event--');
+     	console.log(event);
+     	console.log('--stream--');
+     	console.log(event.stream);
+     	console.log('--streams--');
+     	console.log(event.streams);
+
+     	$('.test').addClass('hidden');
+
+
+     	var subscriber_id = 'subscriber_' + event.stream.connection.connectionId;
+     	subscriberHtmlBlock = '<div class="subscriber" id="' + subscriber_id + '" style="width: 500px;height: 282px;"></div>';
+     	$('#receiver_video_tab').append(subscriberHtmlBlock);
+     	var subscriber = session.subscribe(event.stream, subscriber_id, subscriberOptions, handleError);
+     	subscribers[subscriber_id] = subscriber;
+     	console.log(subscribers);
+     });
+
+     session.on('sessionDisconnected', function sessionDisconnected(event) {
+     	console.log('You were disconnected from the session.', event.reason);
+     });
+
+
+
+//        var connectionCount = 0;
+//   session.on("connectionCreated", function(event) {
+//    connectionCount++;
+//    displayConnectionCount();
+// });
+// session.on("connectionDestroyed", function(event) {
+//    connectionCount--;
+//    displayConnectionCount();
+// });
+
+
+function displayConnectionCount() {
+    document.getElementById("connectionCountField").value = connectionCount.toString();
+    // if(connectionCount == 1){
+    //   session.disconnect();
+    // }
+}
+
+
+$('.vcend').click(function(event) {
+  event.preventDefault();  
+  $('#incoming_call').modal('hide');  
+  var group_id  = $('#group_id').val();
+  $.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
+    $('#group_id').val('');
+	$('.vcend').removeClass('hidden');
+    session.disconnect();
+    window.location.reload();
+  })
+});
+
+
+
+
+
+ });  
+
+});
+
+
+
+
+$('#hangup').click(function(event) {
+	event.preventDefault();  	
+	$('audio#ringback').trigger("pause");
+	$('audio#ringtone').trigger("pause");
+	$('#incoming_call').modal('hide');
+	var group_id  = $('#group_id').val();
+	$.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
+		$('#group_id').val('');
+	});
+});
+
+
+
+
+function handle_video_panel(status){
+	var video_type = $('#video_type').val();
 						if(video_type == 'one'){ // One -to -one video 
 
 							if(status == 0){ /* Clicking Audio icon */
@@ -249,298 +422,298 @@
 
 
 			});				
-				$('#call_history').prepend(history);
-				}
-				/*Call History */
-			});
+								$('#call_history').prepend(history);
+							}
+							/*Call History */
+						});
+}
+/*Set Current */
+function set_nav_bar_chat_user(login_id,element){
+
+	$('.gr_tab').addClass('hidden');
+	$('.vc_tab').removeClass('hidden');
+	$('li').removeClass('active').removeClass('hidden');
+	$(element).addClass('active');
+	$(element).next('span').next('span').empty();
+	var id = $(element).attr('id');
+	$('#'+id).closest('bg-danger').empty();
+	$('#'+id+'danger').empty();
+
+	
+	$('.audio_call_icon').show();
+	$('#video_type').val('one');
+	$('.chat_messages').html('');
+	var type = $(element).attr('type');	
+	$('.group_vccontainer').addClass('hidden');
+
+	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
+		var obj = jQuery.parseJSON(res);
+		if(obj.online_status == 1){
+			var online_status = 'online';
+			$('.title_status').removeClass('offline');
+			$('.title_status').addClass('online');
+		}else{
+			var online_status = 'offline';
+			$('.title_status').removeClass('online');
+			$('.title_status').addClass('offline');
 		}
-			/*Set Current */
-				function set_nav_bar_chat_user(login_id,element){
+		if(obj.profile_img != ''){
+			var receiver_image = obj.profile_img;
+		}else{
+			var receiver_image = base_url+'assets/img/user.jpg';
+		}
+		$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
 
-					$('.gr_tab').addClass('hidden');
-					$('.vc_tab').removeClass('hidden');
-					$('li').removeClass('active').removeClass('hidden');
-					$(element).addClass('active');
-					$(element).next('span').next('span').empty();
-					var id = $(element).attr('id');
-					$('#'+id).closest('bg-danger').empty();
-					$('#'+id+'danger').empty();
+		$('#user_list').html('');
+		$('#add_chat_user').modal('hide');
+		$('#search_user').val('');
+		var session_type = $(element).parent().attr('id');
 
-					$('.add_user').hide();
-					$('.audio_call_icon').show();
-					$('#video_type').val('one');
-					$('.chat_messages').html('');
-					var type = $(element).attr('type');	
-					$('.group_vccontainer').addClass('hidden');
+		$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
+		$("#for_screen_share_group").hide();				
 
-					$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
-						var obj = jQuery.parseJSON(res);
-						if(obj.online_status == 1){
-							var online_status = 'online';
-							$('.title_status').removeClass('offline');
-							$('.title_status').addClass('online');
-						}else{
-							var online_status = 'offline';
-							$('.title_status').removeClass('online');
-							$('.title_status').addClass('offline');
-						}
-						if(obj.profile_img != ''){
-							var receiver_image = obj.profile_img;
-						}else{
-							var receiver_image = base_url+'assets/img/user.jpg';
-						}
-						$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
+		var group_type_name = type.replace(/_/g, ' ');
+		var extra_add = 'Call';
+		if(type == 'text_chat'){
+			extra_add = '';					
+			$('.to_name').text(obj.first_name+' '+obj.last_name);
+		}
 
-						$('#user_list').html('');
-						$('#add_chat_user').modal('hide');
-						$('#search_user').val('');
-						var session_type = $(element).parent().attr('id');
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
+		$('#receiver_sinchusername').val(obj.sinch_username);
+		$('#receiver_id').val(obj.login_id);
+		$('#receiver_image').val(receiver_image);
+		$('.receiver_title_image').attr('src',receiver_image);						
+		$('.chat_messages').html(obj.messages);
+		$('#type').val('text');
+		$('#group_id').val('');
 
-						$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
-						$("#for_screen_share_group").hide();				
-											
-						var group_type_name = type.replace(/_/g, ' ');
-						var extra_add = 'Call';
-						if(type == 'text_chat'){
-							extra_add = '';					
-							$('.to_name').text(obj.first_name+' '+obj.last_name);
-						}
-
-						$('.to_name').text(obj.first_name+' '+obj.last_name);
-						$('#receiver_sinchusername').val(obj.sinch_username);
-						$('#receiver_id').val(obj.login_id);
-						$('#receiver_image').val(receiver_image);
-						$('.receiver_title_image').attr('src',receiver_image);						
-						$('.chat_messages').html(obj.messages);
-						$('#type').val('text');
-						$('#group_id').val('');
-
-						var contents = '<div class="test" >'+
-						'<img src="'+receiver_image+'" title ="'+obj.first_name+' '+obj.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+obj.sinch_username+'" >'+
-										'<video id="video_'+obj.sinch_username+'" autoplay unmute class="hidden"></video>'+
-										'<span class="thumb-title">'+obj.first_name+' '+obj.last_name+'</span>'+
-										'</div>';
-						$('#receiver_video_tab').html(contents);
+		var contents = '<div class="test" >'+
+		'<img src="'+receiver_image+'" title ="'+obj.first_name+' '+obj.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+obj.sinch_username+'" >'+
+		'<video id="video_'+obj.sinch_username+'" autoplay unmute class="hidden"></video>'+
+		'<span class="thumb-title">'+obj.first_name+' '+obj.last_name+'</span>'+
+		'</div>';
+		$('#receiver_video_tab').html(contents);
 
 
-						$('.load-more-btn').click(function(){
-							$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-							var total = parseInt($(this).attr('total'));
-							if(total>0){                        
-								load_more(total);   
-								var total = total - 1;
-								$(this).attr('total',total); 
-								if(total == 0){
-									$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-								}
-							}else{
-								$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-							}
-
-						});
-
-
-
-
-					});
-
+		$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = parseInt($(this).attr('total'));
+			if(total>0){                        
+				load_more(total);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+				if(total == 0){
+					$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
 				}
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
 
-
-				/*Set Current Active User in Chat */
-				function set_chat_user(login_id, element){
-					var chat_user_type = $('#user_list').attr('data-type');	
-					$('li').removeClass('active');
-					$('.chat_messages').html('');
-					$('#video_type').val('one');
-					$('.group_vccontainer,.gr_tab,.add_user').addClass('hidden');
-
-
-					$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
-						var obj = jQuery.parseJSON(res);		
-						if(obj.online_status == 1){
-							var online_status = 'online';
-						}else{
-							var online_status = 'offline';
-						}
-						if(obj.profile_img != ''){
-							var receiver_image = obj.profile_img;
-						}else{
-							var receiver_image = base_url+'assets/img/user.jpg';
-						}
-						$('#'+obj.sinch_username).remove();
-						var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)" type=' + chat_user_type +'>'+
-						'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right" id="'+obj.sinch_username+'danger"></span></a>'+
-						'</li>';
-						var group_type_name = chat_user_type.replace(/_/g, ' ');
-						var extra_add = 'Call';
-						if(chat_user_type == 'text_chat'){
-							$('#session_chat_user').prepend(data);
-							$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
-							extra_add = '';							
-						}		
-
-
-						$('.to_name').text(obj.first_name+' '+obj.last_name);
-
-						$('#user_list').html('');
-						$('#add_chat_user').modal('hide');
-						$('#search_user').val('');		
-						$('.department').text(obj.department_name);
-						$('#receiver_sinchusername').val(obj.sinch_username);
-						$('#receiver_id').val(obj.login_id);
-						$('#receiver_image').val(receiver_image);
-						$('.receiver_title_image').attr('src',receiver_image);						
-						$('.chat_messages').html(obj.messages);
-						$('#type').val('text');
-						$('#group_id').val('');
-
-						var contents = '<div class="test" >'+
-						'<img src="'+receiver_image+'" title ="'+obj.first_name+' '+obj.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+obj.sinch_username+'" >'+
-										'<video id="video_'+obj.sinch_username+'" autoplay unmute class="hidden"></video>'+
-										'<span class="thumb-title">'+obj.first_name+' '+obj.last_name+'</span>'+
-										'</div>';
-						$('#receiver_video_tab').html(contents);
-
-
-
-						$('.load-more-btn').click(function(){
-							$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-							var total = $(this).attr('total');
-							if(total>0 || total == 0 ){                        
-								load_more(total);   
-								var total = total - 1;
-								$(this).attr('total',total); 
-							}else{
-								$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-							}
-
-						});
+		});
 
 
 
 
-					});
+	});
 
-				}
-
-
-
-				function delete_conversation()
-				{
-
-					if(confirm('Are you sure to delete this conversation?')){
-						var sender_id = $('#receiver_id').val();
-						var group_id = $('#group_id').val();
-						$.post(base_url+'chat/delete_conversation',{sender_id:sender_id,group_id:group_id},function(response){
-							if(response == 1){
-								$('.chat_messages').html('<div class="no_message"></div><div class="ajax"></div><input type="hidden"  id="hidden_id">');
-							}
-						});
-					}
-				}
-
-				$('.load-more-btn').click(function(){
-					$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
-					var total = $(this).attr('total');
-					if(total>0 || total == 0 ){                        
-						load_more(total);   
-						var total = total - 1;
-						$(this).attr('total',total); 
-					}else{
-						$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-					}
-
-				});
-
-				/*Append message onclick send button */
-
-				$('#chat_form').submit(function(){
-					$('.no_message').html('');
-					var time = $('#time').val();
-					var img = $('#img').val();
-					var receiver_id = $('#receiver_id').val();
-
-					var input_message = $.trim($('#input_message').val());
-					if(input_message == ''){
-						updateNotification('','Please enter message to send!','error');
-						return false;
-					}
-					if(input_message!=''){
-						var content ='<div class="chat chat-right">'+
-						'<div class="chat-body">'+
-						'<div class="chat-bubble">'+
-						'<div class="chat-content">'+
-						'<p>'+input_message+'</p>'+
-						'<span class="chat-time">'+time+'</span>'+
-						'</div>'+		
-						'</div>'+
-						'</div>'+
-						'</div>';
-						$('.ajax').append(content);     
-						$('#input_message').val('');  
-						var message_type = $('#type').val();
-
-						var group_id = $('#group_id').val();
-						message(input_message);
-						$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
-
-						});                 
+}
 
 
-					}
-					return false;
-				});
+/*Set Current Active User in Chat */
+function set_chat_user(login_id, element){
+	var chat_user_type = $('#user_list').attr('data-type');	
+	$('li').removeClass('active');
+	$('.chat_messages').html('');
+	$('#video_type').val('one');
+	$('.group_vccontainer,.gr_tab').addClass('hidden');
+
+
+	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
+		var obj = jQuery.parseJSON(res);		
+		if(obj.online_status == 1){
+			var online_status = 'online';
+		}else{
+			var online_status = 'offline';
+		}
+		if(obj.profile_img != ''){
+			var receiver_image = obj.profile_img;
+		}else{
+			var receiver_image = base_url+'assets/img/user.jpg';
+		}
+		$('#'+obj.sinch_username).remove();
+		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)" type=' + chat_user_type +'>'+
+		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right" id="'+obj.sinch_username+'danger"></span></a>'+
+		'</li>';
+		var group_type_name = chat_user_type.replace(/_/g, ' ');
+		var extra_add = 'Call';
+		if(chat_user_type == 'text_chat'){
+			$('#session_chat_user').prepend(data);
+			$('.chat-main-row,#task_window,#chat_sidebar').removeClass('hidden');
+			extra_add = '';							
+		}		
+
+
+		$('.to_name').text(obj.first_name+' '+obj.last_name);
+
+		$('#user_list').html('');
+		$('#add_chat_user').modal('hide');
+		$('#search_user').val('');		
+		$('.department').text(obj.department_name);
+		$('#receiver_sinchusername').val(obj.sinch_username);
+		$('#receiver_id').val(obj.login_id);
+		$('#receiver_image').val(receiver_image);
+		$('.receiver_title_image').attr('src',receiver_image);						
+		$('.chat_messages').html(obj.messages);
+		$('#type').val('text');
+		$('#group_id').val('');
+
+		var contents = '<div class="test" >'+
+		'<img src="'+receiver_image+'" title ="'+obj.first_name+' '+obj.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+obj.sinch_username+'" >'+
+		'<video id="video_'+obj.sinch_username+'" autoplay unmute class="hidden"></video>'+
+		'<span class="thumb-title">'+obj.first_name+' '+obj.last_name+'</span>'+
+		'</div>';
+		$('#receiver_video_tab').html(contents);
 
 
 
+		$('.load-more-btn').click(function(){
+			$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+			var total = $(this).attr('total');
+			if(total>0 || total == 0 ){                        
+				load_more(total);   
+				var total = total - 1;
+				$(this).attr('total',total); 
+			}else{
+				$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+			}
 
-				$('#audio_chat_form').submit(function(){
-					$('.no_message').html('');
-					var time = $('#time').val();
-					var img = $('#img').val();
-					var receiver_id = $('#receiver_id').val();
-
-					var input_message = $.trim($('#input_messages').val());
-					if(input_message == ''){
-						updateNotification('','Please enter message to send!','error');
-						return false;
-					}
-					if(input_message!=''){
-						var content ='<div class="chat chat-right">'+
-						'<div class="chat-body">'+
-						'<div class="chat-bubble">'+
-						'<div class="chat-content">'+
-						'<p>'+input_message+'</p>'+
-						'<span class="chat-time">'+time+'</span>'+
-						'</div>'+		
-						'</div>'+
-						'</div>'+
-						'</div>';
-						$('.ajax').append(content);     
-						$('#input_messages').val('');  
-						var message_type = $('#type').val();
-
-						var group_id = $('#group_id').val();
-						message(input_message);
-						$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
-
-						});                 
-
-
-					}
-					return false;
-				});
+		});
 
 
 
-				$('.attach-icon').click(function(){
-					$('#user_file').click();
-				});
+
+	});
+
+}
 
 
-				$('#user_file').change(function(e) {   
-					e.preventDefault();   
+
+function delete_conversation()
+{
+
+	if(confirm('Are you sure to delete this conversation?')){
+		var sender_id = $('#receiver_id').val();
+		var group_id = $('#group_id').val();
+		$.post(base_url+'chat/delete_conversation',{sender_id:sender_id,group_id:group_id},function(response){
+			if(response == 1){
+				$('.chat_messages').html('<div class="no_message"></div><div class="ajax"></div><input type="hidden"  id="hidden_id">');
+			}
+		});
+	}
+}
+
+$('.load-more-btn').click(function(){
+	$('.load-more-btn').html('<button class="btn btn-default">Please wait . . </button>');
+	var total = $(this).attr('total');
+	if(total>0 || total == 0 ){                        
+		load_more(total);   
+		var total = total - 1;
+		$(this).attr('total',total); 
+	}else{
+		$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+	}
+
+});
+
+/*Append message onclick send button */
+
+$('#chat_form').submit(function(){
+	$('.no_message').html('');
+	var time = $('#time').val();
+	var img = $('#img').val();
+	var receiver_id = $('#receiver_id').val();
+
+	var input_message = $.trim($('#input_message').val());
+	if(input_message == ''){
+		updateNotification('','Please enter message to send!','error');
+		return false;
+	}
+	if(input_message!=''){
+		var content ='<div class="chat chat-right">'+
+		'<div class="chat-body">'+
+		'<div class="chat-bubble">'+
+		'<div class="chat-content">'+
+		'<p>'+input_message+'</p>'+
+		'<span class="chat-time">'+time+'</span>'+
+		'</div>'+		
+		'</div>'+
+		'</div>'+
+		'</div>';
+		$('.ajax').append(content);     
+		$('#input_message').val('');  
+		var message_type = $('#type').val();
+
+		var group_id = $('#group_id').val();
+		message(input_message);
+		$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
+
+		});                 
+
+
+	}
+	return false;
+});
+
+
+
+
+$('#audio_chat_form').submit(function(){
+	$('.no_message').html('');
+	var time = $('#time').val();
+	var img = $('#img').val();
+	var receiver_id = $('#receiver_id').val();
+
+	var input_message = $.trim($('#input_messages').val());
+	if(input_message == ''){
+		updateNotification('','Please enter message to send!','error');
+		return false;
+	}
+	if(input_message!=''){
+		var content ='<div class="chat chat-right">'+
+		'<div class="chat-body">'+
+		'<div class="chat-bubble">'+
+		'<div class="chat-content">'+
+		'<p>'+input_message+'</p>'+
+		'<span class="chat-time">'+time+'</span>'+
+		'</div>'+		
+		'</div>'+
+		'</div>'+
+		'</div>';
+		$('.ajax').append(content);     
+		$('#input_messages').val('');  
+		var message_type = $('#type').val();
+
+		var group_id = $('#group_id').val();
+		message(input_message);
+		$.post(base_url+'chat/insert_chat',{message:input_message,receiver_id:receiver_id,message_type:message_type,group_id:group_id},function(res){
+
+		});                 
+
+
+	}
+	return false;
+});
+
+
+
+$('.attach-icon').click(function(){
+	$('#user_file').click();
+});
+
+
+$('#user_file').change(function(e) {   
+	e.preventDefault();   
 					var oFile = document.getElementById("user_file").files[0]; // <input type="file" id="fileUpload" accept=".jpg,.png,.gif,.jpeg"/>
 					if (oFile.size > 25097152){ // 25 mb for bytes.
 						updateNotification('Warning!','File size must under 25MB!','error');
@@ -618,40 +791,40 @@
 
 
 
-				function load_more(total){   
+function load_more(total){   
 
-					if(total==0){
-						$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-						return false;
-					}   
+	if(total==0){
+		$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+		return false;
+	}   
 
-					var receiver_id = $('#receiver_id').val();                  
+	var receiver_id = $('#receiver_id').val();                  
 
-					$.post(base_url+'chat/get_old_messages',{total:total},function(res){  
-						if(res){        
-							$('.load-more-btn').html('<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>');               
-							$('.ajax_old').prepend(res);
-						}else{
-							$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
-						}
-					}); 
-				}
-
-
+	$.post(base_url+'chat/get_old_messages',{total:total},function(res){  
+		if(res){        
+			$('.load-more-btn').html('<button class="btn btn-default" data-page="2"><i class="fa fa-refresh"></i> Load More</button>');               
+			$('.ajax_old').prepend(res);
+		}else{
+			$('.load-more-btn').html('<button class="btn btn-default">Thats all!</button>');
+		}
+	}); 
+}
 
 
 
-				/*setting Current time */
-				function clock() {
-					var time = new Date();
-					time = time.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
-					$('#time').val(time);
-					setTimeout('clock()',1000);
-				}
-				clock();
 
-				function modal_open(modal_type){
-					$('#user_list').attr('data-type', modal_type);
-					$('#add_chat_user').modal('show');
-				}
+
+/*setting Current time */
+function clock() {
+	var time = new Date();
+	time = time.toLocaleString('en-US', { hour: 'numeric',minute:'numeric', hour12: true });
+	$('#time').val(time);
+	setTimeout('clock()',1000);
+}
+clock();
+
+function modal_open(modal_type){
+	$('#user_list').attr('data-type', modal_type);
+	$('#add_chat_user').modal('show');
+}
 

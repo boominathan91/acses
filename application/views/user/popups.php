@@ -1,3 +1,30 @@
+<!-- INCOMING  CALL POPUP -->
+<div id="incoming_call" class="modal custom-modal fade center-modal" role="dialog">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="profile-widget">
+					<div class="profile-img">
+						<a href="javascript:void(0)" class="avatar"><img src="<?php echo base_url(); ?>assets/img/user-03.jpg" alt="" class="caller_image"></a>
+					</div>
+					<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="client-profile.html" class="caller_name"></a></h4>
+					<div class="small text-muted"></div>
+				<div class="incoming-btns">
+								<input type="hidden" name="caller_login_id" class="caller_login_id">
+								<input type="hidden" name="caller_sinchusername" class="caller_sinchusername">
+								<input type="hidden" name="caller_full_name" class="caller_full_name">
+								<input type="hidden" name="caller_profile_img" class="caller_profile_img">
+						<a href="javascript:void(0)" class="btn btn-success m-r-10" id="answer">Answer</a>
+						<a href="javascript:void(0)" class="btn btn-danger" data-dismiss="modal" id="hangup">Decline</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+
 <!-- ADD NEW USER For GROUP POPUP  -->
 
 <div id="add_group_user" class="modal custom-modal fade center-modal" role="dialog">
@@ -81,30 +108,7 @@
 	</div>
 </div>
 
-<!-- INCOMING AUDIO CALL POPUP -->
-<div id="incoming_call" class="modal custom-modal fade center-modal" role="dialog">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-body">
-				<div class="profile-widget">
-					<div class="profile-img">
-						<a href="javascript:void(0)" class="avatar"><img src="<?php echo base_url(); ?>assets/img/user-03.jpg" alt="" class="caller_image"></a>
-					</div>
-					<h4 class="user-name m-t-10 m-b-0 text-ellipsis"><a href="client-profile.html" class="caller_name"></a></h4>
-					<div class="small text-muted"></div>
-				<div class="incoming-btns">
-								<input type="hidden" name="caller_login_id" class="caller_login_id">
-								<input type="hidden" name="caller_sinchusername" class="caller_sinchusername">
-								<input type="hidden" name="caller_full_name" class="caller_full_name">
-								<input type="hidden" name="caller_profile_img" class="caller_profile_img">
-						<a href="javascript:void(0)" class="btn btn-success m-r-10" id="answer">Answer</a>
-						<a href="javascript:void(0)" class="btn btn-danger" data-dismiss="modal" id="hangup">Decline</a>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+
 
 <div id="screen_share" class="modal custom-modal fade center-modal" role="dialog">
 	<div class="modal-dialog">
