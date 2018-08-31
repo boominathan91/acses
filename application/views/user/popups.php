@@ -36,11 +36,11 @@
 			</div>
 			<div class="modal-body">				
 				<form id="group_user_form" method="post">
-					<div class="form-group">
+					<!-- <div class="form-group">
 						<label>Group Name <span class="text-danger">*</span></label>
 						<input class="form-control"  type="text" name="group_name" id="group_name1" readonly>
 						<input class="form-control"  type="hidden" name="group_type" id="group_type1">
-					</div>
+					</div> -->
 					<div class="form-group">
 						<label>Send invites to: <span class="text-muted-light"></span></label>
 						<input class="form-control"  type="text" name="members" id="members1" placeholder="e.g: username1,username2" data-role="tagsinput">

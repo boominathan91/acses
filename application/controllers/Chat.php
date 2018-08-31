@@ -328,7 +328,46 @@ class Chat extends CI_Controller {
 	}
 
 	public function add_group_user(){
-		$group_id = $_POST['group_id'];
+
+
+		if(!empty($_POST['group_id'])){
+			$group_id = $_POST['group_id'];			
+		}elseif(!empty($this->session->userdata('session_group_id'))){ 
+			/* Checking for session Group id */		
+			$group_id = $this->session->userdata('session_group_id');
+
+		}elseif(!empty($this->session->userdata('dummy_group_id'))){ 
+			/* Checking for Dummy group id */
+			$group_id = $this->session->userdata('dummy_group_id');
+		}else{
+				/* No session & dummy group id & post group id */
+
+
+				
+
+			// $group_datas = $this->db
+			// ->select('group_id')
+			// ->order_by('group_id','desc')
+			// ->get_where('chat_group_details',$where)
+			// ->row_array();
+			// if(empty($group_datas)){
+
+			// 	$group_id = 1;
+			// }else{
+			// 	$group_id = $group_datas['group_id'];
+			// 	$group_id++;
+			// }
+		}
+
+
+
+
+
+
+
+
+
+
 		$member = explode(',',$_POST['members']);
 		$new_users = array();
 
@@ -346,6 +385,7 @@ class Chat extends CI_Controller {
 
 				$where = array('group_id' => $group_id,'login_id'=>$user['login_id']);
 				$check  = $this->db->get_where('chat_group_members',$where)->num_rows();
+				/* Check already users presence in group */
 				if($check == 0){
 					$new_users[]=$datas['login_id'];
 					$this->db->insert('chat_group_members',$datas);
@@ -355,6 +395,22 @@ class Chat extends CI_Controller {
 			}
 
 		}
+
+		/* Session chat user id */
+
+		if(!empty($this->session->userdata('session_chat_id'))){
+
+			$where = array('group_id' => $group_id,'login_id'=>$this->session->userdata('session_chat_id'));
+			$check  = $this->db->get_where('chat_group_members',$where)->num_rows();
+			/* Check already users presence in group */
+			if($check == 0){
+				$new_users +=array($this->session->userdata('session_chat_id'));
+				$this->db->insert('chat_group_members',$datas);
+				$this->db->insert('chat_seen_details',$datas);							
+			}
+		}
+
+
 
 		$sinch_users=array();
 		if(!empty($new_users)){			
