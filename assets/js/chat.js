@@ -1,41 +1,5 @@
-	
 
-function get_call_notification(){
-	$.get(base_url+'chat/get_call_notification',function(res){
-		var obj = jQuery.parseJSON(res);
-		var data = obj.data;
-		if(obj.status == true){
 
-			if(data.profile_img!=''){
-				var caller_img = base_url+'uploads/'+data.profile_img;		
-			}else{
-				var caller_img = base_url+'assets/img/user.jpg';	
-			} 
-
-			$('audio#ringtone').prop("currentTime", 0);
-			$('audio#ringtone').trigger("play");
-			$('.caller_image').attr('src',caller_img);
-			$('.caller_name').text(data.first_name+' '+data.last_name);
-			$('.caller_login_id').val(data.login_id);      
-			$('#call_from_id').val(data.login_id);      
-			$('#call_to_id').val(data.call_to_id);
-			$('.caller_sinchusername').val(data.sinch_username);      
-			$('.caller_full_name').val(data.first_name+' '+data.last_name);      
-			$('.caller_profile_img').val(caller_img);      
-			$('#call_type').val(data.call_type);    
-			$('#group_id').val(data.group_id);    
-			$('#incoming_call').modal('show');				
-
-		}else{
-			$('audio#ringback').trigger("pause");
-			$('audio#ringtone').trigger("pause");
-			$('#incoming_call').modal('hide');
-
-		}
-
-	});
-} 
-setInterval(get_call_notification, 5000);
 
 
 
@@ -76,11 +40,16 @@ $('a#answer').click(function(event) {
 			showControls: true,
 			insertMode: 'append',
 			width: '100%',
-			height: '100%'
+			height: '100%',
+			// showControls: true,
+			name: currentUserName,
+			style: { nameDisplayMode: "on" }
 		};
 		var publisher = OT.initPublisher('outgoing', publisherOptions, handleError);
 		$('.single_video,.vcend').removeClass('hidden');
-		$('#outgoing_caller_image,.audio_call_icon,.enable_video').addClass('hidden');
+		$('#outgoing_caller_image').addClass('hidden');
+		$('.camera').css('color','#55ce63');  
+    	clearInterval(notify);
 
     // Connect to the session
     session.connect(token, function callback(error) {
@@ -97,7 +66,7 @@ $('a#answer').click(function(event) {
      	var subscriberOptions = {
      		insertMode: 'append',
      		width: '30%',
-     		height: '50%'
+     		height: '50%'	
      	};
 
      	console.log('--event--');
@@ -122,38 +91,16 @@ $('a#answer').click(function(event) {
      	console.log('You were disconnected from the session.', event.reason);
      });
 
-
-
-//        var connectionCount = 0;
-//   session.on("connectionCreated", function(event) {
-//    connectionCount++;
-//    displayConnectionCount();
-// });
-// session.on("connectionDestroyed", function(event) {
-//    connectionCount--;
-//    displayConnectionCount();
-// });
-
-
-function displayConnectionCount() {
-    document.getElementById("connectionCountField").value = connectionCount.toString();
-    // if(connectionCount == 1){
-    //   session.disconnect();
-    // }
-}
-
-
-$('.vcend').click(function(event) {
-  event.preventDefault();  
-  $('#incoming_call').modal('hide');  
-  var group_id  = $('#group_id').val();
-  $.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
-    $('#group_id').val('');
-	$('.vcend').removeClass('hidden');
-    session.disconnect();
-    window.location.reload();
-  })
-});
+     $('.vcend').click(function(event) {
+     	event.preventDefault();  
+     	session.unpublish(publisher);
+     	$('#incoming_call').modal('hide');  
+     	var group_id  = $('#group_id').val();
+     	$.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
+     		$('#group_id').val('');
+     		$('.vcend').removeClass('hidden');    
+     	})
+     });
 
 
 

@@ -468,7 +468,7 @@
 											<div class="video_call_status" id="video_timer"></div>
 
 											<ul class="nav navbar-nav pull-right chat-menu ">	
-												<li class="call-item audio_call_icon">
+												<li class="call-item audio_call_icon hidden">
 													<a href="javascript:void(0)" title="Audio" data-placement="top" data-toggle="tooltip" onclick="handle_video_panel(0)">
 														<i class="fa fa-phone phone" aria-hidden="true"></i>
 													</a>
@@ -527,7 +527,7 @@
 														<a class="vccam hidden" href="javascript:void(0)" id="group_video_mute">Video</a>     
 														<a class="vccall start-call" href="javascript:void(0)" type="group_video">Call</a>														
 														<a class="vcmike hidden" href="javascript:void(0)" id="group_audio_mute">Mike</a>     
-														<a class="vcend hidden" onclick="window.location.reload();">Call End</a>
+														<a href="javascript:void(0)" class="vcend hidden" onclick="window.location.reload();">Call End</a>
 													</div>
 												</div>
 											</div>
@@ -555,7 +555,7 @@
 
 													</div>	
 													<div class="vcactions">
-														<a class="vcend" onclick="window.location.reload();">Call End</a>
+														<a href="javascript:void(0)" class="vcend hidden" onclick="window.location.reload();">Call End</a>
 													</div>											
 												</div>
 											</div>
@@ -736,7 +736,7 @@
 										<div class="content-full tab-pane active" id="member_tab">
 											<div class="chat-wrap-inner">
 												<div class="chat-box">
-													<div class="chats" id="group_members">
+													<div class="chats group_members">
 														<?php 
 														$group_name='';
 														$group_id = $this->session->userdata('session_group_id');
@@ -797,7 +797,7 @@
 										<div class="content-full tab-pane active" id="call_tab">
 											<div class="chat-wrap-inner">
 												<div class="chat-box">
-													<div class="chats" id="receiver_video_tab">
+													<div class="chats group_members" id="receiver_video_tab">
 														<?php 
 
 															echo '<div class="test" >

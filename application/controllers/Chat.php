@@ -206,6 +206,9 @@ class Chat extends CI_Controller {
 	}
 	
 	public function get_group_datas(){
+		//echo 'test';
+		// echo '<pre>'; print_r($_POST);
+		 //exit;
 		$group_id = $_POST['group_id'];
 		$this->session->set_userdata(array('session_chat_id'=>''));		
 		$data = $this->chat->get_group_datas($group_id);
@@ -328,7 +331,11 @@ class Chat extends CI_Controller {
 	}
 
 	public function add_group_user(){
-
+		// echo '<pre>';
+		// 	print_r($_POST);
+		// 	print_r($this->session->userdata('session_group_id'));
+		// exit;
+		$group_name='';
 
 		if(!empty($_POST['group_id'])){
 			$group_id = $_POST['group_id'];			
@@ -340,31 +347,45 @@ class Chat extends CI_Controller {
 			/* Checking for Dummy group id */
 			$group_id = $this->session->userdata('dummy_group_id');
 		}else{
-				/* No session & dummy group id & post group id */
+			/* No session & dummy group id & post group id */
+			$opentok = new OpenTok($this->apiKey, $this->apiSecret);
+				// An automatically archived session:
+			$sessionOptions = array(
+				// 'archiveMode' => ArchiveMode::ALWAYS,
+				'mediaMode' => MediaMode::ROUTED
+			);
+			$new_session = $opentok->createSession($sessionOptions);
+				// Store this sessionId in the database for later use
+			$sessionId = $new_session->getSessionId();
+			$data = array(					
+				'session_id' => $sessionId,
+				'type' => 'text',
+				'created_by' => $this->login_id
+			);
+			$this->db->insert('chat_group_details',$data);
+			$group_id =$this->db->insert_id();				
 
+			$where = array('group_id' => $group_id,'login_id'=>$this->login_id);
+			$check  = $this->db->get_where('chat_group_members',$where)->num_rows();
 
-				
+			/* Check already users presence in group */
+			
+			if($check == 0){				
+				$det = array(
+					
+					'group_id' => $group_id,
+					'login_id' => $this->login_id,
+					'new_user' => 1
+				);
 
-			// $group_datas = $this->db
-			// ->select('group_id')
-			// ->order_by('group_id','desc')
-			// ->get_where('chat_group_details',$where)
-			// ->row_array();
-			// if(empty($group_datas)){
-
-			// 	$group_id = 1;
-			// }else{
-			// 	$group_id = $group_datas['group_id'];
-			// 	$group_id++;
-			// }
+				$this->db->insert('chat_group_members',$det);
+				$this->db->insert('chat_seen_details',$det);							
+			}
 		}
 
-
-
-
-
-
-
+		/* Insert Current User in group */
+			$group_name = 'Group'.$group_id;
+			$this->db->update('chat_group_details',array('group_name'=>$group_name,'type' => 'text' ),array('group_id'=>$group_id));
 
 
 
@@ -391,36 +412,72 @@ class Chat extends CI_Controller {
 					$this->db->insert('chat_group_members',$datas);
 					$this->db->insert('chat_seen_details',$datas);							
 				}
-
 			}
-
 		}
 
 		/* Session chat user id */
-
 		if(!empty($this->session->userdata('session_chat_id'))){
-
 			$where = array('group_id' => $group_id,'login_id'=>$this->session->userdata('session_chat_id'));
 			$check  = $this->db->get_where('chat_group_members',$where)->num_rows();
 			/* Check already users presence in group */
 			if($check == 0){
 				$new_users +=array($this->session->userdata('session_chat_id'));
-				$this->db->insert('chat_group_members',$datas);
-				$this->db->insert('chat_seen_details',$datas);							
+				$dat = array(
+					'group_id' => $group_id,
+					'login_id' => $this->session->userdata('session_chat_id'),
+					'new_user' => 1
+				);
+				$this->db->insert('chat_group_members',$dat);
+				$this->db->insert('chat_seen_details',$dat);							
 			}
+			
 		}
 
 
 
 		$sinch_users=array();
-		if(!empty($new_users)){			
+		if(!empty($new_users)){		
+			/* Check Current user in Call */
+			 $count = $this->db
+			->get_where('login_details',array('login_id' => $this->login_id, 'call_status' =>1 ))
+			->num_rows();
+
+
+
+			if($count!=0){
+				/*Make Call ringing for new user */
+
+				for ($i=0; $i <count($new_users) ; $i++) { 
+					/* Check Calling user already  in Call */
+					$where = array('login_id' => $new_users[$i], 'call_status' =>1 );
+					$count = $this->db
+					->get_where('login_details',$where)
+					->num_rows();
+
+					if($count==0){
+						$new = array(
+							'group_id' => $group_id ,
+							'from_id' => $this->login_id,
+							'to_id'=>$new_users[$i]
+						);
+						$this->db->insert('call_notification',$new);									
+					}
+
+				}
+			}
+
+
+
+
 			$sinch_users=$this->db
 			->select('sinch_username,first_name,last_name,login_id,profile_img')
 			->where_in('login_id',$new_users)
 			->get('login_details')
 			->result_array();
-		}									
-		echo json_encode($sinch_users);
+		}				
+		$session_values = array('session_chat_id' =>'','session_group_id' => $group_id);
+		$this->session->set_userdata($session_values);
+		echo json_encode(array('group_name'=>$group_name,'group_id'=>$group_id,'users'=>$sinch_users));
 
 	}
 	public function create_group(){
@@ -799,19 +856,6 @@ class Chat extends CI_Controller {
 		$result = array();
 		$data = array();	
 
-		// $session_values = array(
-		// 	'dummy_group_id' => '',
-		// 	'dummy_group_name' => '',
-		// 	'dummy_session_id' => '',
-		// 	'dummy_session' => '',
-		// 	'dummy_token' => ''
-		// );
-
-		// $this->session->set_userdata($session_values);
-
-
-
-
 		if(!empty($this->session->userdata('dummy_session_id'))){
 			$my_token = $this->session->userdata('dummy_token');
 			$sessionId = $this->session->userdata('dummy_session_id');
@@ -866,34 +910,33 @@ class Chat extends CI_Controller {
 
 
 	public function get_chat_token(){
+
+		/*Check  Login User Already in a call */
+		$user = $this->db
+		->get_where('login_details',array('login_id'=>$this->login_id))
+		->row_array();
+
+		if($user['call_status']==1){
+			echo json_encode(array('error' => 'You are already in a call!'));
+			exit;
+		}		
+
+
+		$user =array();
 		$session_chat_id = $this->session->userdata('session_chat_id');
 
 		$user = $this->db
 		->get_where('login_details',array('login_id'=>$session_chat_id))
 		->row_array();
 
-		if($user['online_status']==0){
+		/* Check calling user is online   */
+		if($user['online_status']==0){ 
 			echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' is offline'));
 			exit;
-		}elseif($user['call_status']==1){
+		}elseif($user['call_status']==1){ 
 			echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' already in a call'));
 			exit;
-		}
-
-
-		// $session_values = array(
-		// 	'dummy_group_id' => '',
-		// 	'dummy_group_name' => '',
-		// 	'dummy_session_id' => '',
-		// 	'dummy_session' => '',
-		// 	'dummy_token' => ''
-		// );
-
-		// $this->session->set_userdata($session_values);
-
-
-		// echo '<pre>';
-		// print_r($this->session->userdata('session_chat_id'));exit;
+		}	
 
 		if(!empty($this->session->userdata('dummy_session_id'))){
 			$my_token = $this->session->userdata('dummy_token');
@@ -914,11 +957,11 @@ class Chat extends CI_Controller {
 				// 'archiveMode' => ArchiveMode::ALWAYS,
 				'mediaMode' => MediaMode::ROUTED
 			);
-			$session = $opentok->createSession($sessionOptions);
+			$new_session = $opentok->createSession($sessionOptions);
 
 
 				// Store this sessionId in the database for later use
-			$sessionId = $session->getSessionId();
+			$sessionId = $new_session->getSessionId();
 
 
 			/* Get count of group table */
@@ -952,7 +995,7 @@ class Chat extends CI_Controller {
 
 			
 			// Set some options in a token
-			$my_token = $session->generateToken(array(
+			$my_token = $new_session->generateToken(array(
 				'role'       => Role::MODERATOR,
 			'expireTime' => time()+(7 * 24 * 60 * 60), // in one week
 			'data'       => $login
@@ -966,8 +1009,7 @@ class Chat extends CI_Controller {
 			$session_values = array(
 				'dummy_group_id' => $group_id,
 				'dummy_group_name' => $group_name,
-				'dummy_session_id' => $sessionId,
-				'dummy_session' => $session,
+				'dummy_session_id' => $sessionId,				
 				'dummy_token' => $my_token
 			);
 

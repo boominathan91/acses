@@ -66,9 +66,22 @@ $('#group_user_form').submit(function(){
 		updateNotification('Success  !','New user added','success');	
 
 		var data ='';
+		var group_name = obj.group_name;
+		var group_id = obj.group_id;
+		if(group_name!=''){
+		$('.to_name').text(group_name);
+		$('#group_id').val(group_id);
+		$('li').removeClass('active');
+		var content =  '<li class="active" id="'+group_name+'" onclick="set_nav_bar_group_user('+group_id+',this)" type="group_text_chat"><a href="javascript:void(0)" >#'+group_name+'<span class="badge bg-danger pull-right" id="'+group_name+'danger"></span></a></li>';
+		$('#session_group_text').prepend(content);
+		}
+		
+
+
 		var receivers =[];
 		receivers.push($('#receiver_sinchusername').val());
-		$(obj).each(function(){
+
+		$(obj.users).each(function(){
 			receivers.push(this.sinch_username);
 			send_new_msg('NEW_GROUP_ADDED',this.sinch_username);
 
@@ -89,7 +102,7 @@ $('#group_user_form').submit(function(){
 		$('#receiver_sinchusername').val(receivers);
 
 
-		$('#group_members').prepend(data);
+		$('.group_members').prepend(data);
 		message('NEW_USER_ADDED');
 
 	});
@@ -300,7 +313,7 @@ function set_nav_bar_group_user(group_id,element){
 							'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
 							'</div>';
 						});
-						$('#group_members').html(group_members_thumbnail);
+						$('.group_members').html(group_members_thumbnail);
 					}
 				// console.log(receivers);
 				$('.to_group_video_name').text(group.group_name);

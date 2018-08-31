@@ -180,7 +180,10 @@ $session_data = $this->session->userdata();
 
 									 <div id="other_groups">
 
-										<?php if(!empty($text_group)){ 
+										<?php
+
+										// echo '<pre>';print_r($text_group);exit;
+										 if(!empty($text_group)){ 
 											foreach($text_group['groups'] as $t){
 
 
@@ -290,7 +293,7 @@ $session_data = $this->session->userdata();
 										if(!empty($this->session->userdata('session_chat_id'))){
 
 											echo '<li '.$class.'  id="'.$chat['sinch_username'].'" onclick="set_nav_bar_chat_user('.$chat['login_id'].',this)" type="text_chat">
-												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right" id="'.$chat['sinch_username'].'danger" ></span></a>
+												<a href="javascript:void(0)"><span class="status '.$online_status.'"></span>'.ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']).'<span class="badge bg-danger pull-right" id="'.$chat['sinch_username'].'danger" ></span></a>
 												</li>';
 										}
 
@@ -323,7 +326,7 @@ $session_data = $this->session->userdata();
 
 
 												echo '<li '.$class.'  id="'.$u['sinch_username'].'" onclick="set_nav_bar_chat_user('.$u['login_id'].',this)" type="text_chat">
-												<a href="#"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right" id="'.$u['sinch_username'].'danger">'.$count.'</span></a>
+												<a href="javascript:void(0)"><span class="status '.$online_status.'"></span>'.ucfirst($u['first_name']).' '.ucfirst($u['last_name']).'<span class="badge bg-danger pull-right" id="'.$u['sinch_username'].'danger">'.$count.'</span></a>
 												</li>';
 											}
 
