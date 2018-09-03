@@ -456,6 +456,7 @@ class Chat extends CI_Controller {
 
 					if($count==0){
 						$new = array(
+							'type' => 'many',
 							'group_id' => $group_id ,
 							'from_id' => $this->login_id,
 							'to_id'=>$new_users[$i]
@@ -811,10 +812,13 @@ class Chat extends CI_Controller {
 
 	}
 
+
+
+
 	public function get_call_notification(){
 		$result = array('status'=>false);
 
-		/* Checking already in a call */
+		/* Checking any call for login user  */
 
 		$wh = array('login_id'=>$this->login_id);
 		$data = $this->db->get_where('login_details',$wh)->row_array();
@@ -827,22 +831,32 @@ class Chat extends CI_Controller {
 
 		$where = array('to_id'=>$this->login_id);
 		$data = $this->db->get_where('call_notification',$where)->row_array();
-		if(!empty($data)){
-
-			/* Make currently in a call */
-			//$this->db->update('login_details',array('call_status'=>1),$wh);
+		if(!empty($data)){			
 
 			/* If one to one call */
 			if($data['type'] == 'one'){
 
 				$wheres = array('login_id'=>$data['from_id']);
-				$response = $this->db->select('login_id,first_name,last_name,profile_img,sinch_username')
+				$response = $this->db->select('login_id,first_name,last_name,profile_img,sinch_username,online_status')
 				->get_where('login_details',$wheres)->row_array();
-				$response['group_id'] = $data['group_id'];			  
+				$response['group_id'] = $data['group_id'];	
+				$response['type'] = 'one';	
+				$response['call_type'] = $data['call_type'];
+
 			}else{
+				/* Group Details */
 				$wheres = array('group_id'=>$data['group_id']);
-				$response = $this->db->get_where('chat_group_details',$wheres)
-				->row_array();
+				$response = $this->db->get_where('chat_group_details',$wheres)->row_array();			
+				/* Group Members Details */
+
+					// $this->db->select('l.sinch_username,l.login_id,l.profile_img,l.first_name,l.last_name, cg.members_id,l.online_status');
+					// $this->db->where('cg.group_id',$data['group_id']);
+					// $this->db->where('cg.login_id !=',$this->login_id);
+					// $this->db->join('login_details l','l.login_id = cg.login_id');
+					// $response['group_members']=  $this->db->get('chat_group_members cg')->result_array();
+					$response['type'] = 'many';	
+					$response['call_type'] = $data['call_type'];
+
 			}
 			
 			$result=array('status'=>true,'data'=>$response);
@@ -911,6 +925,8 @@ class Chat extends CI_Controller {
 
 	public function get_chat_token(){
 
+
+
 		/*Check  Login User Already in a call */
 		$user = $this->db
 		->get_where('login_details',array('login_id'=>$this->login_id))
@@ -919,9 +935,17 @@ class Chat extends CI_Controller {
 		if($user['call_status']==1){
 			echo json_encode(array('error' => 'You are already in a call!'));
 			exit;
-		}		
+		}	
 
 
+		/* Check it is a One to One call Or Group Call */
+
+		if(!empty($this->session->userdata('session_chat_id'))){ /* One to One */		
+
+			
+
+
+		/* Check calling user is online or in a call   */
 		$user =array();
 		$session_chat_id = $this->session->userdata('session_chat_id');
 
@@ -929,7 +953,7 @@ class Chat extends CI_Controller {
 		->get_where('login_details',array('login_id'=>$session_chat_id))
 		->row_array();
 
-		/* Check calling user is online   */
+		
 		if($user['online_status']==0){ 
 			echo json_encode(array('error' => $user['first_name'].' '.$user['last_name'].' is offline'));
 			exit;
@@ -938,18 +962,40 @@ class Chat extends CI_Controller {
 			exit;
 		}	
 
+
+
+
+
+
+
+
+		/* Call again in a same group  */
+
 		if(!empty($this->session->userdata('dummy_session_id'))){
 			$my_token = $this->session->userdata('dummy_token');
 			$sessionId = $this->session->userdata('dummy_session_id');
 			$group_id =  $this->session->userdata('dummy_group_id');
+
+
+			/* Check Opposite user in a Same call */
+
+
+
+
+
+
+
+
 		}else{
 
-			
+			/* Make One to One new Call */ 			
 
 			$result = array();
-			$data = array();					
+			$data = array();	
 
-			$this->db->update('login_details',array('call_status'=>1),array('login_id'=>$this->login_id));
+		
+
+			/* Generate a Session Id  */
 
 			$opentok = new OpenTok($this->apiKey, $this->apiSecret);
 				// An automatically archived session:
@@ -962,6 +1008,9 @@ class Chat extends CI_Controller {
 
 				// Store this sessionId in the database for later use
 			$sessionId = $new_session->getSessionId();
+
+
+
 
 
 			/* Get count of group table */
@@ -983,6 +1032,11 @@ class Chat extends CI_Controller {
 			);
 			$this->db->insert('chat_group_details',$datas);
 			$group_id = $this->db->insert_id();
+
+
+				/* Update Login User as in a Call */				
+
+			$this->db->update('login_details',array('call_status'=>1,'group_id'=>$group_id),array('login_id'=>$this->login_id));
 
 
 
@@ -1009,8 +1063,7 @@ class Chat extends CI_Controller {
 			$session_values = array(
 				'dummy_group_id' => $group_id,
 				'dummy_group_name' => $group_name,
-				'dummy_session_id' => $sessionId,				
-				'dummy_token' => $my_token
+				'dummy_session_id' => $sessionId				
 			);
 
 			$this->session->set_userdata($session_values);
@@ -1018,28 +1071,92 @@ class Chat extends CI_Controller {
 			$dats = array('group_id' => $group_id,'login_id' => $session_chat_id);
 			$this->db->insert('chat_group_members',$dats);
 
-
-		}    
-
-		$notify = array(
-
+			/* RINGING one to one call notitification to single user */
+			$notify = array(
 			'group_id' => $group_id,
 			'from_id' => $this->login_id,
-			'to_id' => $session_chat_id,
-			'type' => 'one',
-			'call_type' => 'video'
+			'to_id' => $session_chat_id,						
+			'call_type' => $_POST['type_of_call']
 		);
+			$this->db->insert('call_notification',$notify);
 
-		$this->db->insert('call_notification',$notify);
+
+		}    		
+
+			
+
+		}elseif(!empty($this->session->userdata('session_group_id'))){ /* Group Call */
+
+			$group_id = $this->session->userdata('session_group_id');
+
+			/* Get the session id  from group  table */
+
+			$sessionId = $this->db->get_where('chat_group_details',array('group_id'=>$group_id))->row()->session_id;
+
+
+				$responses['first_name'] = $this->session->userdata('first_name');
+				$responses['last_name'] = $this->session->userdata('last_name');
+				$responses['sinch_username'] = $this->session->userdata('sinch_username');
+				$responses['login_id'] = $this->session->userdata('login_id');
+				
+									// Replace with meaningful metadata for the connection:
+				$connectionMetaData = json_encode($responses);
+
+
+
+			/* Generate as token */
+			$opentok = new OpenTok($this->apiKey, $this->apiSecret);
+		 	// Replace with the correct session ID:
+			$my_token = $opentok->generateToken($sessionId,array('expireTime' => time()+(7 * 24 * 60 * 60), 'data' =>  $connectionMetaData));
+
+
+
+
+			$members = $this->db							
+							->join('login_details l','l.login_id = m.login_id')
+							->get_where('chat_group_members m',array('m.group_id'=>$group_id,'m.login_id !=' =>$this->login_id))
+							->result_array();
+
+			if(!empty($members)){
+
+				foreach ($members as $m) {
+
+						/* Make call notification to group members */
+
+
+						/* Check calling user is online or in a call   */
+						$user =array();
+						$user_login_id = $m['login_id'];
+
+						$user = $this->db
+						->get_where('login_details',array('login_id'=>$user_login_id))
+						->row_array();
+
+
+						if($user['online_status'] !=0 && $user['call_status']!=1){
+
+							/* RINGING Group call notitification to  user */
+							$notify = array(
+							'group_id' => $group_id,
+							'from_id' => $this->login_id,
+							'to_id' => $user_login_id,
+							'type' => 'group',
+							'call_type' => $_POST['type_of_call']
+							);
+							$this->db->insert('call_notification',$notify);												
+						}
+				}
+			}
+		}
 
 		$result = array('apiKey' => $this->apiKey,'sessionId' =>$sessionId , 'token' => $my_token ,'dummy_group_id' => $group_id);
-		echo json_encode($result);
+		echo json_encode($result);	
+
 	}
 
 	public function set_chat_user(){
 
-	// $where = array(''=>$_POST['login_id']);
-	// $this->db->get_where('chat_group_members',$where)->num_rows();
+	
 
 		$this->session->set_userdata(array('session_group_id'=>''));
 		$this->session->set_userdata(array('session_chat_id'=>$_POST['login_id']));
@@ -1175,11 +1292,8 @@ class Chat extends CI_Controller {
 	{	
 
 		  // echo '<pre>'; print_r($_POST); exit;
-		if(!empty($_POST['group_id'])){
-
-			//$receiver_id =explode(',',$_POST['receiver_id']);
-
-				//$data['receiver_id'] = $receiver_id[$j];	
+		if($_POST['message_type'] == 'group'){
+				
 			$data['receiver_id'] = 0;
 			$data['sender_id'] = $this->login_id;
 			$data['time_zone'] = $this->session->userdata('time_zone');
@@ -1205,7 +1319,7 @@ class Chat extends CI_Controller {
 			}	
 			exit;	
 
-		}else{
+		}elseif($_POST['message_type'] == 'text'){
 
 			$data['receiver_id'] =$_POST['receiver_id'];
 			$data['sender_id'] = $this->login_id;
@@ -1213,7 +1327,7 @@ class Chat extends CI_Controller {
 			$data['chatdate'] = date('Y-m-d H:i:s');
 			$data['message'] = $_POST['message'];
 			$data['message_type'] = 'text';
-			$data['group_id'] = (!empty($_POST['group_id']))?$_POST['group_id']:'';
+			$data['group_id'] = 0;
 
 			$result = $this->db->insert('chat_details',$data);
 			$chat_id = $this->db->insert_id();

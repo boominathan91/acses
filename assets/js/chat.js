@@ -11,20 +11,15 @@ $('a#answer').click(function(event) {
 	var caller_full_name = $('.caller_full_name').val();
 	var caller_profile_img = $('.caller_profile_img').val();
 	$('.to_name').text(caller_full_name);
-	$('.receiver_title_image').attr('src',caller_profile_img);
-	$('#'+caller_sinchusername).click();
+	$('.receiver_title_image').attr('src',caller_profile_img);	
 	$('#receiver_sinchusername').val(caller_sinchusername);
 	$('audio#ringback').trigger("pause");
 	$('audio#ringtone').trigger("pause");
 	$('#incoming_call').modal('hide');
-	$('.loading').hide();      
-	$('.gr_tab').addClass('hidden');
-	$('.vc_tab,.audio_call_icon').removeClass('hidden'); 
-
+	$('.loading').hide();    
+	$('.gr_tab,.group_vccontainer').removeClass('hidden');  
 
 	$.post(base_url+'chat/get_dummy_datas',{group_id,group_id},function(res){
-
-
 
 		/* New Incoming  Call  */
 		var token;
@@ -35,21 +30,41 @@ $('a#answer').click(function(event) {
 		var token = obj.token;
 		var group_id = obj.dummy_group_id;
 		var session = OT.initSession(apiKey, sessionId);
-		/*Initialize the publisher*/
-		var publisherOptions = {
-			showControls: true,
-			insertMode: 'append',
-			width: '100%',
-			height: '100%',
-			// showControls: true,
-			name: currentUserName,
-			style: { nameDisplayMode: "on" }
-		};
+
+		var type = $('#call_type').val(); /* Audio Or Video call type */
+
+		if(type == 'audio'){
+			var publisherOptions = {      
+				insertMode: 'append',
+				width: '100%',
+				height: '100%',      
+				name: currentUserName,
+				style: { nameDisplayMode: "on" },
+				publishAudio:true,
+				publishVideo:false
+			};
+			$('.phone').css('color','#55ce63'); 
+			$('.vccam').addClass('active');
+
+		}else{
+			var publisherOptions = {      
+				insertMode: 'append',
+				width: '100%',
+				height: '100%',      
+				name: currentUserName,
+				style: { nameDisplayMode: "on" }
+			};
+			$('.camera').css('color','#55ce63'); 
+
+		}
+
+
+		
 		var publisher = OT.initPublisher('outgoing', publisherOptions, handleError);
-		$('.single_video,.vcend').removeClass('hidden');
-		$('#outgoing_caller_image').addClass('hidden');
-		$('.camera').css('color','#55ce63');  
-    	clearInterval(notify);
+		$('.vcend,.vccam').removeClass('hidden');
+		$('#group_outgoing_caller_image').addClass('hidden');
+		$('li').attr('disabled',true);      
+		clearInterval(notify);
 
     // Connect to the session
     session.connect(token, function callback(error) {
@@ -65,40 +80,119 @@ $('a#answer').click(function(event) {
      session.on('streamCreated', function streamCreated(event) {
      	var subscriberOptions = {
      		insertMode: 'append',
-     		width: '30%',
-     		height: '50%'	
+     		width: '100%',
+     		height: '100%'	
      	};
 
-     	console.log('--event--');
-     	console.log(event);
-     	console.log('--stream--');
-     	console.log(event.stream);
-     	console.log('--streams--');
-     	console.log(event.streams);
+     	// console.log('--event--');
+     	// console.log(event);
+     	// console.log('--stream--');
+     	// console.log(event.stream);
+     	// console.log('--streams--');
+     	// console.log(event.streams);
 
      	$('.test').addClass('hidden');
 
-
      	var subscriber_id = 'subscriber_' + event.stream.connection.connectionId;
-     	subscriberHtmlBlock = '<div class="subscriber" id="' + subscriber_id + '" style="width: 500px;height: 282px;"></div>';
-     	$('#receiver_video_tab').append(subscriberHtmlBlock);
+     	subscriberHtmlBlock = '<div class="subscriber" id="' + subscriber_id + '" ></div>';
+     	$('#member_tab').append(subscriberHtmlBlock);
      	var subscriber = session.subscribe(event.stream, subscriber_id, subscriberOptions, handleError);
      	subscribers[subscriber_id] = subscriber;
      	console.log(subscribers);
+
+
+      /* Video Swapping into large view */
+     	 $('#'+subscriber_id).click(function(){  
+     	 subscribers[subscriber_id].subscribeToVideo(false);
+          $('#inner_image').addClass('hidden');
+          $(this).addClass('active').html('');           
+          var id = $(this).attr('id');
+
+          var subscriberOptions = {
+     		insertMode: 'append',
+     		width: '100%',
+     		height: '100%',
+     		publishAudio:true,
+			publishVideo:true	
+     	};
+          var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
+          $('#sample').attr('data-id',id); 
+          $('#sample').addClass('active'); 
+      });   
+
+
+     	 $('#sample').click(function(){
+     	 	if($(this).hasClass('active')){
+     	 		var id  = $(this).attr('data-id');     	 		
+     	 			$('#temp').html('<div id="'+id+'" class="subscriber"></div>');;
+     	 		var subscriber = session.subscribe(event.stream,id, subscriberOptions, handleError); 
+     	 		$(this).removeClass('active').html('');
+     	 		$('#inner_image').removeClass('hidden');
+     	 		}   
+
+					$('#'+subscriber_id).click(function(){  
+					subscribers[subscriber_id].subscribeToVideo(false);
+					$('#inner_image').addClass('hidden');
+					$(this).addClass('active').html('');           
+					var id = $(this).attr('id');
+
+					var subscriberOptions = {
+					insertMode: 'append',
+					width: '100%',
+					height: '100%',
+					publishAudio:true,
+					publishVideo:true	
+					};
+					var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
+					$('#sample').attr('data-id',id); 
+					$('#sample').addClass('active'); 
+					});   
+
+
+  	 	
+     	 });
+
+
      });
+
+
+
+    
+
+
+
+
 
      session.on('sessionDisconnected', function sessionDisconnected(event) {
      	console.log('You were disconnected from the session.', event.reason);
      });
+
+
+
+     /* Mute the  Video */
+
+     $('#group_video_mute').click(function(){         
+     	if($(this).hasClass('active')){
+     		$(this).removeClass('active');                 
+     		publisher.publishVideo(true);         
+     	}else{
+     		$(this).addClass('active');                                            
+     		publisher.publishVideo(false);
+     	}
+        //console.log(stream);
+    });      
+
+
+
+
 
      $('.vcend').click(function(event) {
      	event.preventDefault();  
      	session.unpublish(publisher);
      	$('#incoming_call').modal('hide');  
      	var group_id  = $('#group_id').val();
-     	$.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
-     		$('#group_id').val('');
-     		$('.vcend').removeClass('hidden');    
+     	$.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){     		
+     		window.location.reload();
      	})
      });
 
@@ -120,103 +214,84 @@ $('#hangup').click(function(event) {
 	$('#incoming_call').modal('hide');
 	var group_id  = $('#group_id').val();
 	$.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
-		$('#group_id').val('');
+		 window.location.reload();
 	});
 });
 
 
 
 
+
+$('.sample').click(function(){
+	$('#inner_image').removeClass('hidden');
+	$(this).html('');
+});
+
+
 function handle_video_panel(status){
-	var video_type = $('#video_type').val();
-						if(video_type == 'one'){ // One -to -one video 
+	if(status == 0){ /* Clicking Audio icon */		
+		$('#call_type').val('audio');								
 
-							if(status == 0){ /* Clicking Audio icon */
-								$('.vc_video').addClass('active');
-								$('.start-call').attr('type','audio');
+	}else{ /*Clicking Video icon */
+		$('#call_type').val('video');								
+	}		
+	if($('.group_vccontainer').hasClass('hidden')){
+		initializeSession();
+		$('.group_vccontainer,.vcend').removeClass('hidden');								
+	}else{
+		$('.group_vccontainer,.vcend').addClass('hidden');								
+	}
+}
 
-							}else{ /*Clicking Video icon */
-								$('.start-call').attr('type','video');
-							}	
+function search_user(){
+	var user_name = $('#search_user').val();
+	$.post(base_url+'chat/get_users_by_name',{user_name:user_name},function(res){
+		$('#user_list').html('');
+		var data = '<ul class="media-list media-list-linked chat-user-list">';
+		if(res){
+			var obj = jQuery.parseJSON(res);
+			$(obj).each(function(){
 
-							if($('.single_video').hasClass('hidden')){
-								$('.single_video').removeClass('hidden');
-								initializeSession();
-							}else{
-								$('.single_video').addClass('hidden');
-							}
+				data +='<li class="media">'+
+				'<a href="#" class="media-link" type="text" onclick="set_chat_user('+this.login_id+', this)">'+
+				'<div class="media-left"><span class="avatar">'+this.first_letter+'</span></div>'+
+				'<div class="media-body media-middle text-nowrap">'+
+				'<div class="user-name">'+this.first_name+' '+this.last_name+'</div>'+
+				'<span class="designation">'+this.department_name+'</span>'+
+				'</div>'+
+				'<div class="media-right media-middle text-nowrap">'+			
+				'</div>'+
+				'</a>'+
+				'</li>';
+			});
+			data +='</ul>';
+			$('#user_list').append(data);
 
-
-						}else{ /*Group video */
-
-							$('.single_video').addClass('hidden');
-							if(status == 0){ /* Clicking Audio icon */
-								$('.vc_video').addClass('active');
-								$('.start-call').attr('type','audio');
-
-							}else{ /*Clicking Video icon */
-								$('.start-call').attr('type','video');
-							}	
-
-							if($('.group_vccontainer').hasClass('hidden')){
-								$('.group_vccontainer').removeClass('hidden');								
-							}else{
-								$('.group_vccontainer').addClass('hidden');								
-							}
-
-						}
-						
-					}
-
-					function search_user(){
-						var user_name = $('#search_user').val();
-						$.post(base_url+'chat/get_users_by_name',{user_name:user_name},function(res){
-							$('#user_list').html('');
-							var data = '<ul class="media-list media-list-linked chat-user-list">';
-							if(res){
-								var obj = jQuery.parseJSON(res);
-								$(obj).each(function(){
-
-									data +='<li class="media">'+
-									'<a href="#" class="media-link" type="text" onclick="set_chat_user('+this.login_id+', this)">'+
-									'<div class="media-left"><span class="avatar">'+this.first_letter+'</span></div>'+
-									'<div class="media-body media-middle text-nowrap">'+
-									'<div class="user-name">'+this.first_name+' '+this.last_name+'</div>'+
-									'<span class="designation">'+this.department_name+'</span>'+
-									'</div>'+
-									'<div class="media-right media-middle text-nowrap">'+			
-									'</div>'+
-									'</a>'+
-									'</li>';
-								});
-								data +='</ul>';
-								$('#user_list').append(data);
-
-							}
+		}
 
 
-						});
-					}
+	});
+}
 
 
-					$(document).ready(function(){
+$(document).ready(function(){
 
 
 
-						$(".vcfullscreen").click(function(){
-							$(".vcheader, .vcmsg, .vccolsmall, .message-bar").toggle();
-							$(".vccollarge").toggleClass("vccollargefull");
-							$(this).toggleClass("vcfullscreenalt");
-							if($(".vccollarge").hasClass("vccollargefull")){
-								$(".vccollarge").css('height',$(window).height());
-							} else{
-								$(".vccollarge").css('height','auto');
-							}
-						});
+	$(".vcfullscreen").click(function(){
+		$(".vcheader, .vcmsg, .vccolsmall, .message-bar").toggle();
+		$(".vccollarge").toggleClass("vccollargefull");
+		$(this).toggleClass("vcfullscreenalt");
+		if($(".vccollarge").hasClass("vccollargefull")){
+			$(".vccollarge").css('height',$(window).height());
+		} else{
+			$(".vccollarge").css('height','auto');
+		}
+	});
 
-						$(".videoinner").click(function(){
-							$(this).toggleClass("videoinneralt");
-						});
+	$(".videoinner").click(function(){
+		$(this).toggleClass("videoinneralt");
+	});
 
 
 
@@ -233,59 +308,59 @@ function handle_video_panel(status){
 					$("#session_audio_user li.active").click();
 				});
 
-					
-
-
-					function update_call_details(){
-						var call_to_id = $('#call_to_id').val();
-						var call_from_id = $('#call_from_id').val();
-						var group_id = $('#group_id').val();
-						var call_type = $('#call_type').val();
-						var call_duration = $('#call_duration').val();
-						var call_started_at = $('#call_started_at').val();
-						var call_ended_at = $('#call_ended_at').val();
-						var end_cause = $('#end_cause').val();
 
 
 
-						$.post(base_url+'chat/update_call_details',
-						{
-							call_from_id :call_from_id,
-							call_to_id :call_to_id,
-							group_id :group_id,
-							call_type :call_type,
-							call_duration :call_duration,
-							call_started_at :call_started_at,
-							call_ended_at :call_ended_at,
-							end_cause :end_cause,
-							call_status:0
-						},function(res){
-							console.log(res);
+function update_call_details(){
+	var call_to_id = $('#call_to_id').val();
+	var call_from_id = $('#call_from_id').val();
+	var group_id = $('#group_id').val();
+	var call_type = $('#call_type').val();
+	var call_duration = $('#call_duration').val();
+	var call_started_at = $('#call_started_at').val();
+	var call_ended_at = $('#call_ended_at').val();
+	var end_cause = $('#end_cause').val();
 
-							var obj = jQuery.parseJSON(res);
-							/*Call History */
 
-							var history ='';
-							/*Call History for Audio */
-							if(obj.call_history.length!=0){
-								$(obj.call_history).each(function(){				
 
-									var end_cause = this.end_cause;
-									if(this.profile_img!=''){
-										var caller_img = base_url+'uploads/'+this.profile_img;		
-									}else{
-										var caller_img = base_url+'assets/img/user.jpg';	
-									}                     
-									if(this.login_id != currentUserId){
-										var caller_name = this.first_name+' '+this.last_name;	
-										var receiver_name = 'You';
-									}else{
-										var receiver_name =  this.first_name+' '+this.last_name;
-										var caller_name = 'You';                    						 		
-									}
-									var call_duration = this.call_duration;                    						 							 			
-									var call_ended_at = this.call_ended_at;
-									if(end_cause == 'HUNG_UP'){ 
+	$.post(base_url+'chat/update_call_details',
+	{
+		call_from_id :call_from_id,
+		call_to_id :call_to_id,
+		group_id :group_id,
+		call_type :call_type,
+		call_duration :call_duration,
+		call_started_at :call_started_at,
+		call_ended_at :call_ended_at,
+		end_cause :end_cause,
+		call_status:0
+	},function(res){
+		console.log(res);
+
+		var obj = jQuery.parseJSON(res);
+		/*Call History */
+
+		var history ='';
+		/*Call History for Audio */
+		if(obj.call_history.length!=0){
+			$(obj.call_history).each(function(){				
+
+				var end_cause = this.end_cause;
+				if(this.profile_img!=''){
+					var caller_img = base_url+'uploads/'+this.profile_img;		
+				}else{
+					var caller_img = base_url+'assets/img/user.jpg';	
+				}                     
+				if(this.login_id != currentUserId){
+					var caller_name = this.first_name+' '+this.last_name;	
+					var receiver_name = 'You';
+				}else{
+					var receiver_name =  this.first_name+' '+this.last_name;
+					var caller_name = 'You';                    						 		
+				}
+				var call_duration = this.call_duration;                    						 							 			
+				var call_ended_at = this.call_ended_at;
+				if(end_cause == 'HUNG_UP'){ 
 					// Call from others and answered 
 
 					history +='<div class="chat chat-left">'+
@@ -369,16 +444,16 @@ function handle_video_panel(status){
 
 
 			});				
-								$('#call_history').prepend(history);
-							}
-							/*Call History */
-						});
+			$('#call_history').prepend(history);
+		}
+		/*Call History */
+	});
 }
 /*Set Current */
 function set_nav_bar_chat_user(login_id,element){
 
-	$('.gr_tab').addClass('hidden');
-	$('.vc_tab').removeClass('hidden');
+	// $('.gr_tab').addClass('hidden');
+	// $('.vc_tab').removeClass('hidden');
 	$('li').removeClass('active').removeClass('hidden');
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
@@ -391,7 +466,7 @@ function set_nav_bar_chat_user(login_id,element){
 	$('#video_type').val('one');
 	$('.chat_messages').html('');
 	var type = $(element).attr('type');	
-	$('.group_vccontainer').addClass('hidden');
+	// $('.group_vccontainer').addClass('hidden');
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);
@@ -433,14 +508,14 @@ function set_nav_bar_chat_user(login_id,element){
 		$('.receiver_title_image').attr('src',receiver_image);						
 		$('.chat_messages').html(obj.messages);
 		$('#type').val('text');
-		$('#group_id').val('');
+		// $('#group_id').val('');
 
 		var contents = '<div class="test" >'+
 		'<img src="'+receiver_image+'" title ="'+obj.first_name+' '+obj.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+obj.sinch_username+'" >'+
 		'<video id="video_'+obj.sinch_username+'" autoplay unmute class="hidden"></video>'+
 		'<span class="thumb-title">'+obj.first_name+' '+obj.last_name+'</span>'+
 		'</div>';
-		$('#receiver_video_tab').html(contents);
+		$('#member_tab').html(contents);
 
 
 		$('.load-more-btn').click(function(){
@@ -473,16 +548,21 @@ function set_chat_user(login_id, element){
 	$('li').removeClass('active');
 	$('.chat_messages').html('');
 	$('#video_type').val('one');
-	$('.group_vccontainer,.gr_tab').addClass('hidden');
 
 
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
-		var obj = jQuery.parseJSON(res);		
+		var obj = jQuery.parseJSON(res);	
+
 		if(obj.online_status == 1){
-			var online_status = 'online';
+			var online_status = 'online';			
+			$('.title_status').removeClass('offline');
+			$('.title_status').addClass('online');
 		}else{
 			var online_status = 'offline';
+			$('.title_status').addClass('offline');
+			$('.title_status').removeClass('online');
 		}
+
 		if(obj.profile_img != ''){
 			var receiver_image = obj.profile_img;
 		}else{
@@ -513,14 +593,14 @@ function set_chat_user(login_id, element){
 		$('.receiver_title_image').attr('src',receiver_image);						
 		$('.chat_messages').html(obj.messages);
 		$('#type').val('text');
-		$('#group_id').val('');
+		// $('#group_id').val('');
 
 		var contents = '<div class="test" >'+
 		'<img src="'+receiver_image+'" title ="'+obj.first_name+' '+obj.last_name+'" class="img-responsive outgoing_image" alt="" id="image_'+obj.sinch_username+'" >'+
 		'<video id="video_'+obj.sinch_username+'" autoplay unmute class="hidden"></video>'+
 		'<span class="thumb-title">'+obj.first_name+' '+obj.last_name+'</span>'+
 		'</div>';
-		$('#receiver_video_tab').html(contents);
+		$('#member_tab').html(contents);
 
 
 

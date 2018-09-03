@@ -306,6 +306,7 @@ $session_data = $this->session->userdata();
 									</div>	
 									<!-- Newly Messaged user  -->
 									<div id="new_message_user" class="new_message_user"></div>
+									<div id="new_call_user" class="new_call_user"></div>
 
 
 									<div id="other_users">

@@ -1,6 +1,18 @@
 <!-- Loader -->
 <div class="loading style-2"><div class="loading-wheel"></div></div>
+<style type="text/css">
+	.subscriber {
+    display: block !important;
+    width: 100% !important;
+    float: left;
+}
 
+.subscriber > div {
+    width: 100% !important;
+    height: 200px !important;
+    margin-bottom: 10px !important;
+}
+</style>
 <div class="main-wrapper">
 	<?php $this->load->view('user/includes/nav_bar'); 
 	// error_reporting(0);
@@ -467,8 +479,10 @@
 											</div>		
 											<div class="video_call_status" id="video_timer"></div>
 
+											<input type="hidden"  id="new_call_type">
+
 											<ul class="nav navbar-nav pull-right chat-menu ">	
-												<li class="call-item audio_call_icon hidden">
+												<li class="call-item audio_call_icon">
 													<a href="javascript:void(0)" title="Audio" data-placement="top" data-toggle="tooltip" onclick="handle_video_panel(0)">
 														<i class="fa fa-phone phone" aria-hidden="true"></i>
 													</a>
@@ -514,21 +528,21 @@
 												<div class="vcvideo">
 													<div class="videoinner">
 														<div class="to_group_video hidden"><?php echo $group_name; ?></div>
-														<img src="<?php echo base_url().'assets/img/user.jpg'; ?>" class="img-circle img-responsive center-block receiver_title_image" id="inner_image">
-														<video autoplay id="inner_video"  class="hidden" style="display: inline;height: 98%;margin: auto;width: 100%;"></video>
+														<img src="<?php echo base_url().'assets/img/user.jpg'; ?>" class="img-circle img-responsive center-block" id="inner_image">
+
+														<div id="sample" style="width: 54%;height: 100%;margin: 0 0 0 250px;"></div>
+														
 													</div>
 													<div class="vcopponentvideo">
 														<img src="<?php echo  $profile_img ?>" class="img-responsive" id="group_outgoing_caller_image">
-														<video  autoplay id="group_outgoing"  class="hidden" style="width:100%" muted></video>
-														
+														<div  id="outgoing"  style="width: 282px;height: 209px;"></div>
 													</div>
-													
 													<div class="vcactions">
-														<a class="vccam hidden" href="javascript:void(0)" id="group_video_mute">Video</a>     
-														<a class="vccall start-call" href="javascript:void(0)" type="group_video">Call</a>														
-														<a class="vcmike hidden" href="javascript:void(0)" id="group_audio_mute">Mike</a>     
-														<a href="javascript:void(0)" class="vcend hidden" onclick="window.location.reload();">Call End</a>
-													</div>
+														<a class="vccam hidden" href="javascript:void(0)" id="group_video_mute">Video</a>  
+														<a href="javascript:void(0)" class="vcend hidden" ">Call End</a>
+													</div>	
+
+
 												</div>
 											</div>
 										</div>
@@ -538,7 +552,7 @@
 
 
 									<!-- Video call Contents here  -->
-									<div class="container-fluid vccontainer single_video hidden">
+								<!-- 	<div class="container-fluid vccontainer single_video hidden">
 										<div class="vcfullscreen">1</div>    
 										<div class="vcrow">
 											<div class="vccol vccollarge">
@@ -555,12 +569,12 @@
 
 													</div>	
 													<div class="vcactions">
-														<a href="javascript:void(0)" class="vcend hidden" onclick="window.location.reload();">Call End</a>
+														<a href="javascript:void(0)" class="vcend hidden" ">Call End</a>
 													</div>											
 												</div>
 											</div>
 										</div>
-									</div>
+									</div> -->
 									
 									<!-- Video call Contents ends here  -->
 									<!-- <input type="text" id="connectionCountField" value="0"></input> -->
@@ -701,6 +715,8 @@
 															<input type="hidden" id="call_started_at" value="call_started_at" >
 															<input type="hidden" id="call_ended_at" value="call_ended_at">
 															<input type="hidden" id="end_cause" value="end_cause" >	
+
+
 															<?php if(!empty($this->session->userdata('session_group_id'))){ 
 																
 																echo '<input type="hidden" id="video_type" value="many" >';
@@ -726,10 +742,10 @@
 							</div>
 
 							<div class="col-xs-3 message-view chat-profile-view chat-sidebar" id="chat_sidebar">
-								<div class="chat-window video-window <?php echo $group_class; ?> gr_tab">
+								<div class="chat-window video-window  gr_tab">
 									<div class="chat-header">
 										<ul class="nav nav-tabs nav-tabs-bottom">
-											<li class="active"><a href="#member_tab" data-toggle="tab">Group Members</a></li>
+											<li class="active"><a href="#member_tab" data-toggle="tab">Members</a></li>
 										</ul>
 									</div>
 									<div class="tab-content chat-contents">
@@ -737,6 +753,7 @@
 											<div class="chat-wrap-inner">
 												<div class="chat-box">
 													<div class="chats group_members">
+														<div id="temp"></div>
 														<?php 
 														$group_name='';
 														$group_id = $this->session->userdata('session_group_id');
@@ -766,10 +783,7 @@
 																			$receivers_image = base_url() . 'uploads/'.$receivers_image;
 																		}
 																	}
-																	$receivers_image = (!empty($g['profile_img']))?$receivers_image : base_url().'assets/img/user.jpg';	
-
-
-
+																	$receivers_image = (!empty($g['profile_img']))?$receivers_image : base_url().'assets/img/user.jpg';
 
 																	echo '<div class="test" >
 																	<img src="'.$receivers_image.'" title ="'.$g['first_name'].' '.$g['last_name'].'" class="img-responsive outgoing_image" alt="" id="image_'.$g['sinch_username'].'" >
@@ -778,6 +792,12 @@
 																	</div>';
 																}
 															}
+														}else{
+															echo '<div class="test" >
+																	<img src="'.$receiver_profile_img.'" title ="'.$name.'" class="img-responsive outgoing_image" alt="" id="image_'.$receiver_sinchusername.'" >
+																	<video id="video_'.$receiver_sinchusername.'" autoplay unmute class="hidden"></video>
+																	<span class="thumb-title">'.$name.'</span>
+																	</div>';
 														}
 														
 														?>
@@ -787,7 +807,7 @@
 										</div>
 									</div>
 								</div>
-								<div class="chat-window video-window vc_tab <?php echo $one_class; ?>">
+								<!-- <div class="chat-window video-window vc_tab <?php echo $one_class; ?>">
 									<div class="chat-header">
 										<ul class="nav nav-tabs nav-tabs-bottom">
 											<li class="active"><a href="#call_tab" data-toggle="tab">Member</a></li>
@@ -812,7 +832,7 @@
 												</div>
 											</div>                    														
 										</div>
-									</div> <!-- video window ends  -->
+									</div>  --><!-- video window ends  -->
 								</div>
 							</div>
 						</div>
