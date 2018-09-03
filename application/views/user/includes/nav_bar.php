@@ -171,7 +171,7 @@ $session_data = $this->session->userdata();
 										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
 									</li>
 
-									<li class="menu-title">New Conversation<a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
+									<li class="menu-title menu">New Conversation<a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
 									<!-- <li class="menu-title" id="text_chat" onclick="set_group_type(1)">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li> -->
 									<!-- Session selected user  -->
 									<div id="session_group_text"></div>	
@@ -196,9 +196,9 @@ $session_data = $this->session->userdata();
 												$count = $this->db->get_where('chat_seen_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_group_id'))){
-													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active menu"':'class="menu"';
 												}else{
-													$class = '';	
+													$class = 'class="menu"';	
 												}
 
 												$new_group_name = str_replace(' ','_',$t['group_name']);
@@ -234,7 +234,7 @@ $session_data = $this->session->userdata();
 
 										if(!empty($this->session->userdata('session_chat_id'))){
 											$name = ucfirst($chat['first_name']).' '.ucfirst($chat['last_name']);
-											$class = '';
+											$class = 'menu';
 											$online_status = ($chat['online_status'] == 1)?'online':'offline';
 											$receiver_profile_img = (!empty($chat['profile_img']))?base_url().'uploads/'.$chat['profile_img']:base_url().'assets/img/user.jpg';
 											$receiver_id = $chat['login_id'];
@@ -249,7 +249,7 @@ $session_data = $this->session->userdata();
 										}else if(!empty($this->session->userdata('session_group_id'))){
 
 											$name = (!empty($chat[0]['group_name']))?ucfirst($chat[0]['group_name']):'';
-											$class = '';
+											$class = 'menu';
 											$online_status = 'online';
 											$receiver_profile_img = base_url().'assets/img/user.jpg';
 
@@ -320,9 +320,9 @@ $session_data = $this->session->userdata();
 												$count = $this->db->get_where('chat_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_chat_id'))){
-													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
+													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active menu"':'class="menu"';
 												}else{
-													$class = '';	
+													$class = 'class="menu"';	
 												}
 
 
@@ -363,9 +363,9 @@ $session_data = $this->session->userdata();
 													$count = $this->db->get_where('chat_details',$where)->num_rows();
 													$count = ($count!=0)?$count:'';
 													if(!empty($this->session->userdata('session_group_id'))){
-														$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+														$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active menu"':'class="menu"';
 													}else{
-														$class = '';	
+														$class = 'class="active menu"';	
 													}
 
 
@@ -407,9 +407,9 @@ $session_data = $this->session->userdata();
 												$count = $this->db->get_where('chat_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_chat_id'))){
-													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
+													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active menu"':'class="menu"';
 												}else{
-													$class = '';	
+													$class = 'class="menu"';	
 												}
 
 
@@ -451,7 +451,7 @@ $session_data = $this->session->userdata();
 												$count = $this->db->get_where('chat_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_group_id'))){
-													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active"':'';
+													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active menu"':'class="menu"';
 												}else{
 													$class = '';	
 												}
@@ -486,7 +486,7 @@ $session_data = $this->session->userdata();
 												$count = $this->db->get_where('chat_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_chat_id'))){
-													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active"':'';
+													$class = ($this->session->userdata('session_chat_id') == $u['login_id'])?'class="active menu"':'class="menu"';
 												}else{
 													$class = '';	
 												}

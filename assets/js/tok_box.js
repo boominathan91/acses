@@ -16,7 +16,7 @@ function get_call_notification(){
 
       /* Notification occurs */
 
-       $('audio#ringtone').prop("currentTime", 0);
+      $('audio#ringtone').prop("currentTime", 0);
       $('audio#ringtone').trigger("play");
 
       /* Show Chatting view */
@@ -63,7 +63,7 @@ function get_call_notification(){
         }
         $('#'+obj.sinch_username).remove();
         $('li').removeClass('active');
-        var html = '<li class="active" id="'+obj.sinch_username+'" onclick="set_chat_user('+obj.login_id+')">'+
+        var html = '<li class="active menu" id="'+obj.sinch_username+'" onclick="set_chat_user('+obj.login_id+')">'+
         '<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right" id="'+obj.sinch_username+'danger"></span></a>'+
         '</li>';       
         $('#new_call_user').html(html);              
@@ -77,7 +77,7 @@ function get_call_notification(){
         $('.caller_name').text(obj.group_name);
 
         $('#'+obj.group_name).remove();
-        var data = '<li  id="'+obj.group_name+'" onclick="set_nav_bar_group_user('+obj.group_id+',this)">'+
+        var data = '<li class="menu active"  id="'+obj.group_name+'" onclick="set_nav_bar_group_user('+obj.group_id+',this)">'+
         '<a href="#">#'+obj.group_name+ '<span class="badge bg-danger pull-right"  id="'+obj.group_name+'danger"></span></a>'+
         '</li>';
         $('#new_group_user').prepend(data);
@@ -164,7 +164,7 @@ function initializeSession() {
     var publisher = OT.initPublisher('outgoing', publisherOptions, handleError);
     $('#group_outgoing_caller_image').addClass('hidden');
     $('.vcend,.vccam').removeClass('hidden');  
-    $('li').attr('disabled',true);      
+    $('.menu').addClass('disabled');      
     // Connect to the session
     session.connect(token, function callback(error) {
       if (error) {
@@ -184,33 +184,12 @@ function initializeSession() {
 
       };
 
-      console.log('--event--');
-      console.log(event);
-      console.log('--stream--');
-      console.log(event.stream);
-      console.log('--streams--');
-      console.log(event.streams);
-
-
+   
       $('.test').addClass('hidden');
 
-      $('.subscriber').click(function(){
-        if($(this).hasClass('active')){         
-          $('#inner_image').removeClass('hidden');
-          $(this).removeClass('active');  
-          $('.sample').html('');    
-        }else{    
-          $('#inner_image').addClass('hidden');
-          $(this).addClass('active'); 
-          var data =$(this).html();
-          $('.sample').html(data);    
-        }
+   
 
-      });
-
-
-
-     var subscriber_id = 'subscriber_' + event.stream.connection.connectionId;
+      var subscriber_id = 'subscriber_' + event.stream.connection.connectionId;
       subscriberHtmlBlock = '<div class="subscriber" id="' + subscriber_id + '" ></div>';
       $('#member_tab').append(subscriberHtmlBlock);
       var subscriber = session.subscribe(event.stream, subscriber_id, subscriberOptions, handleError);
@@ -218,57 +197,37 @@ function initializeSession() {
      // console.log(subscribers);
 
 
-          /* Video Swapping into large view */
-       $('#'+subscriber_id).click(function(){  
-       subscribers[subscriber_id].subscribeToVideo(false);
-          $('#inner_image').addClass('hidden');
-          $(this).addClass('active').html('');           
-          var id = $(this).attr('id');
-
-          var subscriberOptions = {
+     /* Video Swapping into large view */
+     $('#'+subscriber_id).click(function(){  
+     $('#sample').html('');       
+      $('#inner_image').addClass('hidden');
+      $(this).addClass('active');           
+      var id = $(this).attr('id');
+      var subscriberOptions = {
         insertMode: 'append',
         width: '100%',
         height: '100%',
         publishAudio:true,
-      publishVideo:true 
+        publishVideo:true 
       };
-          var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
-          $('#sample').attr('data-id',id); 
-          $('#sample').addClass('active'); 
-      });   
+      var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
+      $('#sample').attr('data-id',id); 
+      $('#sample').addClass('active'); 
+    });   
+
 
 
         $('#sample').click(function(){
         if($(this).hasClass('active')){
-          var id  = $(this).attr('data-id');          
-            $('#temp').html('<div id="'+id+'" class="subscriber"></div>');;
-          var subscriber = session.subscribe(event.stream,id, subscriberOptions, handleError); 
-          $(this).removeClass('active').html('');
-          $('#inner_image').removeClass('hidden');
-          }   
-
-          $('#'+subscriber_id).click(function(){  
-          subscribers[subscriber_id].subscribeToVideo(false);
-          $('#inner_image').addClass('hidden');
-          $(this).addClass('active').html('');           
-          var id = $(this).attr('id');
-
-          var subscriberOptions = {
-          insertMode: 'append',
-          width: '100%',
-          height: '100%',
-          publishAudio:true,
-          publishVideo:true 
-          };
-          var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
-          $('#sample').attr('data-id',id); 
-          $('#sample').addClass('active'); 
-          });   
-      
-       });
+        var id  = $(this).attr('data-id');                    
+        $(this).removeClass('active').html('');
+        $('#inner_image').removeClass('hidden');
+        $(this).attr('data-id','');    
+        }   
+        });
 
 
-     });
+   });
 
 
 

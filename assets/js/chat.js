@@ -63,7 +63,7 @@ $('a#answer').click(function(event) {
 		var publisher = OT.initPublisher('outgoing', publisherOptions, handleError);
 		$('.vcend,.vccam').removeClass('hidden');
 		$('#group_outgoing_caller_image').addClass('hidden');
-		$('li').attr('disabled',true);      
+		$('.menu').addClass('disabled');      
 		clearInterval(notify);
 
     // Connect to the session
@@ -83,13 +83,7 @@ $('a#answer').click(function(event) {
      		width: '100%',
      		height: '100%'	
      	};
-
-     	// console.log('--event--');
-     	// console.log(event);
-     	// console.log('--stream--');
-     	// console.log(event.stream);
-     	// console.log('--streams--');
-     	// console.log(event.streams);
+     	
 
      	$('.test').addClass('hidden');
 
@@ -98,66 +92,47 @@ $('a#answer').click(function(event) {
      	$('#member_tab').append(subscriberHtmlBlock);
      	var subscriber = session.subscribe(event.stream, subscriber_id, subscriberOptions, handleError);
      	subscribers[subscriber_id] = subscriber;
-     	console.log(subscribers);
+     	// console.log(subscribers);
 
 
-      /* Video Swapping into large view */
-     	 $('#'+subscriber_id).click(function(){  
-     	 subscribers[subscriber_id].subscribeToVideo(false);
-          $('#inner_image').addClass('hidden');
-          $(this).addClass('active').html('');           
-          var id = $(this).attr('id');
-
-          var subscriberOptions = {
-     		insertMode: 'append',
-     		width: '100%',
-     		height: '100%',
-     		publishAudio:true,
-			publishVideo:true	
-     	};
-          var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
-          $('#sample').attr('data-id',id); 
-          $('#sample').addClass('active'); 
-      });   
+     	$('#'+subscriber_id).click(function(){  
+     	$('#sample').html('');       
+     		$('#inner_image').addClass('hidden');
+     		$(this).addClass('active');           
+     		var id = $(this).attr('id');
+     		var subscriberOptions = {
+     			insertMode: 'append',
+     			width: '100%',
+     			height: '100%',
+     			publishAudio:true,
+     			publishVideo:true 
+     		};
+     		var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
+     		$('#sample').attr('data-id',id); 
+     		$('#sample').addClass('active'); 
+     	});   
 
 
-     	 $('#sample').click(function(){
-     	 	if($(this).hasClass('active')){
-     	 		var id  = $(this).attr('data-id');     	 		
-     	 			$('#temp').html('<div id="'+id+'" class="subscriber"></div>');;
-     	 		var subscriber = session.subscribe(event.stream,id, subscriberOptions, handleError); 
-     	 		$(this).removeClass('active').html('');
-     	 		$('#inner_image').removeClass('hidden');
-     	 		}   
 
-					$('#'+subscriber_id).click(function(){  
-					subscribers[subscriber_id].subscribeToVideo(false);
-					$('#inner_image').addClass('hidden');
-					$(this).addClass('active').html('');           
-					var id = $(this).attr('id');
-
-					var subscriberOptions = {
-					insertMode: 'append',
-					width: '100%',
-					height: '100%',
-					publishAudio:true,
-					publishVideo:true	
-					};
-					var subscriber = session.subscribe(event.stream,'sample', subscriberOptions, handleError); 
-					$('#sample').attr('data-id',id); 
-					$('#sample').addClass('active'); 
-					});   
+     	$('#sample').click(function(){
+     		if($(this).hasClass('active')){
+     			var id  = $(this).attr('data-id');                    
+     			$(this).removeClass('active').html('');
+     			$('#inner_image').removeClass('hidden');
+     			$(this).attr('data-id','');    
+     		}   
+     	});
 
 
-  	 	
-     	 });
+
+
 
 
      });
 
 
 
-    
+
 
 
 
@@ -214,7 +189,7 @@ $('#hangup').click(function(event) {
 	$('#incoming_call').modal('hide');
 	var group_id  = $('#group_id').val();
 	$.post(base_url+'chat/discard_notify',{group_id:group_id},function(res){
-		 window.location.reload();
+		window.location.reload();
 	});
 });
 
@@ -545,7 +520,7 @@ function set_nav_bar_chat_user(login_id,element){
 /*Set Current Active User in Chat */
 function set_chat_user(login_id, element){
 	var chat_user_type = $('#user_list').attr('data-type');	
-	$('li').removeClass('active');
+	$('li').removeClass('active');	
 	$('.chat_messages').html('');
 	$('#video_type').val('one');
 
@@ -569,7 +544,7 @@ function set_chat_user(login_id, element){
 			var receiver_image = base_url+'assets/img/user.jpg';
 		}
 		$('#'+obj.sinch_username).remove();
-		var data = '<li class="active" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)" type=' + chat_user_type +'>'+
+		var data = '<li class="active menu" id="'+obj.sinch_username+'" onclick="set_nav_bar_chat_user('+obj.login_id+',this)" type=' + chat_user_type +'>'+
 		'<a href="#"><span class="status '+online_status+'"></span>'+obj.first_name+' '+obj.last_name+ '<span class="badge bg-danger pull-right" id="'+obj.sinch_username+'danger"></span></a>'+
 		'</li>';
 		var group_type_name = chat_user_type.replace(/_/g, ' ');

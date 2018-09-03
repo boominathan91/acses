@@ -1,6 +1,12 @@
 <!-- Loader -->
 <div class="loading style-2"><div class="loading-wheel"></div></div>
 <style type="text/css">
+
+.disabled {
+    pointer-events:none; //This makes it not clickable
+    opacity:0.6;         //This grays it out to look disabled
+}
+
 	.subscriber {
     display: block !important;
     width: 100% !important;
