@@ -118,11 +118,18 @@ function initializeSession() {
   $.post(base_url+'chat/get_chat_token',{call_type:call_type,type_of_call:type_of_call},function(res){
     // console.log(res);
     var obj = jQuery.parseJSON(res);
+
     if(obj.error){
-      updateNotification('',obj.error,'error');
-      $('.vcend').addClass('hidden');
-      return false;
-    }
+        updateNotification('','Group was deleted!','error');
+        window.location.reload();
+        return false;
+      }
+
+    // if(obj.error){
+    //   updateNotification('',obj.error,'error');
+    //   $('.vcend').addClass('hidden');
+    //   return false;
+    // }
 
 
     /* New Outgoing  Call Initiated */

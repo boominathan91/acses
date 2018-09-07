@@ -143,7 +143,7 @@ $session_data = $this->session->userdata();
 
 				<div class="sidebar" id="sidebar">
 					<div class="sidebar-inner slimscroll">
-						<div class="sidebar-menu">
+						<div class="sidebar-menu" id="sidebar-menu">
 							
 							<?php $uri = $this->uri->segment(1);	
 
@@ -171,14 +171,18 @@ $session_data = $this->session->userdata();
 										<a href="javascript:void(0)" page="profile" onclick="navigate(this)"><i class="fa fa-home"></i> Back to Home</a>
 									</li>
 
+									
+									<li class="menu-title" id="text_chat" onclick="set_group_type(1)">Create Group <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li>
+
 									<li class="menu-title menu">New Conversation<a href="javascript:void(0);" onclick="modal_open('text_chat')"><i class="fa fa-plus"></i></a></li>
-									<!-- <li class="menu-title" id="text_chat" onclick="set_group_type(1)">Chat Groups <a href="#" data-toggle="modal" data-target="#add_group"><i class="fa fa-plus"></i></a></li> -->
+									
 									<!-- Session selected user  -->
 									<div id="session_group_text"></div>	
 									<!-- Newly Messaged user  -->
 									<div id="new_group_user"></div>
 
 									 <div id="other_groups">
+
 
 										<?php
 
@@ -196,13 +200,33 @@ $session_data = $this->session->userdata();
 												$count = $this->db->get_where('chat_seen_details',$where)->num_rows();
 												$count = ($count!=0)?$count:'';
 												if(!empty($this->session->userdata('session_group_id'))){
-													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="active menu"':'class="menu"';
+													$class = ($this->session->userdata('session_group_id') == $t['group_id'])?'class="submenu active menu"':'class="submenu menu"';
 												}else{
-													$class = 'class="menu"';	
+													$class = 'class="submenu menu"';	
 												}
 
+
+
 												$new_group_name = str_replace(' ','_',$t['group_name']);
-												echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'<span class="badge bg-danger pull-right" id="'.ucfirst($new_group_name).'danger">'.$count.'</span></a></li>';
+													
+												echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat" >
+												<a href="#"><span id="group_name_'.ucfirst($new_group_name).'" > #'.ucfirst($t['group_name']).' </span>											
+												<span class="badge bg-danger pull-right" id="'.ucfirst($new_group_name).'danger">'.$count.'</span>
+												<span class="menu-arrow"></span></a>
+												<ul class="list-unstyled" style="display: none;" id="sub_menus'.$t['group_id'].'">';
+												/* Getting group Members */
+
+												$members  = $this->db
+													->join('login_details l','l.login_id = g.login_id')
+													->get_where('chat_group_members g',array('g.group_id'=>$t['group_id']))->result_array();
+
+												foreach($members as $m){
+													echo '<li><a href="javascript:void(0)">'.ucfirst($m['first_name']).' '.ucfirst($m['last_name']).'</a></li>';
+													}												
+												echo '</ul>
+												</li>';
+
+												// echo '<li '.$class.' id="'.ucfirst($new_group_name).'" onclick="set_nav_bar_group_user('.$t['group_id'].',this)" type="group_text_chat"><a href="javascript:void(0)" >#'.ucfirst($t['group_name']).'<span class="badge bg-danger pull-right" id="'.ucfirst($new_group_name).'danger">'.$count.'</span></a></li>';
 											}
 										} ?>
 									</div> 

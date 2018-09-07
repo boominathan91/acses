@@ -59,7 +59,10 @@ $('#group_user_form').submit(function(){
 		return false
 	}
 
+	$('.loading').show();
+
 	$.post(base_url+'chat/add_group_user',{group_id:group_id,members:members},function(res){
+		$('.loading').hide();
 		var obj = jQuery.parseJSON(res);		
 		$('#add_group_user').modal('hide');	
 		$('#group_user_form')[0].reset();
@@ -73,11 +76,8 @@ $('#group_user_form').submit(function(){
 		$('#group_id').val(group_id);
 		$('li').removeClass('active');
 		var content =  '<li class="active" id="'+group_name+'" onclick="set_nav_bar_group_user('+group_id+',this)" type="group_text_chat"><a href="javascript:void(0)" >#'+group_name+'<span class="badge bg-danger pull-right" id="'+group_name+'danger"></span></a></li>';
-		$('#session_group_text').prepend(content);
 		}
-		
-
-
+		var group_members_list = '';
 		var receivers =[];
 		receivers.push($('#receiver_sinchusername').val());
 
@@ -96,12 +96,11 @@ $('#group_user_form').submit(function(){
 			'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
 			'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
 			'</div>';
-
+			group_members_list +='<li><a href="javascript:void(0)">'+this.first_name+' '+this.last_name+'</a></li>';
 		});
 
+		$('#sub_menus'+group_id).html(group_members_list);
 		$('#receiver_sinchusername').val(receivers);
-
-
 		$('.group_members').prepend(data);
 		message('NEW_USER_ADDED');
 
@@ -113,6 +112,34 @@ $('#group_user_form').submit(function(){
 
 
 });
+
+$('#edit_group_form').submit(function(){
+	var group_name = $('#edit_group_name').val();		
+	var hidden_group_name = $('#hidden_group_name').val();		
+	var group_id = $('#group_id').val();		
+	if(group_name == ''){
+		updateNotification('Warning !','Enter group name to update!','error');
+		return false;
+	}
+
+	$('.loading').show();
+	$.post(base_url+'chat/update_group',{hidden_group_name:hidden_group_name,group_name:group_name,group_id:group_id},function(res){
+		$('.loading').hide();
+		$('#edit_group').modal('hide');
+		updateNotification('Success !','Group name updated!','success');
+		var obj = jQuery.parseJSON(res);
+		$('#hidden_group_name').val(obj.group_name);
+		$('.to_name').val(obj.group_name);
+		$('#group_name_'+obj.hidden_group_name).text(obj.group_name);
+		window.location.reload();
+	});
+
+	return false;
+
+});
+
+
+
 
 $('#group_form').submit(function(){
 	var group_name = $('#group_name').val();
@@ -132,7 +159,10 @@ $('#group_form').submit(function(){
 		$('#type').val('group');
 	}
 
+	$('.loading').show();
+
 	$.post(base_url+'chat/create_group',{group_name:group_name,members:members,group_type:group_type,channel:channel},function(res){
+		$('.loading').hide();
 		if(res){
 			var obj = jQuery.parseJSON(res);
 			if(obj.error){
@@ -244,7 +274,11 @@ $('#screen_share_form').submit(function(){
 	return false;
 });	
 
-
+function edit_group(){
+	$('#edit_group').modal('show');
+	var group_name = $('#hidden_group_name').val();
+	$('#edit_group_name').val(group_name);
+}
 
 function add_user(){
 	var group_name = $('.to_group_video').text();
@@ -256,13 +290,30 @@ function add_user(){
 }
 
 
+function delete_group (){
+	var group_id = $('#group_id').val();
+	if(confirm('Are you sure to delete this group?')){
+		$.post(base_url+'chat/delete_group',{group_id:group_id},function(res){
+			var obj  = jQuery.parseJSON(res);
+			if(obj.error){
+				updateNotification('',obj.error,'error'); 
+				return false;
+			}else{
+				window.location.reload();	
+			}
+			
+		});
+	}
+
+}
 
 
 function set_nav_bar_group_user(group_id,element){
 
-	$('.gr_tab').removeClass('hidden');
+	
 	$('.single_video,.vc_tab').addClass('hidden');
 	$('li').removeClass('active').removeClass('hidden');
+	$('.gr_tab,.edit_group_name,.delete_group_name').removeClass('hidden');
 	$(element).addClass('active');
 	var id = $(element).attr('id');	
 	$('#'+id+'danger').empty();	
@@ -280,6 +331,11 @@ function set_nav_bar_group_user(group_id,element){
 	$.post(base_url+'chat/get_group_datas',{group_id:group_id,type:type},function(res){
 		if(res){
 			var obj = jQuery.parseJSON(res);
+			if(obj.error){
+				window.location.reload();
+				return false;
+			}
+
 			if(obj.group){
 				var group = obj.group;
 				var type = obj.group.type;
@@ -296,7 +352,8 @@ function set_nav_bar_group_user(group_id,element){
 				$('.to_' + type).text(group.group_name);
 					// $('#task_window,#chat_sidebar').addClass('hidden');
 					
-					var group_members_thumbnail = '';;
+					var group_members_thumbnail = '';
+					var group_members_list = '';
 					var i=0;			
 					if( obj.group_members){
 						$(obj.group_members).each(function(){
@@ -312,8 +369,11 @@ function set_nav_bar_group_user(group_id,element){
 							'<video id="video_'+this.sinch_username+'" autoplay unmute class="hidden"></video>'+
 							'<span class="thumb-title">'+this.first_name+' '+this.last_name+'</span>'+
 							'</div>';
+							group_members_list +='<li><a href="javascript:void(0)">'+this.first_name+' '+this.last_name+'</a></li>';
 						});
-						$('.group_members').html(group_members_thumbnail);
+						$('#member_tab').html(group_members_thumbnail);
+						$('#sub_menus'+group.group_id).html(group_members_list);
+						
 					}
 				// console.log(receivers);
 				$('.to_group_video_name').text(group.group_name);

@@ -481,13 +481,16 @@
 												</div>
 												<div class="user-info pull-left">
 													<a href="#" title="<?php $name; ?>"><span class="font-bold to_name"><?php echo $name; ?></span></a>
-												</div>												
+											<span class="group_members_list last-seen"></span>
+												</div>			
+												
 											</div>		
 											<div class="video_call_status" id="video_timer"></div>
 
 											<input type="hidden"  id="new_call_type">
 
 											<ul class="nav navbar-nav pull-right chat-menu ">	
+												
 												<li class="call-item audio_call_icon">
 													<a href="javascript:void(0)" title="Audio" data-placement="top" data-toggle="tooltip" onclick="handle_video_panel(0)">
 														<i class="fa fa-phone phone" aria-hidden="true"></i>
@@ -506,6 +509,16 @@
 												<li class="call-item">
 													<a href="javascript:void(0)" title="Screen Share" data-placement="top" data-toggle="tooltip" onclick="set_screen_share_url()">
 														<i class="fa fa-desktop full-screen" aria-hidden="true"></i>
+													</a>
+												</li>
+												<li class="call-item edit_group_name" data-groupname>
+													<a href="javascript:void(0)" title="Edit Group name" data-placement="top" data-toggle="tooltip" onclick="edit_group()">
+														<i class="fa fa-pencil pencil" aria-hidden="true"></i>
+													</a>
+												</li>
+												<li class="call-item delete_group_name">
+													<a href="javascript:void(0)" title="Delete Group" data-placement="top" data-toggle="tooltip" onclick="delete_group()">
+														<i class="fa fa-trash trash" aria-hidden="true"></i>
 													</a>
 												</li>
 												<li class="dropdown">
@@ -730,9 +743,6 @@
 																echo '<input type="hidden" id="video_type" value="one" >';
 
 															} ?>
-
-
-
 
 															<span class="input-group-btn">
 																<button class="btn btn-primary chat-send-btn" type="submit" ><i class="fa fa-send"></i></button>

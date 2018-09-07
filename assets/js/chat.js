@@ -427,9 +427,9 @@ function update_call_details(){
 /*Set Current */
 function set_nav_bar_chat_user(login_id,element){
 
-	// $('.gr_tab').addClass('hidden');
-	// $('.vc_tab').removeClass('hidden');
+	
 	$('li').removeClass('active').removeClass('hidden');
+	$('.edit_group_name,.delete_group_name').addClass('hidden');
 	$(element).addClass('active');
 	$(element).next('span').next('span').empty();
 	var id = $(element).attr('id');
@@ -519,12 +519,13 @@ function set_nav_bar_chat_user(login_id,element){
 
 /*Set Current Active User in Chat */
 function set_chat_user(login_id, element){
+
 	var chat_user_type = $('#user_list').attr('data-type');	
 	$('li').removeClass('active');	
 	$('.chat_messages').html('');
 	$('#video_type').val('one');
-
-
+	$('.edit_group_name,.delete_group_name').addClass('hidden');
+	
 	$.post(base_url+'chat/set_chat_user',{login_id,login_id},function(res){
 		var obj = jQuery.parseJSON(res);	
 
