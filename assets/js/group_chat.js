@@ -476,6 +476,7 @@ function set_screen_share_url(){
 					},function(){ // If Extension not installed 	
 						$('.loading').hide();									
 						updateNotification('',"Screen leap Extension should be  installed to screenshare.", 'error');
+						$('.download').removeClass('hidden');
 					}					
 					);
 				}

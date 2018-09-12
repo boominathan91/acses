@@ -1,6 +1,26 @@
 <!-- Loader -->
 <div class="loading style-2"><div class="loading-wheel"></div></div>
+<div class="download hidden" >
+	Click to Install Extension <a href='https://chrome.google.com/webstore/detail/screenleap/hpcipbhehomfgjbgnajdhiahhdeeffbg?utm_source=chrome-ntp-icon' target='_blank' onclick="hide_message()">Download</a>
+</div>
+<script>
+	function hide_message(){
+		$('.download').addClass('hidden');
+	}
+</script>
 <style type="text/css">
+
+.download{
+    position: fixed;
+    right: 11px;
+    top: 11px;
+    background: aliceblue;
+    z-index: 999999;
+    font-size: 23px;
+    padding: 25px 12px 27px 19px;
+    border-radius: 6px 5px 5px 5px;
+
+}
 
 .disabled {
     pointer-events:none; //This makes it not clickable
